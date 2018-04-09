@@ -1,0 +1,8 @@
+<litepal>
+    <dbname value="fos"/>
+    <version value="1"/>
+
+    <list>
+        <mapping class="com.fos.database.DataInfo"/>
+    </list>
+</litepal>
