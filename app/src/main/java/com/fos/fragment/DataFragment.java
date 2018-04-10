@@ -47,11 +47,9 @@ public class DataFragment extends Fragment {
         lineChartView_TAH = (LineChartView)view.findViewById(R.id.lineChart_TAH);
         lineChartView_light = (LineChartView)view.findViewById(R.id.lineChart_light);
 
-        myLineChart_TAH =  new MyLineChart();
-        myLineChart_TAH.initLineChartView(lineChartView_TAH,"°");
+        myLineChart_TAH =  new MyLineChart(50,-10,0,60,lineChartView_TAH,"°");
 
-        myLineChart_light = new MyLineChart();
-        myLineChart_light.initLineChartView(lineChartView_light,"%");
+        myLineChart_light = new MyLineChart(50,-10,0,60,lineChartView_light,"cd");
 
         handler = new Handler(){
             @Override
@@ -60,8 +58,6 @@ public class DataFragment extends Fragment {
                 Bundle bundle = msg.getData();
                 String str = bundle.getString("info");
                 Infomation infomation = InfomationAnalysis.jsonToBean(str);
-                myLineChart_TAH.repaintView(Integer.parseInt(infomation.getTemperature()), Color.rgb(199,232,245));
-                myLineChart_light.repaintView(Integer.parseInt(infomation.getTemperature()),Color.rgb(199,232,245));
             }
         };
     }

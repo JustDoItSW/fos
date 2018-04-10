@@ -155,7 +155,8 @@ public class ControlFragment extends Fragment {
                     text_waterHigh.setText("水位 ：" + infomation.getWaterHigh() + "cm");
                     text_soilHum.setText("土湿 ：" + infomation.getSoilHumidity() + "%");
                     text_lux.setText("光强 ：" + infomation.getLux() + "cd");
-                    DataFragment.myLineChart_TAH.repaintView(Integer.parseInt(infomation.getTemperature()), Color.rgb(199, 232, 245));
+                    DataFragment.myLineChart_TAH.repaintView(Integer.parseInt(infomation.getTemperature()),infomation.getDate(),Color.rgb(199, 232, 245));
+                    DataFragment.myLineChart_light.repaintView(Integer.parseInt(infomation.getLux()),infomation.getDate(),Color.rgb(199, 232, 245));
                 }catch(Exception e){
                     e.printStackTrace();
                 }
