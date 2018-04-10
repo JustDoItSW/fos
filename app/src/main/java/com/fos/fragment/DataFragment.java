@@ -47,9 +47,9 @@ public class DataFragment extends Fragment {
         lineChartView_TAH = (LineChartView)view.findViewById(R.id.lineChart_TAH);
         lineChartView_light = (LineChartView)view.findViewById(R.id.lineChart_light);
 
-        myLineChart_TAH =  new MyLineChart(50,-10,0,60,lineChartView_TAH,"°");
+        myLineChart_TAH =  new MyLineChart(50,-10,0,300,lineChartView_TAH,"°");
 
-        myLineChart_light = new MyLineChart(50,-10,0,60,lineChartView_light,"cd");
+        myLineChart_light = new MyLineChart(50,-10,0,300,lineChartView_light,"cd");
 
         handler = new Handler(){
             @Override

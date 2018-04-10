@@ -29,7 +29,7 @@ import com.github.onlynight.waveview.WaveView;
  * Email 745267209@QQ.com
  */
 public class ControlFragment extends Fragment {
-    private Button btn_ledOpen,btn_ledClose,btn_login, btn_cancellation,btn_watering,btn_noWatering,btn_query;
+    private Button btn_ledOpen,btn_ledClose,btn_login, btn_cancellation,btn_watering,btn_noWatering,btn_heating,btn_noHeating,btn_query;
     private TextView text_temp,text_hum,text_soilHum,text_waterHigh,text_lux;
     private WaveView waveView;
     private EditText ip,port;
@@ -59,6 +59,8 @@ public class ControlFragment extends Fragment {
         btn_watering = (Button)view.findViewById(R.id.btn_watering);
         btn_noWatering = (Button)view.findViewById(R.id.btn_noWatering);
         btn_query = (Button)view.findViewById(R.id.btn_query);
+        btn_watering = (Button)view.findViewById(R.id.btn_watering);
+        btn_noHeating = (Button)view.findViewById(R.id.btn_noHeating);
 
         text_temp = (TextView)view.findViewById(R.id.text_temp);
         text_hum = (TextView)view.findViewById(R.id.text_hum);
@@ -100,7 +102,7 @@ public class ControlFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(MainActivity.clientSocket !=null){
-                    MainActivity.clientSocket.clientSendMessage("c");
+                    MainActivity.clientSocket.clientSendMessage("b");
                 }
             }
         });
@@ -109,7 +111,7 @@ public class ControlFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(MainActivity.clientSocket !=null){
-                    MainActivity.clientSocket.clientSendMessage("x");
+                    MainActivity.clientSocket.clientSendMessage("e");
                 }
             }
         });
@@ -118,7 +120,7 @@ public class ControlFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(MainActivity.clientSocket !=null){
-                    MainActivity.clientSocket.clientSendMessage("o");
+                    MainActivity.clientSocket.clientSendMessage("i");
                 }
             }
         });
@@ -127,7 +129,7 @@ public class ControlFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(MainActivity.clientSocket !=null){
-                    MainActivity.clientSocket.clientSendMessage("h");
+                    MainActivity.clientSocket.clientSendMessage("m");
                 }
             }
         });
@@ -137,6 +139,24 @@ public class ControlFragment extends Fragment {
             public void onClick(View v) {
                 if(MainActivity.clientSocket !=null){
                     MainActivity.clientSocket.clientSendMessage("5");
+                }
+            }
+        });
+
+        btn_heating.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(MainActivity.clientSocket !=null){
+                    MainActivity.clientSocket.clientSendMessage("p");
+                }
+            }
+        });
+
+        btn_noHeating.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(MainActivity.clientSocket !=null){
+                    MainActivity.clientSocket.clientSendMessage("s");
                 }
             }
         });

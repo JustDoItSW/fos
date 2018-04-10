@@ -11,6 +11,7 @@ import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.PointValue;
+import lecho.lib.hellocharts.model.ValueShape;
 import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.view.LineChartView;
 
@@ -30,7 +31,7 @@ public class MyLineChart {
     public Axis axisX,axisY;
     public String sign;
     public static int TOP,BOTTOM,LEFT,RIGHT;
-    private int count = 1;
+    private int count = 0;
 
 
     public MyLineChart(int TOP,int BOTTOM,int LEFT,int RIGHT,LineChartView lCV,String sign){
@@ -53,8 +54,8 @@ public class MyLineChart {
         lineChartView.setLineChartData(lineChartData);
         lineChartView.setBackgroundColor(Color.WHITE);
         lineChartView.setMaximumViewport(initViewPort(TOP,BOTTOM,LEFT,RIGHT));
-        lineChartView.setCurrentViewport(initViewPort(30,0,0,6));
-        moveViewPort(3,16);
+        lineChartView.setCurrentViewport(initViewPort(30,0,0,30));
+        moveViewPort(15,16);
         lineChartView.setInteractive(true);
         lineChartView.setScrollEnabled(true);
         lineChartView.setValueTouchEnabled(false);
@@ -73,7 +74,7 @@ public class MyLineChart {
         axisX.setHasLines(true);
         axisX.setLineColor(Color.rgb(235,235,235));
 
-        for(int i = 0;i<=60;i++){
+        for(int i = 0;i<=300;i+=5){
             axisXValueList.add(new AxisValue(i).setLabel(""));
         }
 
@@ -135,17 +136,18 @@ public class MyLineChart {
 
     public void initLine(){
         List<PointValue> pointValueList = new ArrayList<>();
-        for(int i = 1;i<=24;){
+        for(int i = 1;i<=300;){
             pointValueList.add(new PointValue(i,25));
             i+=1;
         }
         Line line = new Line(pointValueList);
-        line.setFilled(true);
+ //       line.setFilled(true);
         line.setHasPoints(true);
-        line.setHasLabels(true);
+ //       line.setHasLabels(true);
         line.setPointColor(Color.WHITE);
+        line.setShape(ValueShape.SQUARE);
         line.setPointRadius(2);
-        line.setColor(Color.GRAY);
+        line.setColor(Color.parseColor("#b0b0b0"));
         line.setStrokeWidth(1);
         lineList.add(line);
     }
@@ -156,7 +158,7 @@ public class MyLineChart {
      * @param color
      */
     public void repaintView(int info,String date,int color){
-        if(count<60) {
+        if(count<300) {
             PointValue newPointValue = new PointValue(count, info);
             newPointValue.setLabel(info+sign);
             pointValueList.add(newPointValue);
@@ -184,10 +186,10 @@ public class MyLineChart {
             lineChartView.setLineChartData(lineChartData);
 
             moveViewPort(count,info);
-            count++;
+            count+=5;
         }else {
             //重新绘制折线图
-            count = 1;
+            count = 0;
             pointValueList = new ArrayList<>();
             axisXValueList = new ArrayList<>();
             lineList = new ArrayList<>();
