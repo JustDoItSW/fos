@@ -185,10 +185,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:isCircle="true"
-                app:period="3"
+                app:period="2"
                 app:waveHeightPercent="0.5"
-                app:waveRange="12dp"
-                app:waveSpeed="8"
+                app:waveRange="6dp"
+                app:waveSpeed="5"
                 app:waveStrokeWidth="1dp"/>
             <TextView
                 android:id="@+id/text1111"
