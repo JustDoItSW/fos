@@ -15,36 +15,55 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="220dp">
+        android:layout_height="220dp"
+        >
         <View
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:background="@android:color/black"/>
         <TextView
+            android:id="@+id/text_temp"
+            android:textColor="@android:color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="温度："
-            android:id="@+id/textwendu"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
-            android:textColor="@android:color/white"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
+            android:textSize="12dp"/>
+
         <TextView
+            android:id="@+id/text_hum"
+            android:textColor="@android:color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="湿度："
-            android:id="@+id/texthum"
+            android:layout_below="@+id/text_temp"
+            android:textSize="12dp"/>
 
-            android:layout_marginLeft="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textwendu"/>
         <TextView
-            android:text="光强："
-
-            android:layout_marginLeft="10dp"
+            android:id="@+id/text_lux"
             android:textColor="@android:color/white"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/texthum"/>
+            android:text="光强："
+            android:layout_below="@+id/text_hum"
+            android:textSize="12dp"/>
+
+        <TextView
+            android:id="@+id/text_soilHum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="土湿："
+            android:layout_below="@+id/text_lux"
+            android:textColor="@android:color/white"
+            android:textSize="12dp"/>
+        <TextView
+            android:id="@+id/text_waterHigh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="水位："
+            android:layout_below="@+id/text_soilHum"
+            android:textColor="@android:color/white"
+            android:textSize="12dp"/>
+
 
     </RelativeLayout>
 
@@ -66,140 +85,119 @@
             android:enabled="false"/>
         <EditText
             android:id="@+id/ip"
-            android:layout_width="130dp"
-            android:layout_height="wrap_content" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:focusable="false"/>
         <EditText
             android:id="@+id/port"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <Button
-            android:id="@+id/btn_query"
-            android:text="查询 "
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/text_temp"
-            android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:text="温度："/>
-
-        <TextView
-            android:id="@+id/text_hum"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:text="湿度："/>
+            android:maxLines="1"
+            android:focusable="false"/>
 
     </LinearLayout>
-
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-        <TextView
-            android:id="@+id/text_lux"
+
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/btn_query"
+                    android:text="查询 "
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_ledOpen"
+                    android:text="开灯"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <Button
+                    android:id="@+id/btn_ledClose"
+                    android:text="关灯"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_watering"
+                    android:text="浇水"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:id="@+id/btn_noWatering"
+                    android:text="停止"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_heating"
+                    android:text="加热"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:id="@+id/btn_noHeating"
+                    android:text="停止"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <RelativeLayout
             android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="光强："/>
+            android:layout_height="100dp">
+            <com.github.onlynight.waveview.WaveView
+                android:id="@+id/waveView1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:isCircle="true"
+                app:period="3"
+                app:waveHeightPercent="0.5"
+                app:waveRange="12dp"
+                app:waveSpeed="8"
+                app:waveStrokeWidth="1dp"/>
+            <TextView
+                android:id="@+id/text1111"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="0.0%"/>
 
-        <TextView
-            android:id="@+id/text_soilHum"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="土湿："/>
-        <TextView
-            android:id="@+id/text_waterHigh"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="水位："/>
-
+        </RelativeLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btn_ledOpen"
-            android:text="开灯"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <Button
-            android:id="@+id/btn_ledClose"
-            android:text="关灯"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btn_watering"
-            android:text="浇水"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:id="@+id/btn_noWatering"
-            android:text="停止"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btn_heating"
-            android:text="加热"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:id="@+id/btn_noHeating"
-            android:text="停止"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="100dp"
-        android:layout_height="100dp">
-        <com.github.onlynight.waveview.WaveView
-            android:id="@+id/waveView1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:isCircle="true"
-            app:period="3"
-            app:waveHeightPercent="0.5"
-            app:waveRange="12dp"
-            app:waveSpeed="8"
-            app:waveStrokeWidth="1dp"/>
-        <TextView
-            android:id="@+id/text1111"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="0.0%"/>
-
-    </RelativeLayout>
 </LinearLayout>

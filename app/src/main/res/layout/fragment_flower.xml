@@ -22,24 +22,27 @@
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:orientation="horizontal"
-        android:layout_gravity="center"
+        android:weightSum="1"
         android:background="@drawable/search_edit"
         >
 
         <EditText
             android:textSize="10dp"
-            android:paddingLeft="30dp"
+            android:paddingLeft="20dp"
             android:layout_gravity="center_vertical"
-            android:layout_width="310dp"
+            android:layout_width="0dp"
+            android:layout_weight="0.92"
             android:layout_height="wrap_content"
             android:hint="输入植物名称进行搜索"
-            android:background="@android:color/white"/>
+            android:background="@android:color/white"
+            android:maxLines="1"/>
 
         <ImageView
-            android:layout_width="18dp"
+            android:layout_width="0dp"
+            android:layout_weight="0.06"
             android:layout_height="18dp"
             android:src="@mipmap/ic_search"
-            android:layout_gravity="center|end"
+            android:layout_gravity="center_vertical"
             />
     </LinearLayout>
 

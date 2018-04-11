@@ -61,6 +61,7 @@ public class ControlFragment extends Fragment {
         btn_query = (Button)view.findViewById(R.id.btn_query);
         btn_watering = (Button)view.findViewById(R.id.btn_watering);
         btn_noHeating = (Button)view.findViewById(R.id.btn_noHeating);
+        btn_heating = (Button)view.findViewById(R.id.btn_heating);
 
         text_temp = (TextView)view.findViewById(R.id.text_temp);
         text_hum = (TextView)view.findViewById(R.id.text_hum);
@@ -169,14 +170,17 @@ public class ControlFragment extends Fragment {
                     Log.e("info", "control收到");
                     Bundle bundle = msg.getData();
                     String str = bundle.getString("info");
+                    Log.e("info", str);
                     Infomation infomation = InfomationAnalysis.jsonToBean(str);
                     text_temp.setText("温度 ：" + infomation.getTemperature() + "℃");
                     text_hum.setText("湿度 ：" + infomation.getHumidity() + "%");
                     text_waterHigh.setText("水位 ：" + infomation.getWaterHigh() + "cm");
                     text_soilHum.setText("土湿 ：" + infomation.getSoilHumidity() + "%");
-                    text_lux.setText("光强 ：" + infomation.getLux() + "cd");
-                    DataFragment.myLineChart_TAH.repaintView(Integer.parseInt(infomation.getTemperature()),infomation.getDate(),Color.rgb(199, 232, 245));
-                    DataFragment.myLineChart_light.repaintView(Integer.parseInt(infomation.getLux()),infomation.getDate(),Color.rgb(199, 232, 245));
+                    text_lux.setText("光强 ：" + infomation.getLux() + "l");
+                    DataFragment.myLineChart_hum.repaintView(Integer.parseInt(infomation.getHumidity()),infomation.getDate().toString(),Color.rgb(199, 232, 245));
+                    DataFragment.myLineChart_lux.repaintView(Integer.parseInt(infomation.getLux()),infomation.getDate().toString(),Color.rgb(246, 235, 188));
+                    DataFragment.myLineChart_soilHum.repaintView(Integer.parseInt(infomation.getSoilHumidity()),infomation.getDate().toString(),Color.rgb(199, 232, 245));
+                    DataFragment.myLineChart_temp.repaintView(Integer.parseInt(infomation.getTemperature()),infomation.getDate().toString(),Color.rgb(255, 150, 150));
                 }catch(Exception e){
                     e.printStackTrace();
                 }

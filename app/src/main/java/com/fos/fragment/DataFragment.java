@@ -25,8 +25,8 @@ import lecho.lib.hellocharts.view.LineChartView;
  */
 public class DataFragment extends Fragment {
     private View  view;
-    public static MyLineChart myLineChart_TAH,myLineChart_light;
-    public static LineChartView lineChartView_TAH,lineChartView_light;
+    public static MyLineChart myLineChart_temp,myLineChart_lux,myLineChart_soilHum,myLineChart_hum;
+    public LineChartView lineChartView_temp,lineChartView_lux,lineChartView_soilHum,lineChartView_hum;
     public static Handler handler;
     private static DataFragment dataFragment;
     public static DataFragment newInstance(){
@@ -44,12 +44,16 @@ public class DataFragment extends Fragment {
     }
 
     private void init(){
-        lineChartView_TAH = (LineChartView)view.findViewById(R.id.lineChart_TAH);
-        lineChartView_light = (LineChartView)view.findViewById(R.id.lineChart_light);
+        lineChartView_temp = (LineChartView)view.findViewById(R.id.lineChart_temp);
+        lineChartView_lux = (LineChartView)view.findViewById(R.id.lineChart_lux);
+        lineChartView_soilHum = (LineChartView)view.findViewById(R.id.lineChart_soilHum);
+        lineChartView_hum = (LineChartView)view.findViewById(R.id.lineChart_hum);
 
-        myLineChart_TAH =  new MyLineChart(50,-10,0,300,lineChartView_TAH,"°");
+        myLineChart_temp =  new MyLineChart(50,0,0,300,lineChartView_temp,"°");
+        myLineChart_lux =  new MyLineChart(1000,0,0,300,lineChartView_lux,"l");
+        myLineChart_soilHum =  new MyLineChart(100,0,0,300,lineChartView_soilHum,"%");
+        myLineChart_hum =  new MyLineChart(100,0,0,300,lineChartView_hum,"%");
 
-        myLineChart_light = new MyLineChart(50,-10,0,300,lineChartView_light,"cd");
 
         handler = new Handler(){
             @Override

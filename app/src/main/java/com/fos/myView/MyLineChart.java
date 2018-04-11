@@ -54,7 +54,7 @@ public class MyLineChart {
         lineChartView.setLineChartData(lineChartData);
         lineChartView.setBackgroundColor(Color.WHITE);
         lineChartView.setMaximumViewport(initViewPort(TOP,BOTTOM,LEFT,RIGHT));
-        lineChartView.setCurrentViewport(initViewPort(30,0,0,30));
+        lineChartView.setCurrentViewport(initViewPort(TOP,BOTTOM,0,30));
         moveViewPort(15,16);
         lineChartView.setInteractive(true);
         lineChartView.setScrollEnabled(true);
@@ -69,12 +69,13 @@ public class MyLineChart {
      */
     public void initAxisX(){
         axisX = new Axis();
-        axisX.setName("时间");
+   //     axisX.setName("时间");
         axisX.setTextColor(Color.rgb(181,179,170));
         axisX.setHasLines(true);
+       // axisX.setHasSeparationLine(true);
         axisX.setLineColor(Color.rgb(235,235,235));
 
-        for(int i = 0;i<=300;i+=5){
+        for(int i = 2;i<=300;i+=5){
             axisXValueList.add(new AxisValue(i).setLabel(""));
         }
 
@@ -87,7 +88,7 @@ public class MyLineChart {
      * @param date
      */
     public void setAxisXLabel(String date){
-        axisXValueList.get(count).setLabel(date);
+        axisXValueList.get(count/5).setLabel(date);
         axisX.setValues(axisXValueList);
         lineChartData.setAxisXBottom(axisX);
     }
@@ -159,7 +160,7 @@ public class MyLineChart {
      */
     public void repaintView(int info,String date,int color){
         if(count<300) {
-            PointValue newPointValue = new PointValue(count, info);
+            PointValue newPointValue = new PointValue(count+2, info);
             newPointValue.setLabel(info+sign);
             pointValueList.add(newPointValue);
 
@@ -189,7 +190,7 @@ public class MyLineChart {
             count+=5;
         }else {
             //重新绘制折线图
-            count = 0;
+            count = 2;
             pointValueList = new ArrayList<>();
             axisXValueList = new ArrayList<>();
             lineList = new ArrayList<>();
@@ -204,9 +205,9 @@ public class MyLineChart {
      */
     public void  moveViewPort(float x,float y){
         Viewport viewport;
-        if(x<3)
+        if(x<15)
             lineChartView.moveToWithAnimation(3,y);
-        if(x>=3 && x<21){
+        if(x>=15 && x<285){
             lineChartView.moveToWithAnimation(x,y);
         }
     }
