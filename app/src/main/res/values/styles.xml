@@ -16,4 +16,12 @@
         <item name="android:textColor">@color/color_menutext</item>
     </style>
 
+    <style name="info_text">
+        <item name="android:layout_marginTop">15dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">10dp</item>
+        <item name="android:textColor">#C0C0C0</item>
+    </style>
+
 </resources>

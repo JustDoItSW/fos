@@ -10,9 +10,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,11 +36,13 @@ import com.github.onlynight.waveview.WaveView;
  * Email 745267209@QQ.com
  */
 public class ControlFragment extends Fragment {
-    private Button btn_query;
-    private Switch ledControl,wateringControl,heatingControl,loginControl;
+    private Switch loginControl;
     private TextView text_temp,text_hum,text_soilHum,text_waterHigh,text_lux;
+    private ImageView refresh,light,watering,heating;
     private WaveView waveView;
     private EditText ip,port;
+    private Animation animation;
+    private LinearInterpolator lin;
     public static Handler  handler;
     private static ControlFragment controlFragment;
     private View view;
@@ -56,13 +62,7 @@ public class ControlFragment extends Fragment {
     }
 
     private void init(){
-        btn_query = (Button)view.findViewById(R.id.btn_query);
-
-
         loginControl = (Switch)view.findViewById(R.id.loginControl);
-        ledControl = (Switch)view.findViewById(R.id.ledControl);
-        wateringControl = (Switch)view.findViewById(R.id.wateringControl);
-        heatingControl = (Switch)view.findViewById(R.id.heatingControl);
 
         text_temp = (TextView)view.findViewById(R.id.text_temp);
         text_hum = (TextView)view.findViewById(R.id.text_hum);
@@ -70,20 +70,80 @@ public class ControlFragment extends Fragment {
         text_waterHigh = (TextView)view.findViewById(R.id.text_waterHigh);
         text_lux = (TextView)view.findViewById(R.id.text_lux);
 
+        light = (ImageView)view.findViewById(R.id.light);
+        watering = (ImageView)view.findViewById(R.id.watering);
+        heating = (ImageView)view.findViewById(R.id.heating);
+        refresh = (ImageView)view.findViewById(R.id.refresh);
+
+        animation = AnimationUtils.loadAnimation(getActivity(), R.anim.refresh_aniamtion);
+        lin = new LinearInterpolator();//设置动画匀速运动
+        animation.setInterpolator(lin);
+
+
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (MainActivity.clientSocket != null) {
+                    if(!v.isSelected()) {
+                        MainActivity.clientSocket.clientSendMessage("i");
+                        refresh.startAnimation(animation);
+                        v.setSelected(true);
+                    }
+                }
+
+            }
+        });
+        light.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(MainActivity.clientSocket !=null)
+                    if(v.isSelected()) {
+                        MainActivity.clientSocket.clientSendMessage("e");
+                        v.setSelected(false);
+                    }
+                    else {
+                        MainActivity.clientSocket.clientSendMessage("b");
+                        v.setSelected(true);
+                    }
+            }
+        });
+
+        watering.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(MainActivity.clientSocket !=null)
+                    if(v.isSelected()) {
+                        MainActivity.clientSocket.clientSendMessage("5");
+                        v.setSelected(false);
+                    }
+                    else {
+                        MainActivity.clientSocket.clientSendMessage("m");
+                        v.setSelected(true);
+                    }
+            }
+        });
+
+        heating.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(MainActivity.clientSocket !=null)
+                    if(v.isSelected()) {
+                        MainActivity.clientSocket.clientSendMessage("s");
+                        v.setSelected(false);
+                    }
+                    else {
+                        MainActivity.clientSocket.clientSendMessage("p");
+                        v.setSelected(true);
+                    }
+
+            }
+        });
+
         ip =  (EditText)view.findViewById(R.id.ip);
         port =  (EditText)view.findViewById(R.id.port);
 
         ip.setText("192.168.191.1");
         port.setText("8000");
-
-        btn_query.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(MainActivity.clientSocket !=null){
-                    MainActivity.clientSocket.clientSendMessage("i");
-                }
-            }
-        });
         loginControl.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -98,43 +158,14 @@ public class ControlFragment extends Fragment {
                         }
             }
         });
-        wateringControl.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(MainActivity.clientSocket !=null)
-                    if(isChecked)
-                        MainActivity.clientSocket.clientSendMessage("m");
-                    else
-                        MainActivity.clientSocket.clientSendMessage("5");
-            }
-        });
-        ledControl.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(MainActivity.clientSocket !=null)
-                    if(isChecked)
-                        MainActivity.clientSocket.clientSendMessage("b");
-                    else
-                        MainActivity.clientSocket.clientSendMessage("e");
-            }
-        });
-        heatingControl.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(MainActivity.clientSocket !=null)
-                    if(isChecked)
-                        MainActivity.clientSocket.clientSendMessage("p");
-                    else
-                        MainActivity.clientSocket.clientSendMessage("s");
-            }
-        });
 
         handler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 try {
-                    Log.e("info", "control收到");
+                    refresh.setSelected(false);
+                    refresh.clearAnimation();
                     Bundle bundle = msg.getData();
                     String str = bundle.getString("info");
                     Log.e("info", str);
