@@ -1,22 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#EDF1F2">
+    android:layout_height="wrap_content"
+    android:background="#EDF1F2"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp"
+    android:paddingRight="10dp"
+    android:paddingLeft="10dp"
+    android:scrollbars="none">
 
-    <lecho.lib.hellocharts.view.LineChartView
-        android:id="@+id/lineChart_TAH"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
 
-    <lecho.lib.hellocharts.view.LineChartView
-        android:id="@+id/lineChart_light"
-        android:layout_width="match_parent"
-        android:layout_height="200dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/btn_round"
+            android:paddingLeft="5dp"
+            android:paddingTop="5dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="5dp">
+            <TextView
+                android:text="温度折线图"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"/>
+            <lecho.lib.hellocharts.view.LineChartView
+                android:id="@+id/lineChart_temp"
+                android:layout_width="match_parent"
+                android:layout_height="250dp" />
+        </LinearLayout>
 
-    <lecho.lib.hellocharts.view.LineChartView
-        android:layout_width="match_parent"
-        android:layout_height="200dp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            />
 
-</LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/btn_round"
+            android:paddingLeft="5dp"
+            android:paddingTop="5dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="5dp">
+            <TextView
+                android:text="湿度折线图"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"/>
+            <lecho.lib.hellocharts.view.LineChartView
+                android:id="@+id/lineChart_hum"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"  />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/btn_round"
+            android:paddingLeft="5dp"
+            android:paddingTop="5dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="5dp">
+            <TextView
+                android:text="土壤湿度折线图"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"/>
+            <lecho.lib.hellocharts.view.LineChartView
+                android:id="@+id/lineChart_soilHum"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"  />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/btn_round"
+            android:paddingLeft="5dp"
+            android:paddingTop="5dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="5dp">
+            <TextView
+                android:text="光强折线图"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"/>
+            <lecho.lib.hellocharts.view.LineChartView
+                android:id="@+id/lineChart_lux"
+                android:layout_width="match_parent"
+                android:layout_height="250dp" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
+

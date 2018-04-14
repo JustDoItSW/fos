@@ -12,6 +12,10 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fos.R;
 import com.fos.service.ClientSocket;
@@ -25,9 +29,9 @@ public class MainActivity extends AppCompatActivity {
     private android.support.v7.widget.Toolbar toolbar;
     private MyViewPager myViewPager;
     private MenuItem menuItem;
+    private LinearLayout menu_control,menu_data,menu_flower;
+    private TextView text_control,text_data,text_flower;
     private MyFragmentPagerAdapter myFragmentPagerAdapter;
-    private BottomNavigationView navigation;//底部控件
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
     private ViewPager.OnPageChangeListener onPageChangeListener ;
     private Intent intent;
     private MainService infomationService;
@@ -48,40 +52,29 @@ public class MainActivity extends AppCompatActivity {
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
             @Override
             public void onPageSelected(int position) {
-                if(menuItem != null){
-                    menuItem.setChecked(false);
-                }else{
-                    navigation.getMenu().getItem(0).setChecked(false);//默认为MessagFragment
+                switch (position){
+                    case 0:
+                        setAllSelected();
+                        text_control.setSelected(true);
+                        break;
+                    case 1:
+                        setAllSelected();
+                        text_data.setSelected(true);
+                        break;
+                    case 2:
+                        setAllSelected();
+                        text_flower.setSelected(true);
+                        break;
+
                 }
-                menuItem = navigation.getMenu().getItem(position);//跳转到相应的界面
-                menuItem.setChecked(true);
             }
             @Override
             public void onPageScrollStateChanged(int state) {}
         };
         //navigation的监听器
-        mOnNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.navigation_control:
-                        myViewPager.setCurrentItem(0);
-                        break;
-                    case R.id.navigation_data:
-                        myViewPager.setCurrentItem(1);
-                        break;
-                    case R.id.navigation_flower:
-                        myViewPager.setCurrentItem(2);
-                        break;
-                }
-                return true;
-            }
-        };
         myViewPager = (MyViewPager)findViewById(R.id.vp);
         myViewPager.addOnPageChangeListener(onPageChangeListener);
         setupViewPager();
-        navigation = (BottomNavigationView)findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         //  toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.myToolbar);
         //    setSupportActionBar(toolbar);
 
@@ -99,8 +92,46 @@ public class MainActivity extends AppCompatActivity {
         };
         startService(intent);//开启服务
         bindService(intent,serviceConnection, Context.BIND_AUTO_CREATE);//绑定服务
+        menu_control = (LinearLayout)findViewById(R.id.menu_control);
+        menu_data = (LinearLayout)findViewById(R.id.menu_data);
+        menu_flower = (LinearLayout)findViewById(R.id.menu_flower);
+        text_control =  (TextView)findViewById(R.id.text_control);
+        text_data =  (TextView)findViewById(R.id.text_data);
+        text_flower =  (TextView)findViewById(R.id.text_flower);
+
+        text_control.setSelected(true);
+        View.OnClickListener onClickListener  = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()){
+                    case R.id.menu_control:
+                        setAllSelected();
+                        text_control.setSelected(true);
+                        myViewPager.setCurrentItem(0);
+                        break;
+                    case R.id.menu_data:
+                        setAllSelected();
+                        text_data.setSelected(true);
+                        myViewPager.setCurrentItem(1);
+                        break;
+                    case R.id.menu_flower:
+                        setAllSelected();
+                        text_flower.setSelected(true);
+                        myViewPager.setCurrentItem(2);
+                        break;
+                }
+            }
+        };
+        menu_control.setOnClickListener(onClickListener);
+        menu_data.setOnClickListener(onClickListener);
+        menu_flower.setOnClickListener(onClickListener);
     }
 
+    private void setAllSelected(){
+        text_control.setSelected(false);
+        text_data.setSelected(false);
+        text_flower.setSelected(false);
+    }
     /**
      * 配置viewpager
      */

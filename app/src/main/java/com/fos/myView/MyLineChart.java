@@ -11,6 +11,7 @@ import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.PointValue;
+import lecho.lib.hellocharts.model.ValueShape;
 import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.view.LineChartView;
 
@@ -26,29 +27,35 @@ public class MyLineChart {
     public LineChartView lineChartView;
     public List<Line> lineList;
     public List<PointValue> pointValueList;
+    public List<AxisValue> axisXValueList,axisYValueList;
     public Axis axisX,axisY;
     public String sign;
-    private int count = 1;
+    public static int TOP,BOTTOM,LEFT,RIGHT;
+    private int count = 0;
 
-    /**
-     * 初始化view
-     * @param lCV
-     */
-    public void initLineChartView(LineChartView lCV,String sign){
+
+    public MyLineChart(int TOP,int BOTTOM,int LEFT,int RIGHT,LineChartView lCV,String sign){
+        this.TOP = TOP;
+        this.BOTTOM = BOTTOM;
+        this.LEFT = LEFT;
+        this.RIGHT = RIGHT;
+
         this.sign =  sign;
         lineChartView = lCV;
         lineChartData = new LineChartData();
         pointValueList = new ArrayList<>();
         lineList = new ArrayList<>();
+        axisXValueList = new ArrayList<>();
+        axisYValueList = new ArrayList<>();
         initAxisX();
         initAxisY();
         initLine();
         initDatas(lineList);
         lineChartView.setLineChartData(lineChartData);
         lineChartView.setBackgroundColor(Color.WHITE);
-        lineChartView.setMaximumViewport(initViewPort(50,-10,0,25));
-        lineChartView.setCurrentViewport(initViewPort(30,0,0,6));
-        moveViewPort(3,16);
+        lineChartView.setMaximumViewport(initViewPort(TOP,BOTTOM,LEFT,RIGHT));
+        lineChartView.setCurrentViewport(initViewPort(TOP,BOTTOM,0,30));
+        moveViewPort(15,16);
         lineChartView.setInteractive(true);
         lineChartView.setScrollEnabled(true);
         lineChartView.setValueTouchEnabled(false);
@@ -62,18 +69,28 @@ public class MyLineChart {
      */
     public void initAxisX(){
         axisX = new Axis();
-        axisX.setName("时间/h");
+   //     axisX.setName("时间");
         axisX.setTextColor(Color.rgb(181,179,170));
         axisX.setHasLines(true);
+       // axisX.setHasSeparationLine(true);
         axisX.setLineColor(Color.rgb(235,235,235));
-        List<AxisValue> axisValueList = new ArrayList<>();
-        for(int i = 1;i<=24;i++){
-            axisValueList.add(new AxisValue(i).setLabel(String.format("%02d",i)+":00"));
+
+        for(int i = 2;i<=300;i+=5){
+            axisXValueList.add(new AxisValue(i).setLabel(""));
         }
-        axisX.setValues(axisValueList);
+
+        axisX.setValues(axisXValueList);
         lineChartData.setAxisXBottom(axisX);
+    }
 
-
+    /**
+     * 设置X坐标
+     * @param date
+     */
+    public void setAxisXLabel(String date){
+        axisXValueList.get(count/5).setLabel(date);
+        axisX.setValues(axisXValueList);
+        lineChartData.setAxisXBottom(axisX);
     }
 
     /**
@@ -88,7 +105,6 @@ public class MyLineChart {
             axisValueList.add(new AxisValue(i).setLabel(i+""));
         }
         axisY.setValues(axisValueList);
-
   //      lineChartData.setAxisYLeft(axisY);
     }
 
@@ -121,17 +137,18 @@ public class MyLineChart {
 
     public void initLine(){
         List<PointValue> pointValueList = new ArrayList<>();
-        for(int i = 1;i<=24;){
+        for(int i = 1;i<=300;){
             pointValueList.add(new PointValue(i,25));
             i+=1;
         }
         Line line = new Line(pointValueList);
-        line.setFilled(true);
+ //       line.setFilled(true);
         line.setHasPoints(true);
-        line.setHasLabels(true);
+ //       line.setHasLabels(true);
         line.setPointColor(Color.WHITE);
+        line.setShape(ValueShape.SQUARE);
         line.setPointRadius(2);
-        line.setColor(Color.GRAY);
+        line.setColor(Color.parseColor("#b0b0b0"));
         line.setStrokeWidth(1);
         lineList.add(line);
     }
@@ -141,9 +158,9 @@ public class MyLineChart {
      * @param
      * @param color
      */
-    public void repaintView(int info,int color){
-        if(count<60) {
-            PointValue newPointValue = new PointValue(count, info);
+    public void repaintView(int info,String date,int color){
+        if(count<300) {
+            PointValue newPointValue = new PointValue(count+2, info);
             newPointValue.setLabel(info+sign);
             pointValueList.add(newPointValue);
 
@@ -165,15 +182,17 @@ public class MyLineChart {
             pointLine.setHasLines(false);
 
             lineList.add(pointLine);
-            lineChartData = initDatas(lineList);
-
+            lineChartData.setLines(lineList);
+            setAxisXLabel(date);
             lineChartView.setLineChartData(lineChartData);
-            moveViewPort(count,info);
-            count++;
 
+            moveViewPort(count,info);
+            count+=5;
         }else {
-            count = 1;
+            //重新绘制折线图
+            count = 2;
             pointValueList = new ArrayList<>();
+            axisXValueList = new ArrayList<>();
             lineList = new ArrayList<>();
             lineChartData = initDatas(null);
             lineChartView.setLineChartData(lineChartData);
@@ -186,9 +205,9 @@ public class MyLineChart {
      */
     public void  moveViewPort(float x,float y){
         Viewport viewport;
-        if(x<3)
+        if(x<15)
             lineChartView.moveToWithAnimation(3,y);
-        if(x>=3 && x<21){
+        if(x>=15 && x<285){
             lineChartView.moveToWithAnimation(x,y);
         }
     }
