@@ -84,11 +84,8 @@ public class ControlFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (MainActivity.clientSocket != null) {
-                    if(!v.isSelected()) {
                         MainActivity.clientSocket.clientSendMessage("i");
                         refresh.startAnimation(animation);
-                        v.setSelected(true);
-                    }
                 }
 
             }
@@ -164,7 +161,6 @@ public class ControlFragment extends Fragment {
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 try {
-                    refresh.setSelected(false);
                     refresh.clearAnimation();
                     Bundle bundle = msg.getData();
                     String str = bundle.getString("info");
