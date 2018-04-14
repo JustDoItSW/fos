@@ -1,115 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#EDF1F2"
-    android:paddingBottom="10dp"
-    android:paddingTop="10dp"
-    android:paddingRight="10dp"
-    android:paddingLeft="10dp"
-    android:scrollbars="none">
+    android:orientation="vertical"
+    android:background="#EDF1F2">
 
     <LinearLayout
+        android:id="@+id/menu_data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal"
+        android:background="#ffffff"
+        android:weightSum="1">
+
+        <TextView
+            android:id="@+id/menu_temp"
+            android:text="温度"
+            style = "@style/menu_data" />
+        <TextView
+            android:id="@+id/menu_hum"
+            android:text="湿度"
+            style = "@style/menu_data" />
+        <TextView
+            android:id="@+id/menu_soilHum"
+            android:text="土壤湿度"
+            style = "@style/menu_data" />
+        <TextView
+            android:id="@+id/menu_lux"
+            android:text="光强"
+            style = "@style/menu_data" />
+    </LinearLayout>
+
+    <com.fos.util.MyViewPager
+        android:id="@+id/vp_data"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/menu_data"
         >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/btn_round"
-            android:paddingLeft="5dp"
-            android:paddingTop="5dp"
-            android:paddingRight="5dp"
-            android:paddingBottom="5dp">
-            <TextView
-                android:text="温度折线图"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/white"/>
-            <lecho.lib.hellocharts.view.LineChartView
-                android:id="@+id/lineChart_temp"
-                android:layout_width="match_parent"
-                android:layout_height="250dp" />
-        </LinearLayout>
+    </com.fos.util.MyViewPager>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/btn_round"
-            android:paddingLeft="5dp"
-            android:paddingTop="5dp"
-            android:paddingRight="5dp"
-            android:paddingBottom="5dp">
-            <TextView
-                android:text="湿度折线图"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/white"/>
-            <lecho.lib.hellocharts.view.LineChartView
-                android:id="@+id/lineChart_hum"
-                android:layout_width="match_parent"
-                android:layout_height="250dp"  />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/btn_round"
-            android:paddingLeft="5dp"
-            android:paddingTop="5dp"
-            android:paddingRight="5dp"
-            android:paddingBottom="5dp">
-            <TextView
-                android:text="土壤湿度折线图"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/white"/>
-            <lecho.lib.hellocharts.view.LineChartView
-                android:id="@+id/lineChart_soilHum"
-                android:layout_width="match_parent"
-                android:layout_height="250dp"  />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/btn_round"
-            android:paddingLeft="5dp"
-            android:paddingTop="5dp"
-            android:paddingRight="5dp"
-            android:paddingBottom="5dp">
-            <TextView
-                android:text="光强折线图"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/white"/>
-            <lecho.lib.hellocharts.view.LineChartView
-                android:id="@+id/lineChart_lux"
-                android:layout_width="match_parent"
-                android:layout_height="250dp" />
-        </LinearLayout>
-    </LinearLayout>
-</ScrollView>
-
+</RelativeLayout>

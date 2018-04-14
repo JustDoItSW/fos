@@ -4,68 +4,67 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.fos.util.MyViewPager
-        android:id="@+id/vp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/menu_tab"
-        >
 
-    </com.fos.util.MyViewPager>
-    <View
-        android:id="@+id/blackView"
-        android:layout_width="match_parent"
-        android:layout_height="0.125dp"
-        android:layout_above="@id/menu_tab"
-        android:background="@android:color/darker_gray"/>
     <LinearLayout
         android:id="@+id/menu_tab"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
         android:orientation="horizontal"
-        android:background="@android:color/white"
+        android:background="#01c462"
         android:weightSum="1">
         <LinearLayout
             android:id="@+id/menu_control"
             android:layout_width="0dp"
-            android:layout_weight="0.33"
-            android:gravity="center"
+            android:layout_weight="0.375"
+            android:gravity="center|right"
             android:layout_height="wrap_content">
-            <TextView
+            <ImageView
                 android:id="@+id/text_control"
                 style="@style/tab_menu_text"
-                android:textSize="10dp"
-                android:drawableTop="@drawable/draw_control"
-                android:text="控制"/>
+                android:src="@drawable/draw_control"
+                />
         </LinearLayout>
         <LinearLayout
             android:id="@+id/menu_data"
             android:layout_width="0dp"
-            android:layout_weight="0.33"
+            android:layout_weight="0.25"
             android:gravity="center"
             android:layout_height="wrap_content">
-            <TextView
+            <ImageView
                 android:id="@+id/text_data"
-                android:text="数据"
-                android:textSize="10dp"
                 style="@style/tab_menu_text"
-                android:drawableTop="@drawable/draw_data"/>
+                android:src="@drawable/draw_data"/>
         </LinearLayout>
         <LinearLayout
             android:id="@+id/menu_flower"
             android:layout_width="0dp"
-            android:layout_weight="0.33"
-            android:gravity="center"
+            android:layout_weight="0.375"
+            android:gravity="center|left"
             android:layout_height="wrap_content">
-            <TextView
+            <ImageView
                 android:id="@+id/text_flower"
-                android:text="植物志"
-                android:textSize="10dp"
                 style="@style/tab_menu_text"
-                android:drawableTop="@drawable/draw_flower"/>
+                android:src="@drawable/draw_flower"/>
         </LinearLayout>
 
     </LinearLayout>
+
+    <!--<View-->
+        <!--android:id="@+id/blackView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0.125dp"-->
+        <!--android:layout_below="@id/menu_tab"-->
+        <!--android:background="@android:color/darker_gray"/>-->
+    <com.fos.util.MyViewPager
+        android:id="@+id/vp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/menu_tab"
+        >
+
+    </com.fos.util.MyViewPager>
+
+
 
 </RelativeLayout>

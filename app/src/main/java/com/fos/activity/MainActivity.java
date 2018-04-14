@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,9 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private android.support.v7.widget.Toolbar toolbar;
     private MyViewPager myViewPager;
-    private MenuItem menuItem;
-    private LinearLayout menu_control,menu_data,menu_flower;
-    private TextView text_control,text_data,text_flower;
+    private ImageView text_control,text_data,text_flower;
     private MyFragmentPagerAdapter myFragmentPagerAdapter;
     private ViewPager.OnPageChangeListener onPageChangeListener ;
     private Intent intent;
@@ -71,12 +70,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageScrollStateChanged(int state) {}
         };
-        //navigation的监听器
         myViewPager = (MyViewPager)findViewById(R.id.vp);
         myViewPager.addOnPageChangeListener(onPageChangeListener);
         setupViewPager();
-        //  toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.myToolbar);
-        //    setSupportActionBar(toolbar);
 
         intent = new Intent(MainActivity.this, MainService.class);
         serviceConnection = new ServiceConnection() {
@@ -92,29 +88,27 @@ public class MainActivity extends AppCompatActivity {
         };
         startService(intent);//开启服务
         bindService(intent,serviceConnection, Context.BIND_AUTO_CREATE);//绑定服务
-        menu_control = (LinearLayout)findViewById(R.id.menu_control);
-        menu_data = (LinearLayout)findViewById(R.id.menu_data);
-        menu_flower = (LinearLayout)findViewById(R.id.menu_flower);
-        text_control =  (TextView)findViewById(R.id.text_control);
-        text_data =  (TextView)findViewById(R.id.text_data);
-        text_flower =  (TextView)findViewById(R.id.text_flower);
+
+        text_control =  (ImageView)findViewById(R.id.text_control);
+        text_data =  (ImageView)findViewById(R.id.text_data);
+        text_flower =  (ImageView)findViewById(R.id.text_flower);
 
         text_control.setSelected(true);
         View.OnClickListener onClickListener  = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (v.getId()){
-                    case R.id.menu_control:
+                    case R.id.text_control:
                         setAllSelected();
                         text_control.setSelected(true);
                         myViewPager.setCurrentItem(0);
                         break;
-                    case R.id.menu_data:
+                    case R.id.text_data:
                         setAllSelected();
                         text_data.setSelected(true);
                         myViewPager.setCurrentItem(1);
                         break;
-                    case R.id.menu_flower:
+                    case R.id.text_flower:
                         setAllSelected();
                         text_flower.setSelected(true);
                         myViewPager.setCurrentItem(2);
@@ -122,9 +116,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-        menu_control.setOnClickListener(onClickListener);
-        menu_data.setOnClickListener(onClickListener);
-        menu_flower.setOnClickListener(onClickListener);
+        text_control.setOnClickListener(onClickListener);
+        text_data.setOnClickListener(onClickListener);
+        text_flower.setOnClickListener(onClickListener);
     }
 
     private void setAllSelected(){
