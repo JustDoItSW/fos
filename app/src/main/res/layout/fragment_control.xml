@@ -14,7 +14,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/black"/>
+            android:background="@android:color/white"/>
 
         <LinearLayout
             android:paddingBottom ="10dp"
@@ -39,6 +39,11 @@
                 android:id="@+id/watering"
                 style="@style/control_image"
                 android:background ="@drawable/watering"/>
+
+            <ImageView
+                android:id="@+id/nutrition"
+                style="@style/control_image"
+                android:background ="@drawable/nutrition"/>
 
             <ImageView
                 android:id="@+id/heating"
@@ -92,12 +97,6 @@
             android:orientation="horizontal"
             android:layout_alignParentBottom="true"
             >
-
-            <TextView
-                android:text="登录 "
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/white"/>
             <Switch
                 android:id="@+id/loginControl"
                 android:layout_width="wrap_content"
@@ -112,7 +111,7 @@
             <EditText
                 android:id="@+id/ip"
                 android:textSize="10dp"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
@@ -120,7 +119,7 @@
             <EditText
                 android:id="@+id/port"
                 android:textSize="10dp"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"

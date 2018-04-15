@@ -38,7 +38,7 @@ import com.github.onlynight.waveview.WaveView;
 public class ControlFragment extends Fragment {
     private Switch loginControl;
     private TextView text_temp,text_hum,text_soilHum,text_waterHigh,text_lux;
-    private ImageView refresh,light,watering,heating;
+    private ImageView refresh,light,watering,nutrition,heating;
     private WaveView waveView;
     private EditText ip,port;
     private Animation animation;
@@ -72,8 +72,9 @@ public class ControlFragment extends Fragment {
 
         light = (ImageView)view.findViewById(R.id.light);
         watering = (ImageView)view.findViewById(R.id.watering);
-        heating = (ImageView)view.findViewById(R.id.heating);
         refresh = (ImageView)view.findViewById(R.id.refresh);
+        heating = (ImageView)view.findViewById(R.id.heating);
+        nutrition = (ImageView)view.findViewById(R.id.nutrition);
 
         animation = AnimationUtils.loadAnimation(getActivity(), R.anim.refresh_aniamtion);
         lin = new LinearInterpolator();//设置动画匀速运动
@@ -115,6 +116,21 @@ public class ControlFragment extends Fragment {
                     }
                     else {
                         MainActivity.clientSocket.clientSendMessage("m");
+                        v.setSelected(true);
+                    }
+            }
+        });
+
+        nutrition.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(MainActivity.clientSocket !=null)
+                    if(v.isSelected()) {
+                        MainActivity.clientSocket.clientSendMessage("y");
+                        v.setSelected(false);
+                    }
+                    else {
+                        MainActivity.clientSocket.clientSendMessage("v");
                         v.setSelected(true);
                     }
             }
@@ -171,10 +187,10 @@ public class ControlFragment extends Fragment {
                     text_waterHigh.setText("水位 ：" + infomation.getWaterHigh() + "cm");
                     text_soilHum.setText("土湿 ：" + infomation.getSoilHumidity() + "%");
                     text_lux.setText("光强 ：" + infomation.getLux() + "l");
-                    DataFragment.myLineChart_hum.repaintView(Integer.parseInt(infomation.getHumidity()),infomation.getDate().toString(),Color.rgb(199, 232, 245));
-                    DataFragment.myLineChart_lux.repaintView(Integer.parseInt(infomation.getLux()),infomation.getDate().toString(),Color.rgb(246, 235, 188));
-                    DataFragment.myLineChart_soilHum.repaintView(Integer.parseInt(infomation.getSoilHumidity()),infomation.getDate().toString(),Color.rgb(199, 232, 245));
-                    DataFragment.myLineChart_temp.repaintView(Integer.parseInt(infomation.getTemperature()),infomation.getDate().toString(),Color.rgb(255, 150, 150));
+                    HumFragment.myLineChart.repaintView(Integer.parseInt(infomation.getHumidity()),infomation.getDate().toString(),Color.rgb(199, 232, 245));
+                    LuxFragment.myLineChart.repaintView(Integer.parseInt(infomation.getLux()),infomation.getDate().toString(),Color.rgb(246, 235, 188));
+                    SoilHumFragment.myLineChart.repaintView(Integer.parseInt(infomation.getSoilHumidity()),infomation.getDate().toString(),Color.rgb(199, 232, 245));
+                    TempFragment.myLineChart.repaintView(Integer.parseInt(infomation.getTemperature()),infomation.getDate().toString(),Color.rgb(255, 150, 150));
                 }catch(Exception e){
                     e.printStackTrace();
                 }
