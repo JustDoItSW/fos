@@ -7,14 +7,45 @@
     android:background="#EDF1F2"
     android:weightSum="1">
 
+    <LinearLayout
+        android:id="@+id/video_connecting_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/add_background"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/video_connecting_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
+            <TextView
+                android:id="@+id/video_connecting_text"
+                android:padding="20dp"
+                android:layout_width="fill_parent"
+                android:gravity="center"
+                android:hint="@string/device_connect_psk_hint"
+                android:textSize="@dimen/add_title_height"
+                android:textColor="@color/add_success_text"
+                android:text="@string/device_connectting_text"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+    </LinearLayout>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
-        <View
+        <com.demo.sdk.DisplayView
+            android:id="@+id/video_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/white"/>
+            android:layout_height="match_parent" />
 
         <LinearLayout
             android:paddingBottom ="10dp"

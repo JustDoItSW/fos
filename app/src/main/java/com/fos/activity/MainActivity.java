@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.fos.R;
 import com.fos.service.ClientSocket;
 import com.fos.service.MainService;
+import com.fos.util.LogUtil;
 import com.fos.util.MyFragmentPagerAdapter;
 import com.fos.util.MyViewPager;
 
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     public static ClientSocket clientSocket;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        LogUtil.i("MING","ThreradID="+Thread.currentThread().getName());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
