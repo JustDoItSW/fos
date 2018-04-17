@@ -10,6 +10,7 @@ import android.os.Message;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +49,7 @@ import com.github.onlynight.waveview.WaveView;
 public class ControlFragment extends Fragment {
     private Switch loginControl;
     private TextView text_temp,text_hum,text_soilHum,text_waterHigh,text_lux;
+    private TextView autoOrMan;
     private ImageView refresh,light,watering,nutrition,heating;
     private WaveView waveView;
     private EditText ip,port;
@@ -115,6 +117,7 @@ public class ControlFragment extends Fragment {
         refresh = (ImageView)view.findViewById(R.id.refresh);
         heating = (ImageView)view.findViewById(R.id.heating);
         nutrition = (ImageView)view.findViewById(R.id.nutrition);
+        autoOrMan = (TextView)view.findViewById(R.id.autoOrMan);
 
         animation = AnimationUtils.loadAnimation(getActivity(), R.anim.refresh_aniamtion);
         lin = new LinearInterpolator();//设置动画匀速运动
@@ -135,6 +138,7 @@ public class ControlFragment extends Fragment {
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (MainActivity.clientSocket != null) {
                         MainActivity.clientSocket.clientSendMessage("i");
                         refresh.startAnimation(animation);
@@ -206,20 +210,37 @@ public class ControlFragment extends Fragment {
         ip =  (EditText)view.findViewById(R.id.ip);
         port =  (EditText)view.findViewById(R.id.port);
 
-        ip.setText("192.168.191.1");
+        ip.setText("172.22.109.176");
         port.setText("8000");
         loginControl.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if(isChecked)
-                        if(MainActivity.clientSocket ==null){
-                            MainActivity.clientSocket  = new ClientSocket(ip.getText().toString(),Integer.parseInt(port.getText().toString()));
+                    if(isChecked) {
+                        if (MainActivity.clientSocket == null) {
+                            MainActivity.clientSocket = new ClientSocket(ip.getText().toString(), Integer.parseInt(port.getText().toString()));
                         }
-                    else
-                        if(MainActivity.clientSocket !=null){
+                    }
+                    else {
+                        if (MainActivity.clientSocket != null) {
                             MainActivity.clientSocket.closeClient();
-                            MainActivity.clientSocket  = null;
+                            MainActivity.clientSocket = null;
                         }
+                    }
+            }
+        });
+
+        autoOrMan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (MainActivity.clientSocket != null) {
+                    if(autoOrMan.getText().toString().equals("自动")){
+                        //   MainActivity.clientSocket.clientSendMessage("man");
+                        autoOrMan.setText("手动");
+                    }else{
+                        // MainActivity.clientSocket.clientSendMessage("auto");
+                        autoOrMan.setText("自动");
+                    }
+                }
             }
         });
 
@@ -228,20 +249,25 @@ public class ControlFragment extends Fragment {
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 try {
-                    refresh.clearAnimation();
-                    Bundle bundle = msg.getData();
-                    String str = bundle.getString("info");
-                    Log.e("info", str);
-                    Infomation infomation = InfomationAnalysis.jsonToBean(str);
-                    text_temp.setText("温度 ：" + infomation.getTemperature() + "℃");
-                    text_hum.setText("湿度 ：" + infomation.getHumidity() + "%");
-                    text_waterHigh.setText("水位 ：" + infomation.getWaterHigh() + "cm");
-                    text_soilHum.setText("土湿 ：" + infomation.getSoilHumidity() + "%");
-                    text_lux.setText("光强 ：" + infomation.getLux() + "l");
-                    HumFragment.myLineChart.repaintView(Integer.parseInt(infomation.getHumidity()),infomation.getDate().toString(),Color.rgb(199, 232, 245));
-                    LuxFragment.myLineChart.repaintView(Integer.parseInt(infomation.getLux()),infomation.getDate().toString(),Color.rgb(246, 235, 188));
-                    SoilHumFragment.myLineChart.repaintView(Integer.parseInt(infomation.getSoilHumidity()),infomation.getDate().toString(),Color.rgb(199, 232, 245));
-                    TempFragment.myLineChart.repaintView(Integer.parseInt(infomation.getTemperature()),infomation.getDate().toString(),Color.rgb(255, 150, 150));
+                    if(msg.what == 0x002){
+                        connectTimeOutDialog();
+                        loginControl.setChecked(false);
+                    }else {
+                        refresh.clearAnimation();
+                        Bundle bundle = msg.getData();
+                        String str = bundle.getString("info");
+                        Log.e("info", str);
+                        Infomation infomation = InfomationAnalysis.jsonToBean(str);
+                        text_temp.setText("温度 ：" + infomation.getTemperature() + "℃");
+                        text_hum.setText("湿度 ：" + infomation.getHumidity() + "%");
+                        text_waterHigh.setText("水位 ：" + infomation.getWaterHigh() + "cm");
+                        text_soilHum.setText("土湿 ：" + infomation.getSoilHumidity() + "%");
+                        text_lux.setText("光强 ：" + infomation.getLux() + "l");
+                        HumFragment.myLineChart.repaintView(Integer.parseInt(infomation.getHumidity()), infomation.getDate().toString(), Color.rgb(199, 232, 245));
+                        LuxFragment.myLineChart.repaintView(Integer.parseInt(infomation.getLux()), infomation.getDate().toString(), Color.rgb(246, 235, 188));
+                        SoilHumFragment.myLineChart.repaintView(Integer.parseInt(infomation.getSoilHumidity()), infomation.getDate().toString(), Color.rgb(199, 232, 245));
+                        TempFragment.myLineChart.repaintView(Integer.parseInt(infomation.getTemperature()), infomation.getDate().toString(), Color.rgb(255, 150, 150));
+                    }
                 }catch(Exception e){
                     e.printStackTrace();
                 }
@@ -252,7 +278,7 @@ public class ControlFragment extends Fragment {
     }
 
     void _startPlay(){
-        _videoConnectLayout.setVisibility(View.VISIBLE);
+        _videoConnectLayout.setVisibility(View.GONE);
         if(_deviceIp.equals("127.0.0.1")){
             if(_remoteTunnel1==null)
                 _remoteTunnel1=new RemoteTunnel(getActivity().getApplicationContext());
@@ -439,5 +465,13 @@ public class ControlFragment extends Fragment {
             _remoteTunnel1 = null;
         }
     }
+
+    public void connectTimeOutDialog (){
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());  //先得到构造器
+            builder.setMessage("当前无网络，请检查网络后重试！"); //设置内容
+            builder.create();
+            builder.create().show();
+    }
+
 
 }

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
 
+import com.fos.activity.MainActivity;
 import com.fos.fragment.ControlFragment;
 
 import java.io.BufferedReader;
@@ -11,8 +12,9 @@ import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.InetSocketAddress;
 import java.net.Socket;
-
+import java.net.SocketAddress;
 
 
 public class ClientSocket {
@@ -44,11 +46,17 @@ public class ClientSocket {
             public void run() {
                 try {
                     Log.e("info","开始连接");
-                    socket = new Socket(serverAddr, REDIRECTED_SERVERPORT);
+                //    socket = new Socket(serverAddr, REDIRECTED_SERVERPORT);
+                    socket = new Socket();
+                    SocketAddress socketAddress = new InetSocketAddress(serverAddr, REDIRECTED_SERVERPORT);
+                    socket.connect(socketAddress,5000);
                     Log.e("info","连接成功");
                     receiveMessage();
                 }catch (Exception e){
                     e.printStackTrace();
+                    Message msg = new Message();
+                    msg.what = 0x002;
+                    ControlFragment.handler.sendMessage(msg);
                 }
             }
         }.start();
@@ -85,6 +93,9 @@ public class ClientSocket {
                         }
                     }catch (Exception e){
                         e.printStackTrace();
+                        Message msg = new Message();
+                        msg.what = 0x002;
+                        ControlFragment.handler.sendMessage(msg);
                     }
                 }
         }.start();
@@ -96,8 +107,11 @@ public class ClientSocket {
                 try{
                     if(out!=null)
                         out.close();
-                    bufferedReader.close();
-                    socket.close();
+                    if(bufferedReader!=null)
+                        bufferedReader.close();
+                    if(socket!=null)
+                        socket.close();
+                    Log.e("info","断开连接");
                 }catch (Exception e){
                     e.printStackTrace();
                 }
