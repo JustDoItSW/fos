@@ -45,7 +45,7 @@ public class DataInfoDao {
     }
 
     /**
-     * 删除手机数据库所有天气数据
+     * 删除手机数据库所有数据
      */
     public void delete(){
         DataSupport.deleteAll(DataInfo.class,null,null);
