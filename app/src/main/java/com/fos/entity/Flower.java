@@ -16,6 +16,7 @@ public class Flower extends DataSupport {
     /**
      * 花朵图片路径
      */
+
     private String flowerImage;
     /**
      * 花朵名称
