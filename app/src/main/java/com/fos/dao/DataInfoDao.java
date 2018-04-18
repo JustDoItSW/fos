@@ -2,7 +2,7 @@ package com.fos.dao;
 
 import com.fos.util.LogUtil;
 
-import com.fos.database.DataInfo;
+import com.fos.entity.DataInfo;
 
 import org.litepal.crud.DataSupport;
 
@@ -14,7 +14,7 @@ import org.litepal.crud.DataSupport;
  **/
 public class DataInfoDao {
 
-    private static DataInfoDao instance;
+    private volatile static DataInfoDao instance;
 
     public static DataInfoDao getInstance(){
         if (instance == null){
@@ -31,7 +31,7 @@ public class DataInfoDao {
     }
 
     /**
-     * 保存手机数据库天气数据
+     * 保存数据
      * @return true 保存成功  false 保存失败
      */
     public boolean save(DataInfo dataInfo){
@@ -45,7 +45,7 @@ public class DataInfoDao {
     }
 
     /**
-     * 删除手机数据库所有天气数据
+     * 删除手机数据库所有数据
      */
     public void delete(){
         DataSupport.deleteAll(DataInfo.class,null,null);

@@ -1,8 +1,9 @@
 <litepal>
     <dbname value="fos"/>
-    <version value="1"/>
+    <version value="2"/>
 
     <list>
-        <mapping class="com.fos.database.DataInfo"/>
+        <mapping class="com.fos.entity.DataInfo"/>
+        <mapping class="com.fos.entity.Flower"/>
     </list>
 </litepal>

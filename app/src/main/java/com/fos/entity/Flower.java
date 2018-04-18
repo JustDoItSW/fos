@@ -1,13 +1,20 @@
 package com.fos.entity;
 
+import org.litepal.crud.DataSupport;
+
 /**
  * Created by Apersonalive on 2018/4/17.
  */
 
-public class Flower {
+public class Flower extends DataSupport {
 
     /**
-     * 花朵图片
+     * 植物ID
+     */
+    private String id;
+
+    /**
+     * 花朵图片路径
      */
     private String flowerImage;
     /**
@@ -22,10 +29,6 @@ public class Flower {
      *花朵温度
      */
     private String flowerTemp;
-    /**
-     *花朵湿度
-     */
-    private String flowerHum;
     /**
      *花朵土壤湿度
      */
@@ -71,14 +74,6 @@ public class Flower {
         this.flowerTemp = flowerTemp;
     }
 
-    public String getFlowerHum() {
-        return flowerHum;
-    }
-
-    public void setFlowerHum(String flowerHum) {
-        this.flowerHum = flowerHum;
-    }
-
     public String getFlowerSoilHum() {
         return flowerSoilHum;
     }
@@ -101,5 +96,12 @@ public class Flower {
 
     public void setFlowerInfo(String flowerInfo) {
         this.flowerInfo = flowerInfo;
+    }
+
+    public String getId() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
     }
 }
