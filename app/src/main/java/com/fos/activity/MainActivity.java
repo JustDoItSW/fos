@@ -7,19 +7,13 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.fos.R;
-import com.fos.service.ClientSocket;
+import com.fos.service.Client_phone;
 import com.fos.service.MainService;
 import com.fos.util.LogUtil;
 import com.fos.util.MyFragmentPagerAdapter;
@@ -37,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private MainService infomationService;
     private ServiceConnection serviceConnection;
     public static Handler  handler;
-    public static ClientSocket clientSocket;
+    public static Client_phone clientPhone;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         LogUtil.i("MING","ThreradID="+Thread.currentThread().getName());

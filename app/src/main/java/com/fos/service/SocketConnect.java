@@ -6,23 +6,29 @@ import android.util.Log;
 
 import com.fos.fragment.ControlFragment;
 
+import java.net.Socket;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.net.Socket;
 
+/**
+ * @author: cwxiong
+ * @e-mail: 1451780593@qq.com
+ * @Company: CSUFT
+ * @Description: 保留Socket TCP传输
+ * @date 2018/4/18 15:32
+ */
 
-
-public class ClientSocket {
+public class SocketConnect {
     public Socket socket;
     private String serverAddr ;
     private int REDIRECTED_SERVERPORT;
     private BufferedReader bufferedReader;
-    private static ClientSocket clientSocket;
+    private static SocketConnect clientPhone;
     private PrintWriter out;
-    public ClientSocket(String ip, int port){
+    public SocketConnect(String ip, int port){
         serverAddr = ip;
         REDIRECTED_SERVERPORT = port;
         Log.e("info",serverAddr+"   "+REDIRECTED_SERVERPORT);
@@ -30,10 +36,10 @@ public class ClientSocket {
     }
 
 
-//    public static ClientSocket newInstance() {
-//        if(clientSocket  ==  null)
-//            clientSocket = new ClientSocket();
-//        return clientSocket;
+//    public static SocketConnect newInstance() {
+//        if(clientPhone  ==  null)
+//            clientPhone = new SocketConnect();
+//        return clientPhone;
 //    }
 
 
@@ -89,7 +95,7 @@ public class ClientSocket {
                 }
         }.start();
     }
-    public void closeClient(){
+    public void close(){
         new Thread(){
             @Override
             public void run() {
@@ -103,7 +109,6 @@ public class ClientSocket {
                 }
             }
         }.start();
-
     }
 
 }

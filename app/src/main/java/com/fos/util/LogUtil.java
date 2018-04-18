@@ -26,6 +26,16 @@ public final class LogUtil {
         }
     }
 
+    /**
+     * 个人专用cwxiong
+     * @param info Logcat提示信息
+     */
+    public static void i(String info){
+        if(isPrint==true){
+            Log.i("MING", info);
+        }
+    }
+
     public static void v(String tag,String info){
         if (isPrint==true){
             Log.v(tag, info);

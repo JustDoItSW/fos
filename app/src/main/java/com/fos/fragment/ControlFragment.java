@@ -32,7 +32,7 @@ import com.demo.sdk.Player;
 import com.fos.R;
 import com.fos.activity.MainActivity;
 import com.fos.entity.Infomation;
-import com.fos.service.ClientSocket;
+import com.fos.service.Client_phone;
 import com.fos.util.InfomationAnalysis;
 import com.fos.util.LogUtil;
 import com.fos.util.RemoteTunnel;
@@ -135,8 +135,8 @@ public class ControlFragment extends Fragment {
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (MainActivity.clientSocket != null) {
-                        MainActivity.clientSocket.clientSendMessage("i");
+                if (MainActivity.clientPhone != null) {
+                        MainActivity.clientPhone.clientSendMessage("i");
                         refresh.startAnimation(animation);
                 }
 
@@ -145,13 +145,13 @@ public class ControlFragment extends Fragment {
         light.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(MainActivity.clientSocket !=null)
+                if(MainActivity.clientPhone !=null)
                     if(v.isSelected()) {
-                        MainActivity.clientSocket.clientSendMessage("e");
+                        MainActivity.clientPhone.clientSendMessage("e");
                         v.setSelected(false);
                     }
                     else {
-                        MainActivity.clientSocket.clientSendMessage("b");
+                        MainActivity.clientPhone.clientSendMessage("b");
                         v.setSelected(true);
                     }
             }
@@ -160,13 +160,13 @@ public class ControlFragment extends Fragment {
         watering.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(MainActivity.clientSocket !=null)
+                if(MainActivity.clientPhone !=null)
                     if(v.isSelected()) {
-                        MainActivity.clientSocket.clientSendMessage("5");
+                        MainActivity.clientPhone.clientSendMessage("5");
                         v.setSelected(false);
                     }
                     else {
-                        MainActivity.clientSocket.clientSendMessage("m");
+                        MainActivity.clientPhone.clientSendMessage("m");
                         v.setSelected(true);
                     }
             }
@@ -175,13 +175,13 @@ public class ControlFragment extends Fragment {
         nutrition.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(MainActivity.clientSocket !=null)
+                if(MainActivity.clientPhone !=null)
                     if(v.isSelected()) {
-                        MainActivity.clientSocket.clientSendMessage("y");
+                        MainActivity.clientPhone.clientSendMessage("y");
                         v.setSelected(false);
                     }
                     else {
-                        MainActivity.clientSocket.clientSendMessage("v");
+                        MainActivity.clientPhone.clientSendMessage("v");
                         v.setSelected(true);
                     }
             }
@@ -190,13 +190,13 @@ public class ControlFragment extends Fragment {
         heating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(MainActivity.clientSocket !=null)
+                if(MainActivity.clientPhone !=null)
                     if(v.isSelected()) {
-                        MainActivity.clientSocket.clientSendMessage("s");
+                        MainActivity.clientPhone.clientSendMessage("s");
                         v.setSelected(false);
                     }
                     else {
-                        MainActivity.clientSocket.clientSendMessage("p");
+                        MainActivity.clientPhone.clientSendMessage("p");
                         v.setSelected(true);
                     }
 
@@ -206,19 +206,19 @@ public class ControlFragment extends Fragment {
         ip =  (EditText)view.findViewById(R.id.ip);
         port =  (EditText)view.findViewById(R.id.port);
 
-        ip.setText("192.168.191.1");
+        ip.setText("192.168.23.1");
         port.setText("8000");
         loginControl.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if(isChecked)
-                        if(MainActivity.clientSocket ==null){
-                            MainActivity.clientSocket  = new ClientSocket(ip.getText().toString(),Integer.parseInt(port.getText().toString()));
+                        if(MainActivity.clientPhone ==null){
+                            MainActivity.clientPhone = new Client_phone(ip.getText().toString(),Integer.parseInt(port.getText().toString()));
                         }
                     else
-                        if(MainActivity.clientSocket !=null){
-                            MainActivity.clientSocket.closeClient();
-                            MainActivity.clientSocket  = null;
+                        if(MainActivity.clientPhone !=null){
+                            MainActivity.clientPhone.close();
+                            MainActivity.clientPhone = null;
                         }
             }
         });
