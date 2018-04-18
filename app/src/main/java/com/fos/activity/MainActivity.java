@@ -26,6 +26,7 @@ import com.fos.util.MyViewPager;
 
 public class MainActivity extends AppCompatActivity {
 
+
     private MyViewPager myViewPager;
     private ImageView left_menu,text_control,text_data,text_flower;
     private DrawerLayout dl;
@@ -60,8 +61,7 @@ public class MainActivity extends AppCompatActivity {
         text_control.setSelected(true);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);//不弹出输入法
         setupViewPager();//初始化viewpager
-        startService(intent);//开启服务
-        bindService(intent,serviceConnection, Context.BIND_AUTO_CREATE);//绑定服务
+
         //viewpager的监听器
         onPageChangeListener = new ViewPager.OnPageChangeListener() {
             @Override
@@ -153,6 +153,9 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        startService(intent);//开启服务
+        bindService(intent,serviceConnection, Context.BIND_AUTO_CREATE);//绑定服务
+
     }
 
     private void setAllSelected(){
