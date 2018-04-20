@@ -35,11 +35,25 @@
             style = "@style/menu_data" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/underLine_layout"
+        android:layout_below="@+id/menu_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/underLine_data"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:scaleType="matrix"
+            android:src ="@mipmap/ic_underline"/>
+    </LinearLayout>
+
     <com.fos.util.MyViewPager
         android:id="@+id/vp_data"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/menu_data"
+        android:layout_below="@+id/underLine_layout"
         >
 
     </com.fos.util.MyViewPager>

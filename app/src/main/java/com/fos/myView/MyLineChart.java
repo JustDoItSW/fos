@@ -153,7 +153,7 @@ public class MyLineChart {
     }
 
     /**
-     * 重绘折现
+     * 重绘折线
      * @param
      * @param color
      */

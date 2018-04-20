@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 使用NIO 无阻塞式TCP传输方式
  */
-public class Client_phone {
+public class Client_phone{
     private SocketChannel client;
     private Selector selctor = getSelector();
     /**
@@ -81,7 +81,7 @@ public class Client_phone {
                 while (run) {
                     try {
                         if (selctor.select(20) == 0) {
-                            LogUtil.i("MING"," 无通道可用");
+//                            LogUtil.i("MING"," 无通道可用");
                             continue;
                         }
                         LogUtil.i("MING"," 有通道可用");

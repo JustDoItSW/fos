@@ -1,4 +1,4 @@
-package com.fos.database;
+package com.fos.entity;
 
 import org.litepal.crud.DataSupport;
 
