@@ -5,58 +5,74 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="#EDF1F2">
-
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/menu_data"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:layout_alignParentTop="true"
-        android:orientation="horizontal"
-        android:background="#ffffff"
-        android:weightSum="1">
-
-        <TextView
-            android:id="@+id/menu_temp"
-            android:text="温度"
-            style = "@style/menu_data" />
-        <TextView
-            android:id="@+id/menu_hum"
-            android:text="湿度"
-            style = "@style/menu_data" />
-        <TextView
-            android:id="@+id/menu_soilHum"
-            android:text="土壤湿度"
-            style = "@style/menu_data" />
-        <TextView
-            android:id="@+id/menu_lux"
-            android:text="光强"
-            style = "@style/menu_data" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/underLine_layout"
-        android:layout_below="@+id/menu_data"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content">
+        <com.fos.util.SpringIndicator.SpringIndicator
+            android:id="@+id/indicator"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:siTextSize="18sp"
+            app:siIndicatorColors="@array/indicator_colors"
+            app:siTextColor="@color/colorPrimaryDark"
+            app:siSelectedTextColor="@android:color/white"
+            app:siIndicatorColor="@color/colorPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
+        </com.fos.util.SpringIndicator.SpringIndicator>
 
-        <ImageView
-            android:id="@+id/underLine_data"
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:scaleType="matrix"
-            android:src ="@mipmap/ic_underline"/>
-    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_alignParentTop="true"
+            android:orientation="horizontal"
+            android:background="@android:color/transparent"
+            android:weightSum="1">
+
+            <TextView
+                android:id="@+id/menu_temp"
+                android:text="温度"
+                style = "@style/menu_data" />
+            <TextView
+                android:id="@+id/menu_hum"
+                android:text="湿度"
+                style = "@style/menu_data" />
+            <TextView
+                android:id="@+id/menu_soilHum"
+                android:text="土壤湿度"
+                style = "@style/menu_data" />
+            <TextView
+                android:id="@+id/menu_lux"
+                android:text="光强"
+                style = "@style/menu_data" />
+        </LinearLayout>
+    </RelativeLayout>
+    <!--<LinearLayout-->
+        <!--android:id="@+id/underLine_layout"-->
+        <!--android:layout_below="@+id/menu_data"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
+
+        <!--<ImageView-->
+            <!--android:id="@+id/underLine_data"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:scaleType="matrix"-->
+            <!--android:src ="@mipmap/ic_underline"/>-->
+    <!--</LinearLayout>-->
 
     <com.fos.util.MyViewPager
         android:id="@+id/vp_data"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/underLine_layout"
+        android:layout_below="@+id/menu_data"
         >
-
     </com.fos.util.MyViewPager>
+
 
 
 </RelativeLayout>

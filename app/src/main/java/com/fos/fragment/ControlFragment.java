@@ -277,6 +277,9 @@ public class ControlFragment extends Fragment {
 
     }
 
+    /**
+     * 连接远程的服务器，服务器端口554，映射客户端端口5555
+     */
     void _startPlay(){
         _videoConnectLayout.setVisibility(View.GONE);
         if(_deviceIp.equals("127.0.0.1")){
@@ -381,6 +384,9 @@ public class ControlFragment extends Fragment {
             if(_player!=null)
                 _player.stop();
         }
+        /**
+         * 检测到断开进行重连
+         */
         updateState(_player.getState());
         final int id = android.os.Process.myUid();
         _lastTraffic = TrafficStats.getUidRxBytes(id);
@@ -395,7 +401,7 @@ public class ControlFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            //检测到断开进行重连
+
                             if(_player!=null){
                                 Log.e("Reconnect...","");
                                 if(_player.getState()== Enums.State.IDLE){
@@ -438,6 +444,10 @@ public class ControlFragment extends Fragment {
         _trafficThread.start();
     }
 
+    /**
+     * 更新视屏播放的状态
+     * @param state
+     */
     private void updateState(Enums.State state) {
         switch (state) {
             case IDLE:
@@ -454,7 +464,7 @@ public class ControlFragment extends Fragment {
     }
 
     /**
-     * Stop
+     * 关闭资源处理
      */
     void Stop(){
         _stopTraffic = true;

@@ -43,4 +43,7 @@ dependencies {
     compile(name: 'wisview.sdk', ext: 'aar')
     implementation files('libs/fastjson-1.1.68.android.jar')
     implementation files('libs/jason-all.jar')
+
+    compile 'com.github.chenupt.android:multiplemodel:1.1.0@aar'
+    compile 'com.google.guava:guava:18.0'
 }

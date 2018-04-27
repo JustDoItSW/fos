@@ -32,7 +32,12 @@ import com.fos.util.InfomationAnalysis;
 import com.fos.util.MyDataFragmentPagerAdapter;
 import com.fos.util.MyFragmentPagerAdapter;
 import com.fos.util.MyViewPager;
+import com.fos.util.SpringIndicator.SpringIndicator;
+import com.google.common.collect.Lists;
 
+import java.util.List;
+
+import github.chenupt.multiplemodel.viewpager.PagerModelManager;
 import lecho.lib.hellocharts.view.LineChartView;
 
 /**
@@ -43,7 +48,7 @@ import lecho.lib.hellocharts.view.LineChartView;
  */
 public class DataFragment extends Fragment {
     private View  view;
-    private ImageView underLine_data;
+//    private ImageView underLine_data;
     private int lineWidth;//下划线宽度
     private int offset =  0;//偏移量
     private int current_index ;
@@ -53,6 +58,9 @@ public class DataFragment extends Fragment {
     private TextView menu_temp,menu_hum,menu_soilHum,menu_lux;
     public static Handler handler;
     private static DataFragment dataFragment;
+
+    SpringIndicator springIndicator;
+
     public static DataFragment newInstance(){
         if(dataFragment == null )
             dataFragment = new DataFragment();
@@ -76,8 +84,8 @@ public class DataFragment extends Fragment {
         menu_hum = (TextView)view.findViewById(R.id.menu_hum);
         menu_soilHum = (TextView)view.findViewById(R.id.menu_soilHum);
         menu_lux = (TextView)view.findViewById(R.id.menu_lux);
-        underLine_data = (ImageView)view.findViewById(R.id.underLine_data);
-        initUnderLine();
+//        underLine_data = (ImageView)view.findViewById(R.id.underLine_data);
+//        initUnderLine();
 
         onPageChangeListener = new ViewPager.OnPageChangeListener() {
             int one =  offset*2+lineWidth;
@@ -85,12 +93,12 @@ public class DataFragment extends Fragment {
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
             @Override
             public void onPageSelected(int position) {
-                float fromX = one*current_index;
-                float toX = one*position;
-                Animation animation =  new TranslateAnimation(fromX,toX,0,0);
-                animation.setFillAfter(true);
-                animation.setDuration(500);
-                underLine_data.startAnimation(animation);
+//                float fromX = one*current_index;
+//                float toX = one*position;
+//                Animation animation =  new TranslateAnimation(fromX,toX,0,0);
+//                animation.setFillAfter(true);
+//                animation.setDuration(500);
+//                underLine_data.startAnimation(animation);
                 switch (position){
                     case 0:
                         setAllSelected();
@@ -119,6 +127,9 @@ public class DataFragment extends Fragment {
             public void onPageScrollStateChanged(int state) {}
         };
         myViewPager = (MyViewPager)view.findViewById(R.id.vp_data);
+
+        springIndicator=view.findViewById(R.id.indicator);
+
         myViewPager.addOnPageChangeListener(onPageChangeListener);
         setupViewPager();
 
@@ -163,21 +174,21 @@ public class DataFragment extends Fragment {
 
     }
 
-    private void initUnderLine(){
-        //lineWidth  = BitmapFactory.decodeResource(getResources(),R.mipmap.ic_underline).getWidth();
-
-        DisplayMetrics  dm   = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-        int screenW  = dm.widthPixels;
-        LinearLayout.LayoutParams params= (LinearLayout.LayoutParams) underLine_data.getLayoutParams();
-        params.width = screenW/4;
-        lineWidth  = screenW/4;
-        underLine_data.setLayoutParams(params);
-        offset = (screenW/4-lineWidth)/2;
-        Matrix matrix = new Matrix();
-        matrix.postTranslate(offset,0);
-        underLine_data.setImageMatrix(matrix);
-    }
+//    private void initUnderLine(){
+//        //lineWidth  = BitmapFactory.decodeResource(getResources(),R.mipmap.ic_underline).getWidth();
+//
+//        DisplayMetrics  dm   = new DisplayMetrics();
+//        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+//        int screenW  = dm.widthPixels;
+//        LinearLayout.LayoutParams params= (LinearLayout.LayoutParams) underLine_data.getLayoutParams();
+//        params.width = screenW/4;
+//        lineWidth  = screenW/4;
+//        underLine_data.setLayoutParams(params);
+//        offset = (screenW/4-lineWidth)/2;
+//        Matrix matrix = new Matrix();
+//        matrix.postTranslate(offset,0);
+//        underLine_data.setImageMatrix(matrix);
+//    }
     private void setCurrentTextView(TextView  textView){
 //        textView.setSelected(true);
 //        textView.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
@@ -193,7 +204,18 @@ public class DataFragment extends Fragment {
     private void setupViewPager(){
         myFragmentPagerAdapter = new MyDataFragmentPagerAdapter(getActivity().getSupportFragmentManager());
         myViewPager.setOffscreenPageLimit(4);//最大缓存三个Fragment
-        if(myFragmentPagerAdapter != null &&  myViewPager != null)
+//        PagerModelManager manager=new PagerModelManager();
+
+        if(myFragmentPagerAdapter != null &&  myViewPager != null) {
+//            manager.addCommonFragment(DataFragment.class,getTitles());
             myViewPager.setAdapter(myFragmentPagerAdapter);//设置适配器
+            myViewPager.fixScrollSpeed();
+            springIndicator.setViewPager(myViewPager);
+        }
+
     }
+
+//    private List<String> getTitles(){
+//        return Lists.newArrayList(menu_temp.getText().toString(),menu_hum.getText().toString(),menu_soilHum.getText().toString(),menu_lux.getText().toString());
+//    }
 }

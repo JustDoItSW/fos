@@ -14,6 +14,9 @@ import com.nabto.api.TunnelInfoResult;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 连接远程云服务
+ */
 
 public class RemoteTunnel {
 	private NabtoApi _nabtoApi;

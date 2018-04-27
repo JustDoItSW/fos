@@ -22,7 +22,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * 使用NIO 无阻塞式TCP传输方式
  */
-public class Client_phone{
+public class Client_phone {
+    public Client_phone client_phone=null;
     private SocketChannel client;
     private Selector selctor = getSelector();
     /**
