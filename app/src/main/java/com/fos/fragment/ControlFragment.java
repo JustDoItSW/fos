@@ -30,6 +30,7 @@ import com.demo.sdk.Controller;
 import com.demo.sdk.Enums;
 import com.demo.sdk.Module;
 import com.demo.sdk.Player;
+import com.demo.sdk.Scanner;
 import com.fos.R;
 import com.fos.activity.MainActivity;
 import com.fos.entity.Infomation;
@@ -38,6 +39,9 @@ import com.fos.util.InfomationAnalysis;
 import com.fos.util.LogUtil;
 import com.fos.util.RemoteTunnel;
 import com.github.onlynight.waveview.WaveView;
+
+import java.net.InetAddress;
+import java.util.Map;
 
 
 /**
@@ -63,13 +67,13 @@ public class ControlFragment extends Fragment {
     private KeyguardManager.KeyguardLock mKeyguardLock = null;
     private PowerManager pm;
     private PowerManager.WakeLock wakeLock;
-    public static String _deviceId="";
-    public static String _deviceIp="";
-    public static String _devicePsk="";
-    public static  int _decoderType=0;
-    public static  int _videoScreen=1;
-    public static int _devicePort=554;
-    public static int _fps=20;
+    private String _deviceId="";
+    private String _deviceIp="";
+    private String _devicePsk="";
+    private  int _decoderType=0;
+    private  int _videoScreen=1;
+    private int _devicePort=554;
+    private int _fps=20;
     private LinearLayout _videoConnectLayout;
     private TextView _videoConnecttingText;
     private ImageView _videoConnectingImg;
@@ -85,6 +89,7 @@ public class ControlFragment extends Fragment {
     private boolean _getTraffic = false;
     private boolean _stopTraffic = false;
     private int _connectTime=0;
+    private Scanner _scanner;
 
     public static ControlFragment newInstance(){
         if(controlFragment == null )
@@ -99,11 +104,33 @@ public class ControlFragment extends Fragment {
         init();
         waveView = (WaveView)view.findViewById(R.id.waveView1);
         waveView.start();
-        _startPlay();
         return view;
     }
 
     private void init(){
+
+        /**
+         * 扫描device IP,获得局域网IP或远程IP
+         */
+        _scanner=new Scanner(getContext());
+        _scanner.setOnScanOverListener(new Scanner.OnScanOverListener() {
+            @Override
+            public void onResult(Map<InetAddress, String> data, InetAddress inetAddress) {
+                LogUtil.i("ip.size()= "+data.entrySet().size()+" ip set= "+data.entrySet().toString());
+                if(data.size()!=0){
+                    for(Map.Entry<InetAddress,String> entry:data.entrySet()){
+                        _deviceIp=entry.getKey().getHostAddress();
+                    }
+                    LogUtil.i("onResult: wlan deviceIP= "+_deviceIp);
+                    _startPlay();
+                }else{
+                    _deviceIp="127.0.0.1";
+                    LogUtil.i("onResult: remote deviceIP= "+_deviceIp);
+                    _startPlay();
+                }
+            }
+        });
+
         loginControl = (Switch)view.findViewById(R.id.loginControl);
 
         text_temp = (TextView)view.findViewById(R.id.text_temp);
@@ -130,10 +157,9 @@ public class ControlFragment extends Fragment {
         _videoView.setFullScreen(true);
         _loadingAnimation = (AnimationDrawable)_videoConnectingImg.getBackground();
         _deviceId = "brexco.2.us.ytong.rakwireless.com";
-        _deviceIp = "127.0.0.1";
         _devicePsk = "admin";
         _fps = 20;
-
+        _scanner.scanAll();
 
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -283,6 +309,7 @@ public class ControlFragment extends Fragment {
     void _startPlay(){
         _videoConnectLayout.setVisibility(View.GONE);
         if(_deviceIp.equals("127.0.0.1")){
+            LogUtil.i("remote");
             if(_remoteTunnel1==null)
                 _remoteTunnel1=new RemoteTunnel(getActivity().getApplicationContext());
             _remoteTunnel1.openTunnel(1, 5555, 554, _deviceId);
@@ -310,6 +337,10 @@ public class ControlFragment extends Fragment {
                     }
                 }
             });
+        }else{
+            LogUtil.i("wlan");
+            _devicePort=554;
+            PlayVideo();
         }
     }
 
@@ -363,6 +394,7 @@ public class ControlFragment extends Fragment {
         if (_player.getState() == Enums.State.IDLE)
         {
             if(_deviceIp.equals("127.0.0.1")){
+                LogUtil.i("remote");
                 try {
                     _player.setImageSize(1920,1080);
                     if(_deviceId.equals("www.sunnyoptical.com")) {
@@ -376,6 +408,20 @@ public class ControlFragment extends Fragment {
                 }
                 catch (Exception e){
                     Log.e("====>","psk error");
+                }
+            }else{
+                LogUtil.i("wlan");
+                try{
+                    _player.setImageSize(1280,720);
+                    if(_deviceId.equals("www.sunnyoptical.com")){
+                        String url="rtsp://"+_deviceIp+"/live1.sdp";
+                        _player.playUrl(url,Enums.Transport.UDP);
+                    }
+                    else{
+                        _player.play(_pipe,Enums.Transport.UDP);
+                    }
+                }catch (Exception e){
+                    LogUtil.i("wlan error");
                 }
             }
         }
@@ -403,7 +449,7 @@ public class ControlFragment extends Fragment {
                         public void run() {
 
                             if(_player!=null){
-                                Log.e("Reconnect...","");
+                               LogUtil.i("Reconnect...Please wait!");
                                 if(_player.getState()== Enums.State.IDLE){
                                     _videoConnectLayout.setVisibility(View.VISIBLE);
                                     _player.stop();
@@ -415,6 +461,14 @@ public class ControlFragment extends Fragment {
                                         else{
                                             Log.i("MING", "PlayVideo: break and ReConnet");
                                             _player.play(_pipe, Enums.Transport.TCP);
+                                        }
+                                    }else{
+                                        if(_deviceId.equals("www.sunnyoptical.com")) {
+                                            String url="rtsp://"+_deviceIp+"/live1.sdp";
+                                            _player.playUrl(url,Enums.Transport.UDP);
+                                        }
+                                        else{
+                                            _player.play(_pipe,Enums.Transport.UDP);
                                         }
                                     }
                                 }
