@@ -4,5 +4,5 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="device_connect_psk_hint">默认密码\'admin\'</string>
-    <string name="device_connectting_text">正在加载中，很快就连接上了...</string>
+    <string name="device_connectting_text">正在加载中...</string>
 </resources>

@@ -1,5 +1,10 @@
 package com.fos.entity;
 
+import android.graphics.Bitmap;
+import android.util.Log;
+
+import com.fos.util.LoadImageUtil;
+
 import org.litepal.crud.DataSupport;
 
 /**
@@ -8,10 +13,11 @@ import org.litepal.crud.DataSupport;
 
 public class Flower extends DataSupport {
 
+    private  Bitmap image;
     /**
      * 植物ID
      */
-    private String id;
+    private String flowerId;
 
     /**
      * 花朵图片路径
@@ -46,6 +52,7 @@ public class Flower extends DataSupport {
     public String getFlowerImage() {
         return flowerImage;
     }
+
 
     public void setFlowerImage(String flowerImage) {
         this.flowerImage = flowerImage;
@@ -100,9 +107,9 @@ public class Flower extends DataSupport {
     }
 
     public String getId() {
-        return id;
+        return flowerId;
     }
     public void setId(String id) {
-        this.id = id;
+        this.flowerId = id;
     }
 }

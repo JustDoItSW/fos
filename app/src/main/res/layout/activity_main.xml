@@ -7,16 +7,19 @@
     android:background="@android:color/transparent">
 
     <RelativeLayout
+
         android:id="@+id/main_relativeLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
         <LinearLayout
             android:id="@+id/menu_tab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
+            android:paddingTop="15dp"
             android:orientation="horizontal"
-            android:background="#01c462"
+            android:background="#2ccaab"
             android:weightSum="1">
             <RelativeLayout
                 android:id="@+id/menu_control"
@@ -51,17 +54,18 @@
                     style="@style/tab_menu_text"
                     android:src="@drawable/draw_data"/>
             </LinearLayout>
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/menu_flower"
                 android:layout_width="0dp"
                 android:layout_weight="0.375"
-                android:gravity="center|left"
+
                 android:layout_height="wrap_content">
                 <ImageView
                     android:id="@+id/text_flower"
                     style="@style/tab_menu_text"
-                    android:src="@drawable/draw_flower"/>
-            </LinearLayout>
+                    android:src="@drawable/draw_flower"
+                    android:layout_alignParentLeft="true"/>
+            </RelativeLayout>
         </LinearLayout>
 
         <com.fos.util.MyViewPager
@@ -73,18 +77,48 @@
         </com.fos.util.MyViewPager>
     </RelativeLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/left_relativeLayout"
         android:layout_width="240dp"
         android:layout_gravity="start"
         android:layout_height="match_parent"
-        android:paddingTop="50dp"
-        android:background="@android:color/white">
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:weightSum="1">
 
-        <TextView
-            android:text="ceshi"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.3"
+
+            >
+            <!--<ImageView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:src="@mipmap/ic_leftbackground"/>-->
+            <ImageView
+                android:id="@+id/user_icon"
+                android:layout_marginLeft="10dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerVertical="true"
+                android:background="@drawable/round_view"/>
+
+            <TextView
+                android:text="Apersonalice"
+                android:layout_below="@+id/user_icon"
+                android:layout_marginLeft="10dp"
+                android:textColor="@android:color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/btn_selectFlower"
+            android:text="选择植物"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-    </RelativeLayout>
+
+    </LinearLayout>
 
 </android.support.v4.widget.DrawerLayout>

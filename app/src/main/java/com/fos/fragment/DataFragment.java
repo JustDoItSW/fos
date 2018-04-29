@@ -25,20 +25,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.fos.R;
-import com.fos.activity.MainActivity;
-import com.fos.entity.Infomation;
-import com.fos.myView.MyLineChart;
-import com.fos.util.InfomationAnalysis;
 import com.fos.util.MyDataFragmentPagerAdapter;
 import com.fos.util.MyFragmentPagerAdapter;
 import com.fos.util.MyViewPager;
 import com.fos.util.SpringIndicator.SpringIndicator;
-import com.google.common.collect.Lists;
 
 import java.util.List;
 
-import github.chenupt.multiplemodel.viewpager.PagerModelManager;
-import lecho.lib.hellocharts.view.LineChartView;
 
 /**
  * Created by Apersonalive（丁起柠） on 2018/3/28 23 43.

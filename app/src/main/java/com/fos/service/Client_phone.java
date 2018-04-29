@@ -2,9 +2,15 @@ package com.fos.service;
 
 import android.os.Bundle;
 import android.os.Message;
+
+import com.fos.entity.Flower;
+import com.fos.entity.Infomation;
 import com.fos.fragment.ControlFragment;
+import com.fos.fragment.FlowerFragment;
+import com.fos.util.InfomationAnalysis;
 import com.fos.util.LogUtil;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.ClosedChannelException;
@@ -119,13 +125,13 @@ public class Client_phone {
                                     tmp.rewind();
                                 }
                                 if (data.length > 0) {
-                                    String receiveData = new String(data);
-                                    LogUtil.i("MING","  read data: " + new String(data));
+                                    String receiveData = new String(data,"UTF-8");
+                                    LogUtil.i("MING","  read data: " + receiveData);
                                     recvHandler(receiveData);
                                 }
                             }
                         }
-                    } catch (IOException e1) {
+                    } catch (Exception e1) {
                         e1.printStackTrace();
                         close();
                     }
@@ -209,7 +215,7 @@ public class Client_phone {
             e1.printStackTrace();
         }
         messageQueue.add(data);
-        LogUtil.i("MING","  write data 1 messageQueue.size()="+messageQueue.size());
+        LogUtil.i("MING","data:"+data+"  write data 1 messageQueue.size()="+messageQueue.size());
 //        try {
 //            Thread.sleep(40);
 //        } catch (InterruptedException e) {
@@ -229,7 +235,18 @@ public class Client_phone {
         Bundle bundle = new Bundle();
         bundle.putString("info", str);
         msg.setData(bundle);
-        ControlFragment.handler.sendMessage(msg);
-        LogUtil.i("MING","control发送");
+        try {
+            if(InfomationAnalysis.judgeInfo(str) == null){
+                ControlFragment.handler.sendMessage(msg);
+            }else if(InfomationAnalysis.judgeInfo(str).equals("error")){
+                msg.what =  0x003;
+                FlowerFragment.handler.sendMessage(msg);
+            }else {
+                FlowerFragment.handler.sendMessage(msg);
+            }
+        }catch (Exception e ){
+            e.printStackTrace();
+        }
+        LogUtil.i("MING", "control发送");
     }
 }

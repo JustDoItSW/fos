@@ -38,7 +38,9 @@ import com.fos.service.Client_phone;
 import com.fos.util.InfomationAnalysis;
 import com.fos.util.LogUtil;
 import com.fos.util.RemoteTunnel;
-import com.github.onlynight.waveview.WaveView;
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.romainpiel.shimmer.Shimmer;
+import com.romainpiel.shimmer.ShimmerTextView;
 
 import java.net.InetAddress;
 import java.util.Map;
@@ -55,14 +57,15 @@ public class ControlFragment extends Fragment {
     private TextView text_temp,text_hum,text_soilHum,text_waterHigh,text_lux;
     private TextView autoOrMan;
     private ImageView refresh,light,watering,nutrition,heating;
-    private WaveView waveView;
+    private ShimmerTextView shimmerTextView;
+    private Shimmer  shimmer;
     private EditText ip,port;
     private Animation animation;
     private LinearInterpolator lin;
     public static Handler  handler;
     private static ControlFragment controlFragment;
     private View view;
-
+    private FloatingActionButton fab_light,fab_heating,fab_nut,fab_watering;
     private KeyguardManager mKeyguardManager = null;
     private KeyguardManager.KeyguardLock mKeyguardLock = null;
     private PowerManager pm;
@@ -75,9 +78,6 @@ public class ControlFragment extends Fragment {
     private int _devicePort=554;
     private int _fps=20;
     private LinearLayout _videoConnectLayout;
-    private TextView _videoConnecttingText;
-    private ImageView _videoConnectingImg;
-    private AnimationDrawable _loadingAnimation;
     private com.demo.sdk.DisplayView _videoView;
     private RemoteTunnel _remoteTunnel1=null;
     private static Module _module;
@@ -102,8 +102,6 @@ public class ControlFragment extends Fragment {
         LogUtil.i("MING","ThreradID="+Thread.currentThread().getName());
         view = inflater.inflate(R.layout.fragment_control,null,false);
         init();
-        waveView = (WaveView)view.findViewById(R.id.waveView1);
-        waveView.start();
         return view;
     }
 
@@ -145,17 +143,30 @@ public class ControlFragment extends Fragment {
         heating = (ImageView)view.findViewById(R.id.heating);
         nutrition = (ImageView)view.findViewById(R.id.nutrition);
         autoOrMan = (TextView)view.findViewById(R.id.autoOrMan);
+        fab_light =  (FloatingActionButton)view.findViewById(R.id.fab_light) ;
+        fab_heating =  (FloatingActionButton)view.findViewById(R.id.fab_heating) ;
+        fab_watering =  (FloatingActionButton)view.findViewById(R.id.fab_watering) ;
+        fab_nut =  (FloatingActionButton)view.findViewById(R.id.fab_nut) ;
+        fab_light.setOnClickListener(onClickListener);
+        fab_heating.setOnClickListener(onClickListener);
+        fab_watering.setOnClickListener(onClickListener);
+        fab_nut.setOnClickListener(onClickListener);
 
         animation = AnimationUtils.loadAnimation(getActivity(), R.anim.refresh_aniamtion);
         lin = new LinearInterpolator();//设置动画匀速运动
         animation.setInterpolator(lin);
 
         _videoConnectLayout=view.findViewById(R.id.video_connecting_layout);
-        _videoConnecttingText=view.findViewById(R.id.video_connecting_text);
-        _videoConnectingImg=view.findViewById(R.id.video_connecting_img);
+        shimmerTextView=view.findViewById(R.id.video_connecting_text);
+        toggleAnimation(shimmerTextView);
         _videoView=view.findViewById(R.id.video_view);
+        _videoView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.menu_tab.setVisibility(MainActivity.menu_tab.getVisibility()== View.GONE?View.VISIBLE:View.GONE);
+            }
+        });
         _videoView.setFullScreen(true);
-        _loadingAnimation = (AnimationDrawable)_videoConnectingImg.getBackground();
         _deviceId = "brexco.2.us.ytong.rakwireless.com";
         _devicePsk = "admin";
         _fps = 20;
@@ -283,7 +294,7 @@ public class ControlFragment extends Fragment {
                         Bundle bundle = msg.getData();
                         String str = bundle.getString("info");
                         Log.e("info", str);
-                        Infomation infomation = InfomationAnalysis.jsonToBean(str);
+                        Infomation infomation = InfomationAnalysis.jsonToData(str);
                         text_temp.setText("温度 ：" + infomation.getTemperature() + "℃");
                         text_hum.setText("湿度 ：" + infomation.getHumidity() + "%");
                         text_waterHigh.setText("水位 ：" + infomation.getWaterHigh() + "cm");
@@ -299,15 +310,74 @@ public class ControlFragment extends Fragment {
                 }
             }
         };
+    }
 
-
+    View.OnClickListener onClickListener= new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case  R.id.fab_light:
+                    if(MainActivity.Client_phone !=null)
+                        if(fab_light.isSelected()) {
+                            MainActivity.Client_phone.clientSendMessage("e");
+                            fab_light.setSelected(false);
+                        }
+                        else {
+                            MainActivity.Client_phone.clientSendMessage("b");
+                            fab_light.setSelected(true);
+                        }
+                        break;
+                case R.id.fab_watering:
+                    if(MainActivity.Client_phone !=null)
+                        if(fab_watering.isSelected()) {
+                            MainActivity.Client_phone.clientSendMessage("5");
+                            fab_watering.setSelected(false);
+                        }
+                        else {
+                            MainActivity.Client_phone.clientSendMessage("m");
+                            fab_watering.setSelected(true);
+                        }
+                        break;
+                case R.id.fab_heating:
+                    if(MainActivity.Client_phone !=null)
+                        if(fab_heating.isSelected()) {
+                            MainActivity.Client_phone.clientSendMessage("s");
+                            fab_heating.setSelected(false);
+                        }
+                        else {
+                            MainActivity.Client_phone.clientSendMessage("p");
+                            fab_heating.setSelected(true);
+                        }
+                        break;
+                case R.id.fab_nut:
+                    if(MainActivity.Client_phone !=null)
+                        if(fab_nut.isSelected()) {
+                            MainActivity.Client_phone.clientSendMessage("y");
+                            fab_nut.setSelected(false);
+                        }
+                        else {
+                            MainActivity.Client_phone.clientSendMessage("v");
+                            fab_nut.setSelected(true);
+                        }
+                        break;
+            }
+        }
+    };
+    public void toggleAnimation(ShimmerTextView target) {
+        if (shimmer != null && shimmer.isAnimating()) {
+            shimmer.cancel();
+        } else {
+            shimmer = new Shimmer();
+            shimmer.setDuration(3000);
+            shimmer.start(target);
+        }
     }
 
     /**
      * 连接远程的服务器，服务器端口554，映射客户端端口5555
      */
     void _startPlay(){
-        _videoConnectLayout.setVisibility(View.GONE);
+        _videoConnectLayout.setVisibility(View.VISIBLE);
         if(_deviceIp.equals("127.0.0.1")){
             LogUtil.i("remote");
             if(_remoteTunnel1==null)

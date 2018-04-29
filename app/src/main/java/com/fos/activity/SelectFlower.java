@@ -1,98 +1,81 @@
-package com.fos.fragment;
+package com.fos.activity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.media.Image;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.fos.R;
-import com.fos.activity.FlowerInfo;
-import com.fos.activity.MainActivity;
-import com.fos.activity.SelectFlower;
 import com.fos.dao.FlowerDao;
 import com.fos.entity.Flower;
 import com.fos.util.InfomationAnalysis;
-import com.fos.util.LoadImageUtil;
 import com.fos.util.MyListViewAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-/**
- * Created by Apersonalive（丁起柠） on 2018/3/28 23 43.
- * Project_name TianShow
- * Package_name dqn.demo.com.tianshow.MyFragment
- * Email 745267209@QQ.com
- */
-public class FlowerFragment extends Fragment {
-    private View view;
+public class SelectFlower extends AppCompatActivity {
+
+    private RelativeLayout exit_selectFlower;
     private ListView listView;
-    private LinearLayout layout_notFind;
-    private TextView text_notFind;
-
-    private EditText edit_search;
-    private FlowerDao flowerDao;
-    private ImageView delSearch;
+    private LinearLayout layout_notFind_select;
+    private TextView text_notFind_select;
     private Flower[] flowers;
+    private EditText edit_search_select;
+    private FlowerDao flowerDao;
+    private ImageView delSearch_select;
     private List<Flower> data;//数据源
     private Map<String,Object> item;//数据项;
     private MyListViewAdapter myListViewAdapter;
     public static Handler handler;
-    private static FlowerFragment flowerFragment;
-    public static FlowerFragment newInstance(){
-        if(flowerFragment == null )
-            flowerFragment = new FlowerFragment();
-        return flowerFragment;
-    }
-
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_flower,null,false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_select_flower);
         init();
         initData();
         initListView();
-        return view;
     }
 
-    private void init(){
+    public void init(){
+        exit_selectFlower = (RelativeLayout)findViewById(R.id.exit_selectFlower);
+        exit_selectFlower.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         data = new ArrayList<Flower>();//存放数据
-        listView = (ListView)view.findViewById(R.id.list_flowerData);
-        layout_notFind  =(LinearLayout)view.findViewById(R.id.layout_notFind);
-        text_notFind = (TextView)view.findViewById(R.id.text_notFind);
-        delSearch =(ImageView)view.findViewById(R.id.delSearch);
-        edit_search = (EditText)view.findViewById(R.id.edit_search);
-        edit_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        listView = (ListView)findViewById(R.id.list_flowerSelect);
+        layout_notFind_select  =(LinearLayout)findViewById(R.id.layout_notFind_select);
+        text_notFind_select = (TextView)findViewById(R.id.text_notFind_select);
+        delSearch_select =(ImageView)findViewById(R.id.delSearch_select);
+        edit_search_select = (EditText)findViewById(R.id.edit_search_select);
+        edit_search_select.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                String flowerName = edit_search.getText().toString();
+                String flowerName = edit_search_select.getText().toString();
                 if (!flowerName.equals("")) {
                     if (MainActivity.Client_phone != null) {
-                        if (actionId==EditorInfo.IME_ACTION_SEARCH) {
+                        if (actionId== EditorInfo.IME_ACTION_SEARCH) {
                             MainActivity.Client_phone.clientSendMessage("search" + flowerName);
                         }
                     }
@@ -100,7 +83,7 @@ public class FlowerFragment extends Fragment {
                 return false;
             }
         });
-        edit_search.addTextChangedListener(new TextWatcher() {
+        edit_search_select.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -114,34 +97,29 @@ public class FlowerFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 if(s.length() == 0){
-                    delSearch.setVisibility(View.GONE);
+                    delSearch_select.setVisibility(View.GONE);
                     updateData();
                     myListViewAdapter.notifyDataSetChanged();
                 }
                 else{
-                    delSearch.setVisibility(View.VISIBLE);
+                    delSearch_select.setVisibility(View.VISIBLE);
                     if (MainActivity.Client_phone != null) {
-                            MainActivity.Client_phone.clientSendMessage("search" + edit_search.getText());
+                        MainActivity.Client_phone.clientSendMessage("search" + edit_search_select.getText());
                     }else{
-                        searchFlower(edit_search.getText().toString());
+                        searchFlower(edit_search_select.getText().toString());
                     }
-
                 }
             }
         });
-        delSearch.setOnClickListener(new View.OnClickListener() {
+        delSearch_select.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                edit_search.setText("");
+                edit_search_select.setText("");
                 updateData();
                 myListViewAdapter.notifyDataSetChanged();
             }
         });
         flowerDao  = FlowerDao.getInstance();
-       //flowerDao.delAll();
-
-
-
 
         handler = new Handler(){
             @Override
@@ -150,13 +128,13 @@ public class FlowerFragment extends Fragment {
                 Bundle bundle = msg.getData();
                 String str = bundle.getString("info");
                 if(msg.what == 0x003){
-                    searchFlower(edit_search.getText().toString());
+                    searchFlower(edit_search_select.getText().toString());
                     Log.e("info","植物不存在");
                 }else {
                     Flower[] flower = InfomationAnalysis.jsonToFlower(str);
                     flowerDao.insertFlower(flower);
                     updateData();
-                    searchFlower(edit_search.getText().toString());
+                    searchFlower(edit_search_select.getText().toString());
                 }
             }
         };
@@ -171,11 +149,10 @@ public class FlowerFragment extends Fragment {
         }
     }
     private void initListView(){
-        myListViewAdapter  =  new MyListViewAdapter(getActivity(),R.layout.layout_flowerlist,data);
+        myListViewAdapter  =  new MyListViewAdapter(SelectFlower.this,R.layout.layout_flowerlist,data);
         listView.setAdapter(myListViewAdapter);
         listView.setOnItemClickListener(listViewOnItemClickListener());
     }
-
 
     /**
      * 更新数据源
@@ -184,14 +161,13 @@ public class FlowerFragment extends Fragment {
         data.clear();
         Flower[] flowers = flowerDao.getAllFlower();
         listView.setVisibility(View.VISIBLE);
-        layout_notFind.setVisibility(View.GONE);
+        layout_notFind_select.setVisibility(View.GONE);
         if(flowers!=null) {
             for (int i = 0; i < flowers.length; i++) {
                 data.add(flowers[i]);
             }
         }
     }
-
     /**
      * 搜索植物
      * @param str
@@ -201,17 +177,16 @@ public class FlowerFragment extends Fragment {
         Flower[] flowers  = flowerDao.searchFlower(str);
         if(flowers!=null){
             listView.setVisibility(View.VISIBLE);
-            layout_notFind.setVisibility(View.GONE);
+            layout_notFind_select.setVisibility(View.GONE);
             for(int i= 0;i < flowers.length;i++){
                 data.add(flowers[i]);
             }
         }
         else{
             listView.setVisibility(View.GONE);
-            layout_notFind.setVisibility(View.VISIBLE);
+            layout_notFind_select.setVisibility(View.VISIBLE);
         }
         myListViewAdapter.notifyDataSetChanged();
-        listView.setOnItemClickListener(listViewOnItemClickListener());
     }
 
     private AdapterView.OnItemClickListener listViewOnItemClickListener(){
@@ -227,11 +202,12 @@ public class FlowerFragment extends Fragment {
                 Bundle  bundle = new Bundle();
                 bundle.putString("flowerName",str);
                 bundle.putBoolean("isSelect",false);
-                Intent intent = new Intent(getContext(),FlowerInfo.class);
+                Intent intent = new Intent(SelectFlower.this,FlowerInfo.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
         };
         return onItemClickListener;
     }
+
 }

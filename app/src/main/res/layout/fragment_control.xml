@@ -4,78 +4,89 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="#EDF1F2"
+    android:background="#EeF2F3"
     android:weightSum="1">
 
-    <LinearLayout
-        android:id="@+id/video_connecting_layout"
-        android:layout_width="10dp"
-        android:layout_height="10dp"
-        android:background="@color/add_background"
-        android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="vertical">
-            <ImageView
-                android:id="@+id/video_connecting_img"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                />
 
-            <TextView
-                android:id="@+id/video_connecting_text"
-                android:padding="20dp"
-                android:layout_width="fill_parent"
-                android:gravity="center"
-                android:hint="@string/device_connect_psk_hint"
-                android:textSize="@dimen/add_title_height"
-                android:textColor="@color/add_success_text"
-                android:text="@string/device_connectting_text"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
 
-    </LinearLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
-        <RelativeLayout
-            android:id="@+id/waveView_layout"
-            android:layout_width="3dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_gravity="center|right"
-
-
-            >
-            <com.github.onlynight.waveview.WaveView
-                android:id="@+id/waveView1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:isCircle="false"
-                app:period="2"
-                app:waveHeightPercent="0.5"
-                app:waveRange="1dp"
-                app:waveSpeed="5"
-                app:waveStrokeWidth="1dp"/>
-            <!--<TextView-->
-                <!--android:id="@+id/text1111"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:gravity="center"-->
-                <!--android:text="0.0%"-->
-                <!--android:textColor="@android:color/white"-->
-                <!--android:textSize="10dp"/>-->
-        </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/video_connecting_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical">
+            <com.romainpiel.shimmer.ShimmerTextView
+                android:id="@+id/video_connecting_text"
+                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:hint="@string/device_connect_psk_hint"
+                android:textSize="@dimen/add_title_height"
+                android:text="@string/device_connectting_text"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
         <com.demo.sdk.DisplayView
             android:id="@+id/video_view"
+            android:scaleType="centerCrop"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+        <com.getbase.floatingactionbutton.FloatingActionsMenu
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_addButtonSize="mini"
+            app:fab_expandDirection="up"
+            app:fab_addButtonColorNormal="@color/white"
+            app:fab_addButtonColorPressed="@color/press_white"
+            app:fab_labelStyle="@style/fab_label"
+            app:fab_addButtonPlusIconColor="#808080">
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fab_colorNormal="@color/white"
+                app:fab_colorPressed="@color/press_white"
+                app:fab_size="mini"
+                android:src="@drawable/light"
+                app:fab_title="光强："/>
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_watering"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fab_colorNormal="@color/white"
+                app:fab_colorPressed="@color/press_white"
+                app:fab_size="mini"
+                android:src="@drawable/watering"
+                app:fab_title="湿度："/>
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_heating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fab_colorNormal="@color/white"
+                app:fab_colorPressed="@color/press_white"
+                app:fab_size="mini"
+                android:src="@drawable/heating"
+                app:fab_title="温度："/>
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_nut"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fab_colorNormal="@color/white"
+                app:fab_colorPressed="@color/press_white"
+                app:fab_size="mini"
+                android:src="@drawable/nutrition"
+                app:fab_title="肥力："/>
+        </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+
 
         <LinearLayout
+            android:visibility="gone"
             android:paddingBottom ="10dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
@@ -89,7 +100,18 @@
                 android:id="@+id/refresh"
                 style="@style/control_image"
                 android:background ="@mipmap/ic_refresh"/>
-
+            <ImageView
+                android:id="@+id/voice"
+                style="@style/control_image"
+                android:background ="@drawable/voice"/>
+            <ImageView
+                android:id="@+id/photo"
+                style="@style/control_image"
+                android:background ="@mipmap/ic_photo"/>
+            <ImageView
+                android:id="@+id/record"
+                style="@style/control_image"
+                android:background ="@mipmap/ic_record"/>
             <ImageView
                 android:id="@+id/light"
                 style="@style/control_image"
@@ -119,7 +141,7 @@
 
         </LinearLayout>
         <LinearLayout
-            android:layout_toRightOf="@+id/waveView_layout"
+            android:visibility="gone"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"

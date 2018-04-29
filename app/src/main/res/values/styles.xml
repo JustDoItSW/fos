@@ -4,8 +4,8 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#ffffff</item>
-        <item name="colorPrimaryDark">#01c462</item>
-        <item name="colorAccent">#01C462</item>
+        <item name="colorPrimaryDark">#2ccaab</item>
+        <item name="colorAccent">#2ccaab</item>
     </style>
 
     <style name="tab_menu_text">
@@ -31,11 +31,17 @@
         <item name="android:textColor">#C0C0C0</item>
     </style>
 
-    <style name="control_image">
+    <style name="control_image" >
         <item name="android:layout_width">25dp</item>
         <item name="android:layout_height">25dp</item>
         <item name="android:layout_marginTop">20dp</item>
         <item name="android:layout_marginRight">15dp</item>
+    </style>
+
+
+    <style name="fab_label">
+        <item  name="android:textColor">#c0c0c0</item>
+
     </style>
 
 </resources>

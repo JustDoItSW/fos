@@ -1,6 +1,6 @@
 <litepal>
     <dbname value="fos"/>
-    <version value="2"/>
+    <version value="4"/>
 
     <list>
         <mapping class="com.fos.entity.DataInfo"/>
