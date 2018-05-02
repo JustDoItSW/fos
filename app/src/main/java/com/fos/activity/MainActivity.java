@@ -156,7 +156,6 @@ public class MainActivity extends AppCompatActivity {
                         setAllSelected();
                         text_control.setSelected(true);
                         myViewPager.setCurrentItem(0);
-
                         break;
                     case R.id.text_data:
                         setAllSelected();
