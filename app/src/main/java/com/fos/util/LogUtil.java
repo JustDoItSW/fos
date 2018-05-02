@@ -32,7 +32,7 @@ public final class LogUtil {
      */
     public static void i(String info){
         if(isPrint==true){
-            Log.i("MING", info);
+            Log.i("DING", info);
         }
     }
 

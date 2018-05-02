@@ -25,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.fos.R;
+import com.fos.util.LoadImageUtil;
 import com.fos.util.MyDataFragmentPagerAdapter;
 import com.fos.util.MyFragmentPagerAdapter;
 import com.fos.util.MyViewPager;
@@ -41,7 +42,7 @@ import java.util.List;
  */
 public class DataFragment extends Fragment {
     private View  view;
-//    private ImageView underLine_data;
+     private ImageView underLine_data;
     private int lineWidth;//下划线宽度
     private int offset =  0;//偏移量
     private int current_index ;
@@ -77,8 +78,9 @@ public class DataFragment extends Fragment {
         menu_hum = (TextView)view.findViewById(R.id.menu_hum);
         menu_soilHum = (TextView)view.findViewById(R.id.menu_soilHum);
         menu_lux = (TextView)view.findViewById(R.id.menu_lux);
-//        underLine_data = (ImageView)view.findViewById(R.id.underLine_data);
-//        initUnderLine();
+        underLine_data = (ImageView)view.findViewById(R.id.testimage);
+        LoadImageUtil.onLoadImage(underLine_data,"http://192.168.191.2:8080/images/f41.jpg");
+
 
         onPageChangeListener = new ViewPager.OnPageChangeListener() {
             int one =  offset*2+lineWidth;
@@ -86,12 +88,6 @@ public class DataFragment extends Fragment {
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
             @Override
             public void onPageSelected(int position) {
-//                float fromX = one*current_index;
-//                float toX = one*position;
-//                Animation animation =  new TranslateAnimation(fromX,toX,0,0);
-//                animation.setFillAfter(true);
-//                animation.setDuration(500);
-//                underLine_data.startAnimation(animation);
                 switch (position){
                     case 0:
                         setAllSelected();

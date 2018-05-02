@@ -28,15 +28,22 @@ public class InfomationAnalysis {
     }
 
     public  static Infomation jsonToData(String info){
-        Infomation i = JSON.parseObject(info,Infomation.class);
-        return i;
+        if(info!=null) {
+            Infomation i = JSON.parseObject(info, Infomation.class);
+            return i;
+        }else{
+            return null;
+        }
     }
     public static  String  judgeInfo(String info){
         try {
-
-            JSONArray myJsonArray = JSONArray.parseArray(info);
-            String str = JSONObject.parseObject(myJsonArray.get(0).toString(),Flower.class).getFlowerName();
-            return str;
+            if(info!=null) {
+                JSONArray myJsonArray = JSONArray.parseArray(info);
+                String str = JSONObject.parseObject(myJsonArray.get(0).toString(), Flower.class).getFlowerName();
+                return str;
+            }
+            else
+                return null;
         }catch (Exception  e){
             e.printStackTrace();
             return null;
@@ -45,13 +52,18 @@ public class InfomationAnalysis {
 
     public  static Flower[] jsonToFlower(String info){
         try {
-            Log.e("info","开始解析植物");
-            JSONArray myJsonArray = JSONArray.parseArray(info);
-            Flower[] flowers = new Flower[myJsonArray.size()];
-            for(int i =  0;i<myJsonArray.size();i++){
-                flowers[i] = JSONObject.parseObject(myJsonArray.get(i).toString(),Flower.class);
+            if(info!= null) {
+                Log.e("info", "开始解析植物");
+                JSONArray myJsonArray = JSONArray.parseArray(info);
+                Flower[] flowers = new Flower[myJsonArray.size()];
+                for (int i = 0; i < myJsonArray.size(); i++) {
+                    flowers[i] = JSONObject.parseObject(myJsonArray.get(i).toString(), Flower.class);
+                }
+                return flowers;
             }
-            return flowers;
+            else{
+                return null;
+            }
         }catch (Exception e){
             e.printStackTrace();
         }

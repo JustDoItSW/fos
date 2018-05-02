@@ -138,7 +138,7 @@ public class FlowerFragment extends Fragment {
             }
         });
         flowerDao  = FlowerDao.getInstance();
-       //flowerDao.delAll();
+       flowerDao.delAll();
 
 
 
@@ -163,7 +163,7 @@ public class FlowerFragment extends Fragment {
     }
 
     private void  initData(){
-        flowers = flowerDao.getAllFlower();
+        Flower[] flowers = flowerDao.getAllFlower();
         if(flowers!=null) {
             for (int i = 0; i < flowers.length; i++) {
                 data.add(flowers[i]);
@@ -197,6 +197,7 @@ public class FlowerFragment extends Fragment {
      * @param str
      */
     private void searchFlower(String str){
+        Log.e("info","更新前数据"+data);
         data.clear();
         Flower[] flowers  = flowerDao.searchFlower(str);
         if(flowers!=null){
@@ -205,6 +206,7 @@ public class FlowerFragment extends Fragment {
             for(int i= 0;i < flowers.length;i++){
                 data.add(flowers[i]);
             }
+            Log.e("info","更新后数据"+data);
         }
         else{
             listView.setVisibility(View.GONE);
@@ -218,14 +220,16 @@ public class FlowerFragment extends Fragment {
         AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String str = flowers[position].getFlowerName();
+                String str = data.get(position).getFlowerName();
+                String str2 = data.get(position).getFlowerImage();
                 MainActivity.editor.putString("flowerName",str);
                 MainActivity.flower.setFlowerName(str);
                 MainActivity.editor.commit();
 
-                Log.e("info","选中的花名为:"+str+"");
+                Log.e("info","选中的花名为:"+position+" "+str+"");
                 Bundle  bundle = new Bundle();
                 bundle.putString("flowerName",str);
+                bundle.putString("flowerImage",str2);
                 bundle.putBoolean("isSelect",false);
                 Intent intent = new Intent(getContext(),FlowerInfo.class);
                 intent.putExtras(bundle);

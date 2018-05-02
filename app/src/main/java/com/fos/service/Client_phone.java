@@ -3,6 +3,7 @@ package com.fos.service;
 import android.os.Bundle;
 import android.os.Message;
 
+import com.fos.activity.MainActivity;
 import com.fos.entity.Flower;
 import com.fos.entity.Infomation;
 import com.fos.fragment.ControlFragment;
@@ -108,6 +109,7 @@ public class Client_phone {
                                 SocketChannel writeSocketChannel = (SocketChannel) selectionKey.channel();
                                 Object requestMessage = null;
                                 LogUtil.i("MING"," 可写入状态");
+
                                 while (messageQueue.size() > 0) {
                                     requestMessage = messageQueue.remove(0);
                                     LogUtil.i("MING","  write data 2 "+requestMessage);
@@ -115,7 +117,7 @@ public class Client_phone {
                                 }
                             } else if (selectionKey.isReadable()) {
                                 SocketChannel readSocketChannel = (SocketChannel) selectionKey.channel();
-                                ByteBuffer tmp = ByteBuffer.allocate(1024);
+                                ByteBuffer tmp = ByteBuffer.allocate(4096);
                                 LogUtil.i("MING","read data begin:");
                                 int len = -1;
                                 byte[] data = new byte[0];
@@ -126,7 +128,7 @@ public class Client_phone {
                                 }
                                 if (data.length > 0) {
                                     String receiveData = new String(data,"UTF-8");
-                                    LogUtil.i("MING","  read data: " + receiveData);
+                                    LogUtil.i("  read data: " + receiveData);
                                     recvHandler(receiveData);
                                 }
                             }

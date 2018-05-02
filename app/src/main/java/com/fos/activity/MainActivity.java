@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 
+import android.os.Message;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
     private MainService infomationService;
     private ServiceConnection serviceConnection;
     public static Handler  handler;
+    private Thread queryThread;
     public static Client_phone Client_phone;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +89,6 @@ public class MainActivity extends AppCompatActivity {
             getWindow().setStatusBarColor(Color.TRANSPARENT);
             getWindow().setNavigationBarColor(Color.TRANSPARENT);
         }
-
-
         sharedPreferences = getSharedPreferences(PREFERENCE_NAME,MODE_PRIVATE);
         editor = sharedPreferences.edit();
         flower = new Flower();

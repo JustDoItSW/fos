@@ -37,7 +37,6 @@ public class SelectFlower extends AppCompatActivity {
     private ListView listView;
     private LinearLayout layout_notFind_select;
     private TextView text_notFind_select;
-    private Flower[] flowers;
     private EditText edit_search_select;
     private FlowerDao flowerDao;
     private ImageView delSearch_select;
@@ -141,7 +140,7 @@ public class SelectFlower extends AppCompatActivity {
     }
 
     private void  initData(){
-        flowers = flowerDao.getAllFlower();
+        Flower[]  flowers = flowerDao.getAllFlower();
         if(flowers!=null) {
             for (int i = 0; i < flowers.length; i++) {
                 data.add(flowers[i]);
@@ -193,7 +192,8 @@ public class SelectFlower extends AppCompatActivity {
         AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String str = flowers[position].getFlowerName();
+                String str = data.get(position).getFlowerName();
+                String str2 = data.get(position).getFlowerImage();
                 MainActivity.editor.putString("flowerName",str);
                 MainActivity.flower.setFlowerName(str);
                 MainActivity.editor.commit();
@@ -201,6 +201,7 @@ public class SelectFlower extends AppCompatActivity {
                 Log.e("info","选中的花名为:"+str+"");
                 Bundle  bundle = new Bundle();
                 bundle.putString("flowerName",str);
+                bundle.putString("flowerImage",str2);
                 bundle.putBoolean("isSelect",true);
                 Intent intent = new Intent(SelectFlower.this,FlowerInfo.class);
                 intent.putExtras(bundle);

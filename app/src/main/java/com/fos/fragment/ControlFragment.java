@@ -60,6 +60,7 @@ public class ControlFragment extends Fragment {
     private EditText ip,port;
     private Animation animation;
     private LinearInterpolator lin;
+    private Thread queryThread;
     public static Handler  handler;
     private static ControlFragment controlFragment;
     private View view;
@@ -160,22 +161,10 @@ public class ControlFragment extends Fragment {
         _fps = 20;
         _scanner.scanAll();
 
-//        refresh.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                if (MainActivity.Client_phone != null) {
-//                        MainActivity.Client_phone.clientSendMessage("i");
-//                        refresh.startAnimation(animation);
-//                }
-//
-//            }
-//        });
-
         ip =  (EditText)view.findViewById(R.id.ip);
         port =  (EditText)view.findViewById(R.id.port);
 
-        ip.setText("172.22.109.176");
+        ip.setText("192.168.191.2");
         port.setText("8000");
         loginControl.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -183,10 +172,31 @@ public class ControlFragment extends Fragment {
                     if(isChecked) {
                         if (MainActivity.Client_phone == null) {
                             MainActivity.Client_phone = new Client_phone(ip.getText().toString(), Integer.parseInt(port.getText().toString()));
+                            queryThread = new Thread(){
+                                @Override
+                                public void run() {
+                                    super.run();
+                                    try {
+                                        while (true){
+                                            sleep(10000);
+                                            Log.e("info","开始查询");
+                                            if (MainActivity.Client_phone != null) {
+                                                MainActivity.Client_phone.clientSendMessage("i");
+                                            }
+                                            sleep(50000);
+                                        }
+                                    }catch(Exception e){
+                                        e.printStackTrace();
+                                    }
+                                }
+                            };
+                            queryThread.start();
                         }
                     }
                     else {
                         if (MainActivity.Client_phone != null) {
+                            queryThread.interrupt();
+                            queryThread = null;
                             MainActivity.Client_phone.close();
                             MainActivity.Client_phone = null;
                         }
@@ -208,16 +218,30 @@ public class ControlFragment extends Fragment {
                 }
             }
         });
-
+        /**
+         * 查询线程
+         */
+        queryThread = new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    while (!isInterrupted()){
+                        if (MainActivity.Client_phone != null) {
+                            MainActivity.Client_phone.clientSendMessage("i");
+                        }
+                        sleep(60000);
+                    }
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
         handler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 try {
-                    if(msg.what == 0x002){
-                        connectTimeOutDialog();
-                        loginControl.setChecked(false);
-                    }else {
                         Bundle bundle = msg.getData();
                         String str = bundle.getString("info");
                         Log.e("info", str);
@@ -226,7 +250,6 @@ public class ControlFragment extends Fragment {
                         LuxFragment.myLineChart.repaintView(Integer.parseInt(infomation.getLux()), infomation.getDate().toString(), Color.rgb(246, 235, 188));
                         SoilHumFragment.myLineChart.repaintView(Integer.parseInt(infomation.getSoilHumidity()), infomation.getDate().toString(), Color.rgb(199, 232, 245));
                         TempFragment.myLineChart.repaintView(Integer.parseInt(infomation.getTemperature()), infomation.getDate().toString(), Color.rgb(255, 150, 150));
-                    }
                 }catch(Exception e){
                     e.printStackTrace();
                 }
@@ -241,7 +264,7 @@ public class ControlFragment extends Fragment {
                 case  R.id.fab_light:
                     if(MainActivity.Client_phone !=null)
                         if(fab_light.isSelected()) {
-                            MainActivity.Client_phone.clientSendMessage("e");
+                            MainActivity.Client_phone.clientSendMessage("i");
                             fab_light.setSelected(false);
                         }
                         else {

@@ -8,6 +8,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.util.Log;
 
 /**
  * Created by Apersonalive on 2018/4/24.
@@ -20,6 +21,7 @@ public class BitmapSetting {
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
 
+        Log.e("info","控件大小为："+w+"   "+h+"图片大小为:"+width+"   "+height);
         float scaleWidth = ((float) w) / width;
         float scaleHeight = ((float) h) / height;
 

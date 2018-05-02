@@ -79,10 +79,12 @@
         android:paddingRight="10dp"
         android:paddingLeft="10dp"
         android:scrollbars="none">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+
     </ScrollView>
+    <ImageView
+        android:id="@+id/testimage"
+        android:layout_width="match_parent"
+        android:layout_height="300dp" />
 
 
 
