@@ -54,9 +54,7 @@ import java.util.Map;
  */
 public class ControlFragment extends Fragment {
     private Switch loginControl;
-    private TextView text_temp,text_hum,text_soilHum,text_waterHigh,text_lux;
     private TextView autoOrMan;
-    private ImageView refresh,light,watering,nutrition,heating;
     private ShimmerTextView shimmerTextView;
     private Shimmer  shimmer;
     private EditText ip,port;
@@ -131,17 +129,7 @@ public class ControlFragment extends Fragment {
 
         loginControl = (Switch)view.findViewById(R.id.loginControl);
 
-        text_temp = (TextView)view.findViewById(R.id.text_temp);
-        text_hum = (TextView)view.findViewById(R.id.text_hum);
-        text_soilHum = (TextView)view.findViewById(R.id.text_soilHum);
-        text_waterHigh = (TextView)view.findViewById(R.id.text_waterHigh);
-        text_lux = (TextView)view.findViewById(R.id.text_lux);
 
-        light = (ImageView)view.findViewById(R.id.light);
-        watering = (ImageView)view.findViewById(R.id.watering);
-        refresh = (ImageView)view.findViewById(R.id.refresh);
-        heating = (ImageView)view.findViewById(R.id.heating);
-        nutrition = (ImageView)view.findViewById(R.id.nutrition);
         autoOrMan = (TextView)view.findViewById(R.id.autoOrMan);
         fab_light =  (FloatingActionButton)view.findViewById(R.id.fab_light) ;
         fab_heating =  (FloatingActionButton)view.findViewById(R.id.fab_heating) ;
@@ -172,77 +160,17 @@ public class ControlFragment extends Fragment {
         _fps = 20;
         _scanner.scanAll();
 
-        refresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (MainActivity.Client_phone != null) {
-                        MainActivity.Client_phone.clientSendMessage("i");
-                        refresh.startAnimation(animation);
-                }
-
-            }
-        });
-        light.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(MainActivity.Client_phone !=null)
-                    if(v.isSelected()) {
-                        MainActivity.Client_phone.clientSendMessage("e");
-                        v.setSelected(false);
-                    }
-                    else {
-                        MainActivity.Client_phone.clientSendMessage("b");
-                        v.setSelected(true);
-                    }
-            }
-        });
-
-        watering.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(MainActivity.Client_phone !=null)
-                    if(v.isSelected()) {
-                        MainActivity.Client_phone.clientSendMessage("5");
-                        v.setSelected(false);
-                    }
-                    else {
-                        MainActivity.Client_phone.clientSendMessage("m");
-                        v.setSelected(true);
-                    }
-            }
-        });
-
-        nutrition.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(MainActivity.Client_phone !=null)
-                    if(v.isSelected()) {
-                        MainActivity.Client_phone.clientSendMessage("y");
-                        v.setSelected(false);
-                    }
-                    else {
-                        MainActivity.Client_phone.clientSendMessage("v");
-                        v.setSelected(true);
-                    }
-            }
-        });
-
-        heating.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(MainActivity.Client_phone !=null)
-                    if(v.isSelected()) {
-                        MainActivity.Client_phone.clientSendMessage("s");
-                        v.setSelected(false);
-                    }
-                    else {
-                        MainActivity.Client_phone.clientSendMessage("p");
-                        v.setSelected(true);
-                    }
-
-            }
-        });
+//        refresh.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                if (MainActivity.Client_phone != null) {
+//                        MainActivity.Client_phone.clientSendMessage("i");
+//                        refresh.startAnimation(animation);
+//                }
+//
+//            }
+//        });
 
         ip =  (EditText)view.findViewById(R.id.ip);
         port =  (EditText)view.findViewById(R.id.port);
@@ -290,16 +218,10 @@ public class ControlFragment extends Fragment {
                         connectTimeOutDialog();
                         loginControl.setChecked(false);
                     }else {
-                        refresh.clearAnimation();
                         Bundle bundle = msg.getData();
                         String str = bundle.getString("info");
                         Log.e("info", str);
                         Infomation infomation = InfomationAnalysis.jsonToData(str);
-                        text_temp.setText("温度 ：" + infomation.getTemperature() + "℃");
-                        text_hum.setText("湿度 ：" + infomation.getHumidity() + "%");
-                        text_waterHigh.setText("水位 ：" + infomation.getWaterHigh() + "cm");
-                        text_soilHum.setText("土湿 ：" + infomation.getSoilHumidity() + "%");
-                        text_lux.setText("光强 ：" + infomation.getLux() + "l");
                         HumFragment.myLineChart.repaintView(Integer.parseInt(infomation.getHumidity()), infomation.getDate().toString(), Color.rgb(199, 232, 245));
                         LuxFragment.myLineChart.repaintView(Integer.parseInt(infomation.getLux()), infomation.getDate().toString(), Color.rgb(246, 235, 188));
                         SoilHumFragment.myLineChart.repaintView(Integer.parseInt(infomation.getSoilHumidity()), infomation.getDate().toString(), Color.rgb(199, 232, 245));

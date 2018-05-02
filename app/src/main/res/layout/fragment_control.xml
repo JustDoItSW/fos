@@ -38,7 +38,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             app:fab_addButtonSize="mini"
             app:fab_expandDirection="up"
             app:fab_addButtonColorNormal="@color/white"
@@ -95,42 +95,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
            >
-
-            <ImageView
-                android:id="@+id/refresh"
-                style="@style/control_image"
-                android:background ="@mipmap/ic_refresh"/>
-            <ImageView
-                android:id="@+id/voice"
-                style="@style/control_image"
-                android:background ="@drawable/voice"/>
-            <ImageView
-                android:id="@+id/photo"
-                style="@style/control_image"
-                android:background ="@mipmap/ic_photo"/>
-            <ImageView
-                android:id="@+id/record"
-                style="@style/control_image"
-                android:background ="@mipmap/ic_record"/>
-            <ImageView
-                android:id="@+id/light"
-                style="@style/control_image"
-                android:background ="@drawable/light"/>
-
-            <ImageView
-                android:id="@+id/watering"
-                style="@style/control_image"
-                android:background ="@drawable/watering"/>
-
-            <ImageView
-                android:id="@+id/nutrition"
-                style="@style/control_image"
-                android:background ="@drawable/nutrition"/>
-
-            <ImageView
-                android:id="@+id/heating"
-                style="@style/control_image"
-                android:background ="@drawable/heating"/>
             <TextView
                 android:id="@+id/autoOrMan"
                 android:text="自动"
@@ -138,47 +102,8 @@
                 android:layout_marginTop="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-
         </LinearLayout>
-        <LinearLayout
-            android:visibility="gone"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
 
-            android:paddingTop="25dp"
-            >
-            <TextView
-                android:id="@+id/text_temp"
-                style="@style/info_text"
-                android:text="温度："
-                />
-
-            <TextView
-                android:id="@+id/text_hum"
-                style="@style/info_text"
-                android:text="湿度："
-                />
-
-            <TextView
-                android:id="@+id/text_lux"
-                style="@style/info_text"
-                android:text="光强："
-               />
-
-            <TextView
-                android:id="@+id/text_soilHum"
-                style="@style/info_text"
-                android:text="土湿："
-                />
-            <TextView
-                android:id="@+id/text_waterHigh"
-                style="@style/info_text"
-                android:text="水位："
-                />
-
-
-        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/loginLine"

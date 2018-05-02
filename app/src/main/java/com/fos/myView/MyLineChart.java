@@ -54,7 +54,7 @@ public class MyLineChart {
         lineChartView.setLineChartData(lineChartData);
         lineChartView.setBackgroundColor(Color.WHITE);
         lineChartView.setMaximumViewport(initViewPort(TOP,BOTTOM,LEFT,RIGHT));
-        lineChartView.setCurrentViewport(initViewPort(TOP/2,BOTTOM,0,30));
+        lineChartView.setCurrentViewport(initViewPort(TOP,BOTTOM,0,30));
         lineChartView.setInteractive(true);
         lineChartView.setScrollEnabled(true);
         lineChartView.setValueTouchEnabled(false);

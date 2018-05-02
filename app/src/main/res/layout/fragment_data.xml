@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:weightSum="1"
     android:background="#EDF1F2">
     <RelativeLayout
         android:id="@+id/menu_data"
@@ -52,28 +53,33 @@
                 style = "@style/menu_data" />
         </LinearLayout>
     </RelativeLayout>
-    <!--<LinearLayout-->
-        <!--android:id="@+id/underLine_layout"-->
-        <!--android:layout_below="@+id/menu_data"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content">-->
-
-        <!--<ImageView-->
-            <!--android:id="@+id/underLine_data"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="1dp"-->
-            <!--android:scaleType="matrix"-->
-            <!--android:src ="@mipmap/ic_underline"/>-->
-    <!--</LinearLayout>-->
 
     <com.fos.util.MyViewPager
         android:id="@+id/vp_data"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.6"
         android:layout_below="@+id/menu_data"
         >
     </com.fos.util.MyViewPager>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#EDF1F2"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:scrollbars="none">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </ScrollView>
 
 
 
-</RelativeLayout>
+</LinearLayout>

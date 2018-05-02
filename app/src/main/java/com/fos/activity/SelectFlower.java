@@ -201,7 +201,7 @@ public class SelectFlower extends AppCompatActivity {
                 Log.e("info","选中的花名为:"+str+"");
                 Bundle  bundle = new Bundle();
                 bundle.putString("flowerName",str);
-                bundle.putBoolean("isSelect",false);
+                bundle.putBoolean("isSelect",true);
                 Intent intent = new Intent(SelectFlower.this,FlowerInfo.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
