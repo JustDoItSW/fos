@@ -179,6 +179,7 @@ public class ControlFragment extends Fragment {
                         fab_light.setTitle("光强:"+infomation.getLux());
                         fab_heating.setTitle("温度:"+infomation.getTemperature());
                         fab_watering.setTitle("土壤湿度:"+infomation.getSoilHumidity());
+                      //  fab_nut.setTitle("肥力:"+);
                         HumFragment.myLineChart.repaintView(Integer.parseInt(infomation.getHumidity()), infomation.getDate().toString(), Color.rgb(199, 232, 245));
                         LuxFragment.myLineChart.repaintView(Integer.parseInt(infomation.getLux()), infomation.getDate().toString(), Color.rgb(246, 235, 188));
                         SoilHumFragment.myLineChart.repaintView(Integer.parseInt(infomation.getSoilHumidity()), infomation.getDate().toString(), Color.rgb(199, 232, 245));
