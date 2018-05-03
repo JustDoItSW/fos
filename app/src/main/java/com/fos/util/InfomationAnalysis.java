@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fos.entity.Flower;
+import com.fos.entity.FlowerInfo;
 import com.fos.entity.Infomation;
 
 import java.util.List;
@@ -68,6 +69,21 @@ public class InfomationAnalysis {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static FlowerInfo jsonToFlowerInfo(String info){
+//        Flower[] flowers = jsonToFlower(info);
+//        FlowerInfo[] flowerInfos = new FlowerInfo[flowers.length];
+//        for(int i = 0;i<flowers.length;i++){
+//            if(flowers[i].getFlowerInfo()!= null)
+//            flowerInfos[i] = JSONObject.parseObject(flowers[i].getFlowerInfo(),FlowerInfo.class);
+//        }
+//        return flowerInfos;
+        if(info!=null){
+            return JSONObject.parseObject(info,FlowerInfo.class);
+        }
+        else
+            return null;
     }
 
 }

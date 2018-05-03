@@ -194,6 +194,7 @@ public class SelectFlower extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String str = data.get(position).getFlowerName();
                 String str2 = data.get(position).getFlowerImage();
+                String str3 = data.get(position).getFlowerInfo();
                 MainActivity.editor.putString("flowerName",str);
                 MainActivity.flower.setFlowerName(str);
                 MainActivity.editor.commit();
@@ -202,6 +203,7 @@ public class SelectFlower extends AppCompatActivity {
                 Bundle  bundle = new Bundle();
                 bundle.putString("flowerName",str);
                 bundle.putString("flowerImage",str2);
+                bundle.putString("flowerInfo",str3);
                 bundle.putBoolean("isSelect",true);
                 Intent intent = new Intent(SelectFlower.this,FlowerInfo.class);
                 intent.putExtras(bundle);

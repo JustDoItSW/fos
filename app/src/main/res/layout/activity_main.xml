@@ -79,7 +79,7 @@
 
     <LinearLayout
         android:id="@+id/left_relativeLayout"
-        android:layout_width="240dp"
+        android:layout_width="295dp"
         android:layout_gravity="start"
         android:layout_height="match_parent"
         android:background="@android:color/white"
@@ -89,30 +89,68 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.3"
+            android:layout_weight="0.35"
 
             >
-            <!--<ImageView-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:src="@mipmap/ic_leftbackground"/>-->
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/ic_leftbackground"/>
             <ImageView
                 android:id="@+id/user_icon"
                 android:layout_marginLeft="10dp"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:layout_centerVertical="true"
                 android:background="@drawable/round_view"/>
 
             <TextView
-                android:text="Apersonalice"
-                android:layout_below="@+id/user_icon"
+                android:text="Apersonalive"
                 android:layout_marginLeft="10dp"
-                android:textColor="@android:color/black"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="15dp"
+                android:textSize="18dp"
+                android:textColor="@android:color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/loginLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            >
+            <Switch
+                android:id="@+id/loginControl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textOn="开"
+                android:textOff="关"
+                android:thumb="@drawable/thumb"
+                android:track="@drawable/track"
+                android:showText="false"
+                android:checked="false"
+                />
+            <EditText
+                android:id="@+id/ip"
+                android:textSize="10dp"
+                android:textColor="@android:color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                />
+            <EditText
+                android:id="@+id/port"
+                android:textSize="10dp"
+                android:textColor="@android:color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                />
 
+        </LinearLayout>
         <Button
             android:id="@+id/btn_selectFlower"
             android:text="选择植物"

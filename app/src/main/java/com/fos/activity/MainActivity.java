@@ -26,9 +26,12 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.fos.R;
@@ -58,12 +61,12 @@ public class MainActivity extends AppCompatActivity {
     public static LinearLayout left_linearLayout,menu_tab;
     private SharedPreferences  sharedPreferences;
     private MyViewPager myViewPager;
-    private ImageView left_menu,text_control,text_data,text_flower,contextMenu;
+    private ImageView left_menu,text_control,text_data,text_flower;
+    private Switch loginControl;
+    private EditText ip,port;
     private DrawerLayout dl;
-    private FragmentManager fragmentManager;
     private RelativeLayout main_relativeLayout;
     private MyFragmentPagerAdapter myFragmentPagerAdapter;
-    private ViewPager.OnPageChangeListener onPageChangeListener ;
     private Button btn_selectFlower;
     private Intent intent;
     private MainService infomationService;
@@ -73,13 +76,14 @@ public class MainActivity extends AppCompatActivity {
     public static Client_phone Client_phone;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        LogUtil.i("MING","ThreradID="+Thread.currentThread().getName());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        allScreen();
         init();
+        setupViewPager();//初始化viewpager
     }
 
-    private void init(){
+    private void allScreen(){
         if(Build.VERSION.SDK_INT >= 21) {
             View decorView = getWindow().getDecorView();
             //设置让应用主题内容占据状态栏和导航栏
@@ -89,12 +93,14 @@ public class MainActivity extends AppCompatActivity {
             getWindow().setStatusBarColor(Color.TRANSPARENT);
             getWindow().setNavigationBarColor(Color.TRANSPARENT);
         }
-        sharedPreferences = getSharedPreferences(PREFERENCE_NAME,MODE_PRIVATE);
+    }
+    private void init(){
+        sharedPreferences = getSharedPreferences(PREFERENCE_NAME,MODE);
         editor = sharedPreferences.edit();
         flower = new Flower();
         flower.setFlowerName(sharedPreferences.getString("flowerName","flowerName"));
-
         intent = new Intent(MainActivity.this, MainService.class);
+
         dl = (DrawerLayout)findViewById(R.id.dl);
         main_relativeLayout =  (RelativeLayout)findViewById(R.id.main_relativeLayout);
         left_linearLayout  =(LinearLayout)findViewById(R.id.left_relativeLayout);
@@ -103,40 +109,17 @@ public class MainActivity extends AppCompatActivity {
         text_control =  (ImageView)findViewById(R.id.text_control);
         text_data =  (ImageView)findViewById(R.id.text_data);
         text_flower =  (ImageView)findViewById(R.id.text_flower);
-        fragmentManager = getSupportFragmentManager();
         myViewPager = (MyViewPager)findViewById(R.id.vp);
         btn_selectFlower  = (Button)findViewById(R.id.btn_selectFlower);
+        loginControl = (Switch)findViewById(R.id.loginControl);
+        ip =  (EditText)findViewById(R.id.ip);
+        port =  (EditText)findViewById(R.id.port);
+
+        ip.setText("192.168.191.2");
+        port.setText("8000");
+
+        loginControl.setOnCheckedChangeListener(checkedChangeListener);
         text_control.setSelected(true);
-        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);//不弹出输入法
-        setupViewPager();//初始化viewpager
-
-        //viewpager的监听器
-        onPageChangeListener = new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
-            @Override
-            public void onPageSelected(int position) {
-                switch (position){
-                    case 0:
-                        setAllSelected();
-                        text_control.setSelected(true);
-                        break;
-                    case 1:
-                        setAllSelected();
-                        text_data.setSelected(true);
-                        MainActivity.menu_tab.setVisibility(View.VISIBLE);
-                        break;
-                    case 2:
-                        setAllSelected();
-                        text_flower.setSelected(true);
-                        MainActivity.menu_tab.setVisibility(View.VISIBLE);
-                        break;
-
-                }
-            }
-            @Override
-            public void onPageScrollStateChanged(int state) {}
-        };
         serviceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
@@ -148,39 +131,6 @@ public class MainActivity extends AppCompatActivity {
                 infomationService = null;
             }
         };
-        View.OnClickListener onClickListener  = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()){
-                    case R.id.text_control:
-                        setAllSelected();
-                        text_control.setSelected(true);
-                        myViewPager.setCurrentItem(0);
-                        break;
-                    case R.id.text_data:
-                        setAllSelected();
-                        text_data.setSelected(true);
-                        myViewPager.setCurrentItem(1);
-                        MainActivity.menu_tab.setVisibility(View.VISIBLE);
-                        break;
-                    case R.id.text_flower:
-                        setAllSelected();
-                        text_flower.setSelected(true);
-                        myViewPager.setCurrentItem(2);
-                        MainActivity.menu_tab.setVisibility(View.VISIBLE);
-                        break;
-                    case R.id.left_menu:
-                        if(!dl.isDrawerOpen(left_linearLayout)){
-                            dl.openDrawer(left_linearLayout);
-                        }
-                        break;
-                    case R.id.btn_selectFlower:
-                        Intent intent  = new Intent(MainActivity.this,SelectFlower.class);
-                        startActivity(intent);
-                }
-            }
-        };
-        myViewPager.addOnPageChangeListener(onPageChangeListener);
         left_menu.setOnClickListener(onClickListener);
         text_control.setOnClickListener(onClickListener);
         text_data.setOnClickListener(onClickListener);
@@ -213,6 +163,103 @@ public class MainActivity extends AppCompatActivity {
         bindService(intent,serviceConnection, Context.BIND_AUTO_CREATE);//绑定服务
 
     }
+
+    CompoundButton.OnCheckedChangeListener  checkedChangeListener =  new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if(isChecked) {
+                if (MainActivity.Client_phone == null) {
+                    MainActivity.Client_phone = new Client_phone(ip.getText().toString(), Integer.parseInt(port.getText().toString()));
+                    queryThread = new Thread(){
+                        @Override
+                        public void run() {
+                            super.run();
+                            try {
+                                while (true){
+                                    sleep(10000);
+                                    Log.e("info","开始查询");
+                                    if (MainActivity.Client_phone != null) {
+                                        MainActivity.Client_phone.clientSendMessage("i");
+                                    }
+                                    sleep(50000);
+                                }
+                            }catch(Exception e){
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+                    queryThread.start();
+                }
+            }
+            else {
+                if (MainActivity.Client_phone != null) {
+                    queryThread.interrupt();
+                    queryThread = null;
+                    MainActivity.Client_phone.close();
+                    MainActivity.Client_phone = null;
+                }
+            }
+        }
+
+    };
+    View.OnClickListener onClickListener  = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.text_control:
+                    setAllSelected();
+                    text_control.setSelected(true);
+                    myViewPager.setCurrentItem(0);
+                    break;
+                case R.id.text_data:
+                    setAllSelected();
+                    text_data.setSelected(true);
+                    myViewPager.setCurrentItem(1);
+                    MainActivity.menu_tab.setVisibility(View.VISIBLE);
+                    break;
+                case R.id.text_flower:
+                    setAllSelected();
+                    text_flower.setSelected(true);
+                    myViewPager.setCurrentItem(2);
+                    MainActivity.menu_tab.setVisibility(View.VISIBLE);
+                    break;
+                case R.id.left_menu:
+                    if(!dl.isDrawerOpen(left_linearLayout)){
+                        dl.openDrawer(left_linearLayout);
+                    }
+                    break;
+                case R.id.btn_selectFlower:
+                    Intent intent  = new Intent(MainActivity.this,SelectFlower.class);
+                    startActivity(intent);
+            }
+        }
+    };
+    ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+        @Override
+        public void onPageSelected(int position) {
+            switch (position){
+                case 0:
+                    setAllSelected();
+                    text_control.setSelected(true);
+                    break;
+                case 1:
+                    setAllSelected();
+                    text_data.setSelected(true);
+                    MainActivity.menu_tab.setVisibility(View.VISIBLE);
+                    break;
+                case 2:
+                    setAllSelected();
+                    text_flower.setSelected(true);
+                    MainActivity.menu_tab.setVisibility(View.VISIBLE);
+                    break;
+
+            }
+        }
+        @Override
+        public void onPageScrollStateChanged(int state) {}
+    };
     private void setAllSelected(){
         text_control.setSelected(false);
         text_data.setSelected(false);
@@ -226,15 +273,8 @@ public class MainActivity extends AppCompatActivity {
         myViewPager.setOffscreenPageLimit(3);//最大缓存三个Fragment
         if(myFragmentPagerAdapter != null &&  myViewPager != null)
             myViewPager.setAdapter(myFragmentPagerAdapter);//设置适配器
+        myViewPager.addOnPageChangeListener(onPageChangeListener);
     }
-    @Override
-    public boolean onCreateOptionsMenu(final Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        Log.e("info","success");
-        inflater.inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

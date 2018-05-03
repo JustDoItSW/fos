@@ -42,9 +42,6 @@ import java.util.List;
  */
 public class DataFragment extends Fragment {
     private View  view;
-     private ImageView underLine_data;
-    private int lineWidth;//下划线宽度
-    private int offset =  0;//偏移量
     private int current_index ;
     private MyViewPager myViewPager;
     private MyDataFragmentPagerAdapter myFragmentPagerAdapter;
@@ -65,25 +62,17 @@ public class DataFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_data,null,false);
-
         init();
-
-
         return view;
     }
     private void init(){
-
-
         menu_temp = (TextView)view.findViewById(R.id.menu_temp);
         menu_hum = (TextView)view.findViewById(R.id.menu_hum);
         menu_soilHum = (TextView)view.findViewById(R.id.menu_soilHum);
         menu_lux = (TextView)view.findViewById(R.id.menu_lux);
-        underLine_data = (ImageView)view.findViewById(R.id.testimage);
-        LoadImageUtil.onLoadImage(underLine_data,"http://192.168.191.2:8080/images/f41.jpg");
 
 
         onPageChangeListener = new ViewPager.OnPageChangeListener() {
-            int one =  offset*2+lineWidth;
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
             @Override
@@ -92,22 +81,22 @@ public class DataFragment extends Fragment {
                     case 0:
                         setAllSelected();
                         menu_temp.setSelected(true);
-                        current_index = 0;
+
                         break;
                     case 1:
                         setAllSelected();
                         menu_hum.setSelected(true);
-                        current_index = 1;
+
                         break;
                     case 2:
                         setAllSelected();
                         menu_soilHum.setSelected(true);
-                        current_index = 2;
+
                         break;
                     case 3:
                         setAllSelected();
                         menu_lux.setSelected(true);
-                        current_index = 3;
+
                         break;
 
                 }
@@ -131,25 +120,25 @@ public class DataFragment extends Fragment {
                         setAllSelected();
                         setCurrentTextView(menu_temp);
                         myViewPager.setCurrentItem(0);
-                        current_index = 0;
+
                         break;
                     case R.id.menu_hum:
                         setAllSelected();
                         setCurrentTextView(menu_hum);
                         myViewPager.setCurrentItem(1);
-                        current_index = 1;
+
                         break;
                     case R.id.menu_soilHum:
                         setAllSelected();
                         setCurrentTextView(menu_soilHum);
                         myViewPager.setCurrentItem(2);
-                        current_index = 2;
+
                         break;
                     case R.id.menu_lux:
                         setAllSelected();
                         setCurrentTextView(menu_lux);
                         myViewPager.setCurrentItem(3);
-                        current_index = 3;
+
                         break;
                 }
             }
@@ -163,21 +152,6 @@ public class DataFragment extends Fragment {
 
     }
 
-//    private void initUnderLine(){
-//        //lineWidth  = BitmapFactory.decodeResource(getResources(),R.mipmap.ic_underline).getWidth();
-//
-//        DisplayMetrics  dm   = new DisplayMetrics();
-//        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-//        int screenW  = dm.widthPixels;
-//        LinearLayout.LayoutParams params= (LinearLayout.LayoutParams) underLine_data.getLayoutParams();
-//        params.width = screenW/4;
-//        lineWidth  = screenW/4;
-//        underLine_data.setLayoutParams(params);
-//        offset = (screenW/4-lineWidth)/2;
-//        Matrix matrix = new Matrix();
-//        matrix.postTranslate(offset,0);
-//        underLine_data.setImageMatrix(matrix);
-//    }
     private void setCurrentTextView(TextView  textView){
 //        textView.setSelected(true);
 //        textView.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
@@ -193,10 +167,8 @@ public class DataFragment extends Fragment {
     private void setupViewPager(){
         myFragmentPagerAdapter = new MyDataFragmentPagerAdapter(getActivity().getSupportFragmentManager());
         myViewPager.setOffscreenPageLimit(4);//最大缓存三个Fragment
-//        PagerModelManager manager=new PagerModelManager();
 
         if(myFragmentPagerAdapter != null &&  myViewPager != null) {
-//            manager.addCommonFragment(DataFragment.class,getTitles());
             myViewPager.setAdapter(myFragmentPagerAdapter);//设置适配器
             myViewPager.fixScrollSpeed();
             springIndicator.setViewPager(myViewPager);
@@ -204,7 +176,4 @@ public class DataFragment extends Fragment {
 
     }
 
-//    private List<String> getTitles(){
-//        return Lists.newArrayList(menu_temp.getText().toString(),menu_hum.getText().toString(),menu_soilHum.getText().toString(),menu_lux.getText().toString());
-//    }
 }

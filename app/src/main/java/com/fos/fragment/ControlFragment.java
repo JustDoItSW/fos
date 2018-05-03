@@ -53,14 +53,10 @@ import java.util.Map;
  * Email 745267209@QQ.com
  */
 public class ControlFragment extends Fragment {
-    private Switch loginControl;
+
     private TextView autoOrMan;
     private ShimmerTextView shimmerTextView;
     private Shimmer  shimmer;
-    private EditText ip,port;
-    private Animation animation;
-    private LinearInterpolator lin;
-    private Thread queryThread;
     public static Handler  handler;
     private static ControlFragment controlFragment;
     private View view;
@@ -100,12 +96,13 @@ public class ControlFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         LogUtil.i("MING","ThreradID="+Thread.currentThread().getName());
         view = inflater.inflate(R.layout.fragment_control,null,false);
+        initInternet();
+        initVideo();
         init();
         return view;
     }
 
-    private void init(){
-
+    private void initInternet(){
         /**
          * 扫描device IP,获得局域网IP或远程IP
          */
@@ -127,27 +124,10 @@ public class ControlFragment extends Fragment {
                 }
             }
         });
+    }
 
-        loginControl = (Switch)view.findViewById(R.id.loginControl);
-
-
-        autoOrMan = (TextView)view.findViewById(R.id.autoOrMan);
-        fab_light =  (FloatingActionButton)view.findViewById(R.id.fab_light) ;
-        fab_heating =  (FloatingActionButton)view.findViewById(R.id.fab_heating) ;
-        fab_watering =  (FloatingActionButton)view.findViewById(R.id.fab_watering) ;
-        fab_nut =  (FloatingActionButton)view.findViewById(R.id.fab_nut) ;
-        fab_light.setOnClickListener(onClickListener);
-        fab_heating.setOnClickListener(onClickListener);
-        fab_watering.setOnClickListener(onClickListener);
-        fab_nut.setOnClickListener(onClickListener);
-
-        animation = AnimationUtils.loadAnimation(getActivity(), R.anim.refresh_aniamtion);
-        lin = new LinearInterpolator();//设置动画匀速运动
-        animation.setInterpolator(lin);
-
+    private void initVideo(){
         _videoConnectLayout=view.findViewById(R.id.video_connecting_layout);
-        shimmerTextView=view.findViewById(R.id.video_connecting_text);
-        toggleAnimation(shimmerTextView);
         _videoView=view.findViewById(R.id.video_view);
         _videoView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,83 +140,33 @@ public class ControlFragment extends Fragment {
         _devicePsk = "admin";
         _fps = 20;
         _scanner.scanAll();
-
-        ip =  (EditText)view.findViewById(R.id.ip);
-        port =  (EditText)view.findViewById(R.id.port);
-
-        ip.setText("192.168.191.2");
-        port.setText("8000");
-        loginControl.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if(isChecked) {
-                        if (MainActivity.Client_phone == null) {
-                            MainActivity.Client_phone = new Client_phone(ip.getText().toString(), Integer.parseInt(port.getText().toString()));
-                            queryThread = new Thread(){
-                                @Override
-                                public void run() {
-                                    super.run();
-                                    try {
-                                        while (true){
-                                            sleep(10000);
-                                            Log.e("info","开始查询");
-                                            if (MainActivity.Client_phone != null) {
-                                                MainActivity.Client_phone.clientSendMessage("i");
-                                            }
-                                            sleep(50000);
-                                        }
-                                    }catch(Exception e){
-                                        e.printStackTrace();
-                                    }
-                                }
-                            };
-                            queryThread.start();
-                        }
-                    }
-                    else {
-                        if (MainActivity.Client_phone != null) {
-                            queryThread.interrupt();
-                            queryThread = null;
-                            MainActivity.Client_phone.close();
-                            MainActivity.Client_phone = null;
-                        }
-                    }
-            }
-        });
-
+    }
+    private void init(){
+        autoOrMan = (TextView)view.findViewById(R.id.autoOrMan);
+        fab_light =  (FloatingActionButton)view.findViewById(R.id.fab_light) ;
+        fab_heating =  (FloatingActionButton)view.findViewById(R.id.fab_heating) ;
+        fab_watering =  (FloatingActionButton)view.findViewById(R.id.fab_watering) ;
+        fab_nut =  (FloatingActionButton)view.findViewById(R.id.fab_nut) ;
+        fab_light.setOnClickListener(onClickListener);
+        fab_heating.setOnClickListener(onClickListener);
+        fab_watering.setOnClickListener(onClickListener);
+        fab_nut.setOnClickListener(onClickListener);
+        shimmerTextView=view.findViewById(R.id.video_connecting_text);
+        toggleAnimation(shimmerTextView);
         autoOrMan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (MainActivity.Client_phone != null) {
                     if(autoOrMan.getText().toString().equals("自动")){
-                        //   MainActivity.Client_phone.clientSendMessage("man");
+                        MainActivity.Client_phone.clientSendMessage("man"+MainActivity.flower.getFlowerName());
                         autoOrMan.setText("手动");
                     }else{
-                        // MainActivity.Client_phone.clientSendMessage("auto");
+                         MainActivity.Client_phone.clientSendMessage("smart"+MainActivity.flower.getFlowerName());
                         autoOrMan.setText("自动");
                     }
                 }
             }
         });
-        /**
-         * 查询线程
-         */
-        queryThread = new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                try {
-                    while (!isInterrupted()){
-                        if (MainActivity.Client_phone != null) {
-                            MainActivity.Client_phone.clientSendMessage("i");
-                        }
-                        sleep(60000);
-                    }
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
-            }
-        };
         handler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
@@ -544,13 +474,5 @@ public class ControlFragment extends Fragment {
             _remoteTunnel1 = null;
         }
     }
-
-    public void connectTimeOutDialog (){
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());  //先得到构造器
-            builder.setMessage("当前无网络，请检查网络后重试！"); //设置内容
-            builder.create();
-            builder.create().show();
-    }
-
 
 }

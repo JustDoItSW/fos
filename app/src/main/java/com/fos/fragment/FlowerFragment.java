@@ -80,7 +80,8 @@ public class FlowerFragment extends Fragment {
     }
 
     private void init(){
-        data = new ArrayList<Flower>();//存放数据
+
+        flowerDao  = FlowerDao.getInstance();
         listView = (ListView)view.findViewById(R.id.list_flowerData);
         layout_notFind  =(LinearLayout)view.findViewById(R.id.layout_notFind);
         text_notFind = (TextView)view.findViewById(R.id.text_notFind);
@@ -137,12 +138,6 @@ public class FlowerFragment extends Fragment {
                 myListViewAdapter.notifyDataSetChanged();
             }
         });
-        flowerDao  = FlowerDao.getInstance();
-       flowerDao.delAll();
-
-
-
-
         handler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
@@ -163,6 +158,7 @@ public class FlowerFragment extends Fragment {
     }
 
     private void  initData(){
+        data = new ArrayList<Flower>();//存放数据
         Flower[] flowers = flowerDao.getAllFlower();
         if(flowers!=null) {
             for (int i = 0; i < flowers.length; i++) {
@@ -173,10 +169,8 @@ public class FlowerFragment extends Fragment {
     private void initListView(){
         myListViewAdapter  =  new MyListViewAdapter(getActivity(),R.layout.layout_flowerlist,data);
         listView.setAdapter(myListViewAdapter);
-        listView.setOnItemClickListener(listViewOnItemClickListener());
+        listView.setOnItemClickListener(onItemClickListener);
     }
-
-
     /**
      * 更新数据源
      */
@@ -213,29 +207,28 @@ public class FlowerFragment extends Fragment {
             layout_notFind.setVisibility(View.VISIBLE);
         }
         myListViewAdapter.notifyDataSetChanged();
-        listView.setOnItemClickListener(listViewOnItemClickListener());
     }
+    AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            String str = data.get(position).getFlowerName();
+            String str2 = data.get(position).getFlowerImage();
+            String str3 = data.get(position).getFlowerInfo();
+            MainActivity.editor.putString("flowerName",str);
+            MainActivity.flower.setFlowerName(str);
+            MainActivity.editor.commit();
 
-    private AdapterView.OnItemClickListener listViewOnItemClickListener(){
-        AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String str = data.get(position).getFlowerName();
-                String str2 = data.get(position).getFlowerImage();
-                MainActivity.editor.putString("flowerName",str);
-                MainActivity.flower.setFlowerName(str);
-                MainActivity.editor.commit();
+            Log.e("info","选中的花名为:"+position+" "+str+"");
+            Bundle  bundle = new Bundle();
+            bundle.putString("flowerName",str);
+            bundle.putString("flowerImage",str2);
+            bundle.putString("flowerInfo",str3);
+            bundle.putBoolean("isSelect",false);
+            Intent intent = new Intent(getContext(),FlowerInfo.class);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        }
+    };
 
-                Log.e("info","选中的花名为:"+position+" "+str+"");
-                Bundle  bundle = new Bundle();
-                bundle.putString("flowerName",str);
-                bundle.putString("flowerImage",str2);
-                bundle.putBoolean("isSelect",false);
-                Intent intent = new Intent(getContext(),FlowerInfo.class);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        };
-        return onItemClickListener;
-    }
+
 }

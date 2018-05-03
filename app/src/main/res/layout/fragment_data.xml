@@ -81,10 +81,7 @@
         android:scrollbars="none">
 
     </ScrollView>
-    <ImageView
-        android:id="@+id/testimage"
-        android:layout_width="match_parent"
-        android:layout_height="300dp" />
+
 
 
 
