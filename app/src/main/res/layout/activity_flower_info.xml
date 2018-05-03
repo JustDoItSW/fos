@@ -60,57 +60,48 @@
                 android:layout_centerInParent="true"
                 android:layout_marginTop="10dp"
                 android:text="葫芦"
-                android:textColor="@android:color/black"
                 android:textSize="18dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
         </RelativeLayout>
-        
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.58"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginBottom="10dp"
-            android:scrollbars="none">
+            android:orientation="vertical">
 
-            <LinearLayout
+            <View
+                android:background="#bfbfbf"
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"/>
+            <TextView
+                android:text="基本信息"
+                android:textColor="#bfbfbf"
+                android:textSize="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <View
+                android:background="#bfbfbf"
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"/>
+
+            <ListView
+                android:id="@+id/list_flowerInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:scrollbars="none"></ListView>
 
-                <View
-                    android:background="#bfbfbf"
-                    android:layout_width="match_parent"
-                    android:layout_height="0.125dp"/>
-                <TextView
-                    android:text="基本信息"
-                    android:textColor="#bfbfbf"
-                    android:textSize="12dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <View
-                    android:background="#bfbfbf"
-                    android:layout_width="match_parent"
-                    android:layout_height="0.125dp"/>
-
-                <ListView
-                    android:id="@+id/list_flowerInfo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:scrollbars="none"></ListView>
-
-
-            </LinearLayout>
-
-            
-            
-        </ScrollView>
-
+            <View
+                android:background="#bfbfbf"
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"/>
+        </LinearLayout>
         <Button
             android:id="@+id/btn_finish"
             android:text="完成"

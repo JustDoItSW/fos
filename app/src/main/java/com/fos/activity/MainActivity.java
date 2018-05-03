@@ -118,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
         ip.setText("192.168.191.2");
         port.setText("8000");
 
+        menu_tab.setOnClickListener(onClickListener);
         loginControl.setOnCheckedChangeListener(checkedChangeListener);
         text_control.setSelected(true);
         serviceConnection = new ServiceConnection() {
@@ -193,8 +194,10 @@ public class MainActivity extends AppCompatActivity {
             }
             else {
                 if (MainActivity.Client_phone != null) {
-                    queryThread.interrupt();
-                    queryThread = null;
+                    if(queryThread!=null) {
+                        queryThread.interrupt();
+                        queryThread = null;
+                    }
                     MainActivity.Client_phone.close();
                     MainActivity.Client_phone = null;
                 }
@@ -231,6 +234,8 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.btn_selectFlower:
                     Intent intent  = new Intent(MainActivity.this,SelectFlower.class);
                     startActivity(intent);
+                default:
+                        break;
             }
         }
     };
@@ -254,6 +259,8 @@ public class MainActivity extends AppCompatActivity {
                     text_flower.setSelected(true);
                     MainActivity.menu_tab.setVisibility(View.VISIBLE);
                     break;
+                    default:
+                        break;
 
             }
         }

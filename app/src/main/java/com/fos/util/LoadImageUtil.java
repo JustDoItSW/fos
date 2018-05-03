@@ -32,15 +32,15 @@ public class LoadImageUtil {
         final Handler handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-               // onLoadImageListener.OnLoadImage((Bitmap)msg.obj,null);
-                if((Bitmap)msg.obj!=null) {
-                    if(imageView.getWidth()<=50)
-                        imageView.setImageBitmap(BitmapSetting.resizeBitmap(BitmapSetting.getOvalBitmap((Bitmap)msg.obj),50,50));
-                    else
-                        imageView.setImageBitmap(BitmapSetting.resizeBitmap(BitmapSetting.getOvalBitmap((Bitmap)msg.obj),imageView.getWidth(),imageView.getHeight()));
+                    if ((Bitmap) msg.obj != null) {
+                        if (imageView.getWidth() <= 50)
+                            imageView.setImageBitmap(BitmapSetting.resizeBitmap(BitmapSetting.getOvalBitmap((Bitmap) msg.obj), 50, 50));
+                        else
+                            imageView.setImageBitmap(BitmapSetting.resizeBitmap(BitmapSetting.getOvalBitmap((Bitmap) msg.obj), imageView.getWidth(), imageView.getHeight()));
 
+                    }
                 }
-            }
+
         };
         executorService.submit(new Runnable() {
             @Override

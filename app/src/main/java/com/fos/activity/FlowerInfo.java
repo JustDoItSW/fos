@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -67,7 +68,7 @@ public class FlowerInfo extends AppCompatActivity {
             table_flowerInfo.setText("您将要添加的植物是");
             btn_finish.setVisibility(View.VISIBLE);
         }else {
-            table_flowerInfo.setText("植物信息");
+            table_flowerInfo.setText(intent.getExtras().getString("flowerName"));
             btn_finish.setVisibility(View.GONE);
         }
         flowerName_info.setText(intent.getExtras().getString("flowerName"));

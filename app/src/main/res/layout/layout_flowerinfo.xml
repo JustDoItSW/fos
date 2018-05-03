@@ -5,26 +5,37 @@
     android:orientation="horizontal"
     android:weightSum="1">
 
-    <TextView
-        android:text="类型"
-        android:id="@+id/flower_type"
-        android:layout_width="0dp"
-        android:layout_weight="0.3"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="12dp"
+        android:orientation="horizontal"
         android:layout_gravity="center_vertical"
-        />
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:weightSum="1">
+        <TextView
+            android:text="类型"
+            android:id="@+id/flower_type"
+            android:textColor="#bfbfbf"
+            android:layout_width="0dp"
+            android:layout_weight="0.3"
+            android:layout_height="wrap_content"
+            android:textSize="12dp"
+            android:layout_gravity="center_vertical"
+            />
 
-    <TextView
-        android:text="描述"
-        android:id="@+id/flower_der"
-        android:layout_width="0dp"
-        android:layout_weight="0.7"
-        android:layout_height="wrap_content"
-        android:textSize="12dp"
-        android:textColor="@android:color/black"
-        android:layout_gravity="center_vertical"
-        />
+        <TextView
+            android:text="描述"
+            android:id="@+id/flower_der"
+            android:layout_width="0dp"
+            android:layout_weight="0.7"
+            android:layout_height="wrap_content"
+            android:textSize="12dp"
+            android:layout_gravity="center_vertical"
+            />
+
+    </LinearLayout>
+
 
 
 

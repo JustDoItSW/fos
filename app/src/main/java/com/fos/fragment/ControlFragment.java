@@ -176,6 +176,9 @@ public class ControlFragment extends Fragment {
                         String str = bundle.getString("info");
                         Log.e("info", str);
                         Infomation infomation = InfomationAnalysis.jsonToData(str);
+                        fab_light.setTitle("光强:"+infomation.getLux());
+                        fab_heating.setTitle("温度:"+infomation.getTemperature());
+                        fab_watering.setTitle("土壤湿度:"+infomation.getSoilHumidity());
                         HumFragment.myLineChart.repaintView(Integer.parseInt(infomation.getHumidity()), infomation.getDate().toString(), Color.rgb(199, 232, 245));
                         LuxFragment.myLineChart.repaintView(Integer.parseInt(infomation.getLux()), infomation.getDate().toString(), Color.rgb(246, 235, 188));
                         SoilHumFragment.myLineChart.repaintView(Integer.parseInt(infomation.getSoilHumidity()), infomation.getDate().toString(), Color.rgb(199, 232, 245));

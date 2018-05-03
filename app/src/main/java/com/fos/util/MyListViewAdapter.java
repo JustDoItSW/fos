@@ -62,7 +62,7 @@ public class MyListViewAdapter extends BaseAdapter {
             viewholder=(ViewHolder)view.getTag();
         }
         Flower flower=mlist.get(i);
-        viewholder.imageView.setImageResource(R.mipmap.ic_launcher);
+        viewholder.imageView.setImageResource(R.mipmap.ic_launcher_round);
         //调用方法传递所需信息
         LoadImageUtil.onLoadImage(viewholder.imageView, mlist.get(i).getFlowerImage());
         Log.e("info", "当前图片地址："+mlist.get(i).getFlowerImage());
