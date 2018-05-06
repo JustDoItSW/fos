@@ -24,6 +24,7 @@ import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -39,6 +40,8 @@ import com.fos.entity.Flower;
 import com.fos.service.ClientSocket;
 import com.fos.service.Client_phone;
 import com.fos.service.MainService;
+import com.fos.util.ActivityCollector;
+import com.fos.util.GuideView;
 import com.fos.util.LogUtil;
 import com.fos.util.MyFragmentPagerAdapter;
 import com.fos.util.MyViewPager;
@@ -79,6 +82,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         allScreen();
+
+        ActivityCollector.finishAll();
+        ActivityCollector.addActivity(this);
+
         init();
         setupViewPager();//初始化viewpager
     }
@@ -283,8 +290,46 @@ public class MainActivity extends AppCompatActivity {
         myViewPager.addOnPageChangeListener(onPageChangeListener);
     }
     @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        Log.e("info","success");
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setGuideView();
+    }
+    GuideView guideView;
+    private void setGuideView() {
+        final ImageView iv=new ImageView(this);
+        iv.setBackgroundResource(R.drawable.img_new_task_guide);
+        RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        iv.setLayoutParams(params);
+
+        guideView=GuideView.Builder
+                .newInstance(this)
+                .setTargetView(left_menu)
+                .setCustomGuideView(iv)
+                .setDirction(GuideView.Direction.RIGHT_BOTTOM)
+                .setShape(GuideView.MyShape.CIRCULAR)
+                .setBgColor(getResources().getColor(R.color.shadow))
+                .setOnclickListener(new GuideView.OnClickCallback() {
+                    @Override
+                    public void onClickedGuideView() {
+                        guideView.hide();
+                    }
+                })
+                .build();
+        guideView.show();
+    }
+
     protected void onDestroy() {
         super.onDestroy();
+
+        ActivityCollector.removeActivity(this);
         stopService(intent);//关闭服务
         unbindService(serviceConnection);//解除服务绑定
     }
