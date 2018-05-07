@@ -5,22 +5,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 
-import android.os.Message;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -37,19 +33,12 @@ import android.widget.TextView;
 
 import com.fos.R;
 import com.fos.entity.Flower;
-import com.fos.service.ClientSocket;
 import com.fos.service.Client_phone;
 import com.fos.service.MainService;
 import com.fos.util.ActivityCollector;
 import com.fos.util.GuideView;
-import com.fos.util.LogUtil;
 import com.fos.util.MyFragmentPagerAdapter;
 import com.fos.util.MyViewPager;
-
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -89,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
         initFlower();
         init();
         setupViewPager();//初始化viewpager
+        setGuideView();
     }
 
     private void allScreen(){
@@ -180,6 +170,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     *  获得当前的所需要的温湿度信息（每隔60s）
+     */
     CompoundButton.OnCheckedChangeListener  checkedChangeListener =  new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -308,30 +301,72 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        setGuideView();
-    }
-    GuideView guideView;
-    private void setGuideView() {
-        final ImageView iv=new ImageView(this);
-        iv.setBackgroundResource(R.drawable.img_new_task_guide);
-        RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-        iv.setLayoutParams(params);
 
-        guideView=GuideView.Builder
+    }
+    GuideView guideView_leftBtn;
+    private GuideView guideView_selectFlowerBtn;
+    private void setGuideView() {
+        /**
+         * leftButton 的引导
+         */
+        final ImageView leftBtn_img=new ImageView(this);
+        leftBtn_img.setBackgroundResource(R.drawable.img_guide_leftbtn);
+        RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        leftBtn_img.setLayoutParams(params);
+
+        guideView_leftBtn=GuideView.Builder
                 .newInstance(this)
                 .setTargetView(left_menu)
-                .setCustomGuideView(iv)
+                .setCustomGuideView(leftBtn_img)
                 .setDirction(GuideView.Direction.RIGHT_BOTTOM)
                 .setShape(GuideView.MyShape.CIRCULAR)
                 .setBgColor(getResources().getColor(R.color.shadow))
                 .setOnclickListener(new GuideView.OnClickCallback() {
                     @Override
                     public void onClickedGuideView() {
-                        guideView.hide();
+                        guideView_leftBtn.hide();
+                        if(!dl.isDrawerOpen(left_linearLayout)){
+                            dl.openDrawer(left_linearLayout);
+                        }
+                        guideView_selectFlowerBtn.show();
                     }
                 })
                 .build();
-        guideView.show();
+
+        /**
+         * selectFlowerButton 的引导
+         */
+        final ImageView selectFlowerBtn_img=new ImageView(this);
+        selectFlowerBtn_img.setBackgroundResource(R.drawable.img_guide_selectflowerbtn);
+        RelativeLayout.LayoutParams params1=new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        selectFlowerBtn_img.setLayoutParams(params1);
+
+        /**
+         * 引导显示文字
+         */
+//        final TextView tv=new TextView(this);
+//        tv.setText("点击这里选择植物哦");
+//        tv.setTextColor(getResources().getColor(R.color.white));
+//        tv.setTextSize(30);
+//        tv.setGravity(Gravity.CENTER);
+
+        guideView_selectFlowerBtn=GuideView.Builder
+                .newInstance(this)
+                .setTargetView(btn_selectFlower)
+                .setCustomGuideView(selectFlowerBtn_img)
+                .setDirction(GuideView.Direction.RIGHT_BOTTOM)
+                .setShape(GuideView.MyShape.RECTANGULAR)
+                .setRadius(80)
+                .setBgColor(getResources().getColor(R.color.shadow))
+                .setOnclickListener(new GuideView.OnClickCallback() {
+                    @Override
+                    public void onClickedGuideView() {
+                        guideView_selectFlowerBtn.hide();
+                    }
+                })
+                .build();
+
+        guideView_leftBtn.show();
     }
 
     protected void onDestroy() {

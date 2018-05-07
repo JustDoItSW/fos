@@ -388,10 +388,10 @@ public class GuideView extends RelativeLayout implements ViewTreeObserver.OnGlob
                     break;
                 case RECTANGULAR://圆角矩形
                     //RectF对象
-                    oval.left = center[0] - 150;                              //左边
-                    oval.top = center[1] - 50;                                   //上边
-                    oval.right = center[0] + 150;                             //右边
-                    oval.bottom = center[1] + 50;                                //下边
+                    oval.left = center[0]-100;                              //左边
+                    oval.top = center[1] ;                                   //上边
+                    oval.right = center[0]+250 ;                             //右边
+                    oval.bottom = center[1] ;                                //下边
                     temp.drawRoundRect(oval, radius, radius, mCirclePaint);                   //绘制圆角矩形
                     break;
             }
