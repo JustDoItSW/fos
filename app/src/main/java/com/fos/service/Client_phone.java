@@ -7,6 +7,7 @@ import com.fos.activity.MainActivity;
 import com.fos.entity.Flower;
 import com.fos.entity.Infomation;
 import com.fos.fragment.ControlFragment;
+import com.fos.fragment.DataFragment;
 import com.fos.fragment.FlowerFragment;
 import com.fos.util.InfomationAnalysis;
 import com.fos.util.LogUtil;
@@ -239,7 +240,10 @@ public class Client_phone {
         msg.setData(bundle);
         try {
             if(InfomationAnalysis.judgeInfo(str) == null){
+                Message msg2 = new Message();
+                msg2.setData(bundle);
                 ControlFragment.handler.sendMessage(msg);
+                DataFragment.handler.sendMessage(msg2);
             }else if(InfomationAnalysis.judgeInfo(str).equals("error")){
                 msg.what =  0x003;
                 FlowerFragment.handler.sendMessage(msg);

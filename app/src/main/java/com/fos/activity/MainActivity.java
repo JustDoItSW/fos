@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         ActivityCollector.finishAll();
         ActivityCollector.addActivity(this);
 
+        initFlower();
         init();
         setupViewPager();//初始化viewpager
     }
@@ -101,11 +102,18 @@ public class MainActivity extends AppCompatActivity {
             getWindow().setNavigationBarColor(Color.TRANSPARENT);
         }
     }
-    private void init(){
+    private void initFlower(){
         sharedPreferences = getSharedPreferences(PREFERENCE_NAME,MODE);
         editor = sharedPreferences.edit();
         flower = new Flower();
         flower.setFlowerName(sharedPreferences.getString("flowerName","flowerName"));
+        flower.setFlowerLux(sharedPreferences.getString("light","normal"));
+        flower.setFlowerSoilHum(sharedPreferences.getString("hum","normal"));
+        flower.setFlowerTemp(sharedPreferences.getString("temp","normal"));
+        flower.setFlowerImage(sharedPreferences.getString("image",""));
+    }
+    private void init(){
+
         intent = new Intent(MainActivity.this, MainService.class);
 
         dl = (DrawerLayout)findViewById(R.id.dl);
@@ -122,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
         ip =  (EditText)findViewById(R.id.ip);
         port =  (EditText)findViewById(R.id.port);
 
-        ip.setText("192.168.191.2");
+        ip.setText("47.106.161.42");
         port.setText("8000");
 
         menu_tab.setOnClickListener(onClickListener);

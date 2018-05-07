@@ -215,7 +215,17 @@ public class FlowerFragment extends Fragment {
             String str2 = data.get(position).getFlowerImage();
             String str3 = data.get(position).getFlowerInfo();
             MainActivity.editor.putString("flowerName",str);
+            MainActivity.editor.putString("light",data.get(position).getFlowerLux());
+            MainActivity.editor.putString("hum",data.get(position).getFlowerSoilHum());
+            MainActivity.editor.putString("temp",data.get(position).getFlowerTemp());
+            MainActivity.editor.putString("image",data.get(position).getFlowerImage());
+         //   MainActivity.editor.putString("nut",data.get(position).getFlowerN());
             MainActivity.flower.setFlowerName(str);
+            MainActivity.flower.setFlowerLux(data.get(position).getFlowerLux());
+            MainActivity.flower.setFlowerSoilHum(data.get(position).getFlowerSoilHum());
+            MainActivity.flower.setFlowerTemp(data.get(position).getFlowerTemp());
+            MainActivity.flower.setFlowerImage(data.get(position).getFlowerImage());
+           // MainActivity.flower.set
             MainActivity.editor.commit();
 
             Log.e("info","选中的花名为:"+position+" "+str+"");

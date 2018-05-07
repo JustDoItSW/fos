@@ -134,6 +134,7 @@
                 android:checked="false"
                 />
             <EditText
+                android:visibility="gone"
                 android:id="@+id/ip"
                 android:textSize="10dp"
                 android:textColor="@android:color/black"
@@ -142,6 +143,7 @@
                 android:maxLines="1"
                 />
             <EditText
+                android:visibility="gone"
                 android:id="@+id/port"
                 android:textSize="10dp"
                 android:textColor="@android:color/black"

@@ -7,9 +7,6 @@
     android:background="#EeF2F3"
     android:weightSum="1">
 
-
-
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -91,30 +88,9 @@
                 app:fab_colorPressed="@color/press_white"
                 app:fab_size="mini"
                 android:src="@drawable/nutrition"
-                app:fab_title="肥力："/>
+                app:fab_title="肥力：合适"/>
 
         </com.getbase.floatingactionbutton.FloatingActionsMenu>
-
-
-
-        <LinearLayout
-            android:visibility="gone"
-            android:paddingBottom ="10dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginLeft="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-           >
-            <TextView
-                android:id="@+id/autoOrMan"
-                android:text="自动"
-                android:textColor="#bfbfbf"
-                android:layout_marginTop="20dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
     </RelativeLayout>
 
 </LinearLayout>

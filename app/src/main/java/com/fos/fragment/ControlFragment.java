@@ -142,7 +142,6 @@ public class ControlFragment extends Fragment {
         _scanner.scanAll();
     }
     private void init(){
-        autoOrMan = (TextView)view.findViewById(R.id.autoOrMan);
         fab_light =  (FloatingActionButton)view.findViewById(R.id.fab_light) ;
         fab_heating =  (FloatingActionButton)view.findViewById(R.id.fab_heating) ;
         fab_watering =  (FloatingActionButton)view.findViewById(R.id.fab_watering) ;
@@ -155,20 +154,6 @@ public class ControlFragment extends Fragment {
         fab_ctrl.setOnClickListener(onClickListener);
         shimmerTextView=view.findViewById(R.id.video_connecting_text);
         toggleAnimation(shimmerTextView);
-        autoOrMan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (MainActivity.Client_phone != null) {
-                    if(autoOrMan.getText().toString().equals("自动")){
-                        MainActivity.Client_phone.clientSendMessage("man"+MainActivity.flower.getFlowerName());
-                        autoOrMan.setText("手动");
-                    }else{
-                         MainActivity.Client_phone.clientSendMessage("smart"+MainActivity.flower.getFlowerName());
-                        autoOrMan.setText("自动");
-                    }
-                }
-            }
-        });
         handler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
@@ -176,16 +161,13 @@ public class ControlFragment extends Fragment {
                 try {
                         Bundle bundle = msg.getData();
                         String str = bundle.getString("info");
-                        Log.e("info", str);
+                        Log.e("Ctrl收到：", str);
                         Infomation infomation = InfomationAnalysis.jsonToData(str);
-                        fab_light.setTitle("光强:"+infomation.getLux());
-                        fab_heating.setTitle("温度:"+infomation.getTemperature());
-                        fab_watering.setTitle("土壤湿度:"+infomation.getSoilHumidity());
+                        fab_light.setTitle("光强:"+infomation.getLux()+"lux");
+                        fab_heating.setTitle("温度:"+infomation.getTemperature()+"°");
+                        fab_watering.setTitle("土壤湿度:"+Integer.parseInt(infomation.getSoilHumidity())/10+"%");
                       //  fab_nut.setTitle("肥力:"+);
-                        HumFragment.myLineChart.repaintView(Integer.parseInt(infomation.getHumidity()), infomation.getDate().toString(), Color.rgb(199, 232, 245));
-                        LuxFragment.myLineChart.repaintView(Integer.parseInt(infomation.getLux()), infomation.getDate().toString(), Color.rgb(246, 235, 188));
-                        SoilHumFragment.myLineChart.repaintView(Integer.parseInt(infomation.getSoilHumidity()), infomation.getDate().toString(), Color.rgb(199, 232, 245));
-                        TempFragment.myLineChart.repaintView(Integer.parseInt(infomation.getTemperature()), infomation.getDate().toString(), Color.rgb(255, 150, 150));
+
                 }catch(Exception e){
                     e.printStackTrace();
                 }
@@ -241,16 +223,18 @@ public class ControlFragment extends Fragment {
                     case R.id.fab_ctrl:
                         if(fab_ctrl.isSelected()){
                             MainActivity.Client_phone.clientSendMessage("smart");
+                            fab_ctrl.setTitle("当前状态：自动");
                             fab_ctrl.setSelected(false);
                         }else{
                             MainActivity.Client_phone.clientSendMessage("smart"+MainActivity.flower.getFlowerName());
                             fab_ctrl.setSelected(true);
+                            fab_ctrl.setTitle("当前状态：手动");
                         }
                     default:
                         break;
                 }
             }else{
-                Toast.makeText(getActivity(),"请先登录服务器！",Toast.LENGTH_LONG);
+                Toast.makeText(getActivity(),"请先登录服务器！",Toast.LENGTH_LONG).show();
             }
 
         }
