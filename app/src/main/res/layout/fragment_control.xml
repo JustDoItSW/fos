@@ -46,14 +46,15 @@
             app:fab_labelStyle="@style/fab_label"
             app:fab_addButtonPlusIconColor="#808080">
             <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_light"
+                android:id="@+id/fab_ctrl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:fab_colorNormal="@color/white"
                 app:fab_colorPressed="@color/press_white"
                 app:fab_size="mini"
-                android:src="@drawable/light"
-                app:fab_title="光强："/>
+                android:src="@drawable/control"
+                app:fab_title="当前状态："
+                />
             <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_watering"
                 android:layout_width="wrap_content"
@@ -62,7 +63,17 @@
                 app:fab_colorPressed="@color/press_white"
                 app:fab_size="mini"
                 android:src="@drawable/watering"
-                app:fab_title="湿度："/>
+                app:fab_title="湿度： 剩余水量：78%"/>
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fab_colorNormal="@color/white"
+                app:fab_colorPressed="@color/press_white"
+                app:fab_size="mini"
+                android:src="@drawable/light"
+                app:fab_title="光强："/>
+
             <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_heating"
                 android:layout_width="wrap_content"
@@ -81,6 +92,7 @@
                 app:fab_size="mini"
                 android:src="@drawable/nutrition"
                 app:fab_title="肥力："/>
+
         </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
 

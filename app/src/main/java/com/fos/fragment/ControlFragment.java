@@ -60,7 +60,7 @@ public class ControlFragment extends Fragment {
     public static Handler  handler;
     private static ControlFragment controlFragment;
     private View view;
-    private FloatingActionButton fab_light,fab_heating,fab_nut,fab_watering;
+    private FloatingActionButton fab_light,fab_heating,fab_nut,fab_watering,fab_ctrl;
     private KeyguardManager mKeyguardManager = null;
     private KeyguardManager.KeyguardLock mKeyguardLock = null;
     private PowerManager pm;
@@ -147,10 +147,12 @@ public class ControlFragment extends Fragment {
         fab_heating =  (FloatingActionButton)view.findViewById(R.id.fab_heating) ;
         fab_watering =  (FloatingActionButton)view.findViewById(R.id.fab_watering) ;
         fab_nut =  (FloatingActionButton)view.findViewById(R.id.fab_nut) ;
+        fab_ctrl =  (FloatingActionButton)view.findViewById(R.id.fab_ctrl) ;
         fab_light.setOnClickListener(onClickListener);
         fab_heating.setOnClickListener(onClickListener);
         fab_watering.setOnClickListener(onClickListener);
         fab_nut.setOnClickListener(onClickListener);
+        fab_ctrl.setOnClickListener(onClickListener);
         shimmerTextView=view.findViewById(R.id.video_connecting_text);
         toggleAnimation(shimmerTextView);
         autoOrMan.setOnClickListener(new View.OnClickListener() {
@@ -194,11 +196,11 @@ public class ControlFragment extends Fragment {
     View.OnClickListener onClickListener= new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch (v.getId()){
-                case  R.id.fab_light:
-                    if(MainActivity.Client_phone !=null)
+            if(MainActivity.Client_phone !=null){
+                switch (v.getId()){
+                    case  R.id.fab_light:
                         if(fab_light.isSelected()) {
-                            MainActivity.Client_phone.clientSendMessage("i");
+                            MainActivity.Client_phone.clientSendMessage("e");
                             fab_light.setSelected(false);
                         }
                         else {
@@ -206,8 +208,7 @@ public class ControlFragment extends Fragment {
                             fab_light.setSelected(true);
                         }
                         break;
-                case R.id.fab_watering:
-                    if(MainActivity.Client_phone !=null)
+                    case R.id.fab_watering:
                         if(fab_watering.isSelected()) {
                             MainActivity.Client_phone.clientSendMessage("5");
                             fab_watering.setSelected(false);
@@ -217,8 +218,7 @@ public class ControlFragment extends Fragment {
                             fab_watering.setSelected(true);
                         }
                         break;
-                case R.id.fab_heating:
-                    if(MainActivity.Client_phone !=null)
+                    case R.id.fab_heating:
                         if(fab_heating.isSelected()) {
                             MainActivity.Client_phone.clientSendMessage("s");
                             fab_heating.setSelected(false);
@@ -228,8 +228,7 @@ public class ControlFragment extends Fragment {
                             fab_heating.setSelected(true);
                         }
                         break;
-                case R.id.fab_nut:
-                    if(MainActivity.Client_phone !=null)
+                    case R.id.fab_nut:
                         if(fab_nut.isSelected()) {
                             MainActivity.Client_phone.clientSendMessage("y");
                             fab_nut.setSelected(false);
@@ -239,7 +238,21 @@ public class ControlFragment extends Fragment {
                             fab_nut.setSelected(true);
                         }
                         break;
+                    case R.id.fab_ctrl:
+                        if(fab_ctrl.isSelected()){
+                            MainActivity.Client_phone.clientSendMessage("smart");
+                            fab_ctrl.setSelected(false);
+                        }else{
+                            MainActivity.Client_phone.clientSendMessage("smart"+MainActivity.flower.getFlowerName());
+                            fab_ctrl.setSelected(true);
+                        }
+                    default:
+                        break;
+                }
+            }else{
+                Toast.makeText(getActivity(),"请先登录服务器！",Toast.LENGTH_LONG);
             }
+
         }
     };
     public void toggleAnimation(ShimmerTextView target) {

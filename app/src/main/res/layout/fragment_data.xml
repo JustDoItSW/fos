@@ -76,6 +76,7 @@
         android:layout_weight="0.2"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:background="@drawable/stroke_data"
         >
         <ImageView
             android:id="@+id/image_flowerInfo"
@@ -212,7 +213,7 @@
 
                 <TextView
                     android:id="@+id/str2"
-                    android:text="光照"
+                    android:text="湿度"
                     android:layout_toRightOf="@+id/ic2"
                     android:layout_marginTop="5dp"
                     android:layout_width="wrap_content"
@@ -281,14 +282,14 @@
 
                 <TextView
                     android:id="@+id/str3"
-                    android:text="光照"
+                    android:text="温度"
                     android:layout_toRightOf="@+id/ic3"
                     android:layout_marginTop="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <TextView
                     android:id="@+id/level_tem"
-                    android:text="合适"
+                    android:text="过高"
                     android:layout_marginTop="5dp"
                     android:textColor="@android:color/black"
                     android:layout_toRightOf="@+id/str3"
@@ -316,13 +317,13 @@
                         android:layout_weight="0.6"
                         android:layout_marginLeft="2dp"
                         android:layout_marginRight="2dp"
-                        android:background="@drawable/round_view_green"/>
+                        android:background="@drawable/round_view_gray"/>
 
                     <View
                         android:layout_width="0dp"
                         android:layout_height="5dp"
                         android:layout_weight="0.2"
-                        android:background="@drawable/round_view_gray"/>
+                        android:background="@drawable/round_view_red"/>
 
                 </LinearLayout>
             </RelativeLayout>
@@ -342,14 +343,14 @@
 
                 <TextView
                     android:id="@+id/str4"
-                    android:text="光照"
+                    android:text="肥力"
                     android:layout_toRightOf="@+id/ic4"
                     android:layout_marginTop="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <TextView
                     android:id="@+id/level_nut"
-                    android:text="合适"
+                    android:text="较差"
                     android:layout_marginTop="5dp"
                     android:textColor="@android:color/black"
                     android:layout_toRightOf="@+id/str4"
