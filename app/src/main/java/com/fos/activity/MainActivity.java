@@ -79,13 +79,7 @@ public class MainActivity extends AppCompatActivity {
         init();
         setupViewPager();//初始化viewpager
 
-        sharedPreferences=getSharedPreferences(PREFERENCE_NAME,MODE);
-        editor=sharedPreferences.edit();
-        /**
-         * 判断用户是否选择了植物，通过sharedPreferences查看已经存入的植物名称
-         */
-        if((sharedPreferences.getString("flowerName","")).equals(""))
-            setGuideView();
+
     }
 
     private void allScreen(){
@@ -102,11 +96,13 @@ public class MainActivity extends AppCompatActivity {
     private void initFlower(){
         sharedPreferences = getSharedPreferences(PREFERENCE_NAME,MODE);
         editor = sharedPreferences.edit();
+        if((sharedPreferences.getString("flowerName","")).equals(""))
+            setGuideView();
         flower = new Flower();
-        flower.setFlowerName(sharedPreferences.getString("flowerName","flowerName"));
-        flower.setFlowerLux(sharedPreferences.getString("light","normal"));
-        flower.setFlowerSoilHum(sharedPreferences.getString("hum","normal"));
-        flower.setFlowerTemp(sharedPreferences.getString("temp","normal"));
+        flower.setFlowerName(sharedPreferences.getString("flowerName","未选择"));
+        flower.setFlowerLux(sharedPreferences.getString("light","500"));
+        flower.setFlowerSoilHum(sharedPreferences.getString("hum","50"));
+        flower.setFlowerTemp(sharedPreferences.getString("temp","25"));
         flower.setFlowerImage(sharedPreferences.getString("image",""));
     }
     private void init(){

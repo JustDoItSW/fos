@@ -82,6 +82,7 @@ public class FlowerFragment extends Fragment {
     private void init(){
 
         flowerDao  = FlowerDao.getInstance();
+        flowerDao.delAll();
         listView = (ListView)view.findViewById(R.id.list_flowerData);
         layout_notFind  =(LinearLayout)view.findViewById(R.id.layout_notFind);
         text_notFind = (TextView)view.findViewById(R.id.text_notFind);
@@ -191,7 +192,6 @@ public class FlowerFragment extends Fragment {
      * @param str
      */
     private void searchFlower(String str){
-        Log.e("info","更新前数据"+data);
         data.clear();
         Flower[] flowers  = flowerDao.searchFlower(str);
         if(flowers!=null){
@@ -200,7 +200,6 @@ public class FlowerFragment extends Fragment {
             for(int i= 0;i < flowers.length;i++){
                 data.add(flowers[i]);
             }
-            Log.e("info","更新后数据"+data);
         }
         else{
             listView.setVisibility(View.GONE);
@@ -214,19 +213,6 @@ public class FlowerFragment extends Fragment {
             String str = data.get(position).getFlowerName();
             String str2 = data.get(position).getFlowerImage();
             String str3 = data.get(position).getFlowerInfo();
-            MainActivity.editor.putString("flowerName",str);
-            MainActivity.editor.putString("light",data.get(position).getFlowerLux());
-            MainActivity.editor.putString("hum",data.get(position).getFlowerSoilHum());
-            MainActivity.editor.putString("temp",data.get(position).getFlowerTemp());
-            MainActivity.editor.putString("image",data.get(position).getFlowerImage());
-         //   MainActivity.editor.putString("nut",data.get(position).getFlowerN());
-            MainActivity.flower.setFlowerName(str);
-            MainActivity.flower.setFlowerLux(data.get(position).getFlowerLux());
-            MainActivity.flower.setFlowerSoilHum(data.get(position).getFlowerSoilHum());
-            MainActivity.flower.setFlowerTemp(data.get(position).getFlowerTemp());
-            MainActivity.flower.setFlowerImage(data.get(position).getFlowerImage());
-           // MainActivity.flower.set
-            MainActivity.editor.commit();
 
             Log.e("info","选中的花名为:"+position+" "+str+"");
             Bundle  bundle = new Bundle();

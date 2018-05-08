@@ -67,6 +67,7 @@ public class DataFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_data,null,false);
         init();
+        initUserFlower();
         setupViewPager();
         return view;
     }
@@ -106,9 +107,7 @@ public class DataFragment extends Fragment {
 
         springIndicator=view.findViewById(R.id.indicator);
 
-        LoadImageUtil.onLoadImage(image_flowerInfo,MainActivity.flower.getFlowerImage());
-        data_flowerName.setText(MainActivity.flower.getFlowerName());
-        data_flowerName_g.setText(MainActivity.flower.getFlowerName());
+
 
         menu_temp.setOnClickListener(onClickListener);
         menu_hum.setOnClickListener(onClickListener);
@@ -119,6 +118,8 @@ public class DataFragment extends Fragment {
         handler =  new Handler(){
             @Override
             public void handleMessage(Message msg) {
+                if(msg.what == 0x004)
+                    initUserFlower();
                 super.handleMessage(msg);
                 Bundle bundle = msg.getData();
                 String str = bundle.getString("info");
@@ -126,11 +127,16 @@ public class DataFragment extends Fragment {
                 Infomation infomation = InfomationAnalysis.jsonToData(str);
                 HumFragment.myLineChart.repaintView(Integer.parseInt(infomation.getHumidity()), infomation.getDate().toString(), Color.rgb(199, 232, 245));
                 LuxFragment.myLineChart.repaintView(Integer.parseInt(infomation.getLux()), infomation.getDate().toString(), Color.rgb(246, 235, 188));
-                SoilHumFragment.myLineChart.repaintView(Integer.parseInt(infomation.getSoilHumidity())/10, infomation.getDate().toString(), Color.rgb(199, 232, 245));
+                SoilHumFragment.myLineChart.repaintView(Math.round(Float.parseFloat(infomation.getSoilHumidity())), infomation.getDate().toString(), Color.rgb(199, 232, 245));
                 TempFragment.myLineChart.repaintView(Integer.parseInt(infomation.getTemperature()), infomation.getDate().toString(), Color.rgb(255, 150, 150));
                 setLevel(infomation);
             }
         };
+    }
+    private  void initUserFlower(){
+        LoadImageUtil.onLoadImage(image_flowerInfo,MainActivity.flower.getFlowerImage());
+        data_flowerName.setText(MainActivity.flower.getFlowerName());
+        data_flowerName_g.setText(MainActivity.flower.getFlowerName());
     }
     private void initLevel(){
         light_lv1.setBackgroundResource(R.drawable.round_view_gray);
@@ -146,16 +152,16 @@ public class DataFragment extends Fragment {
     private void  setLevel(Infomation infomation){
         initLevel();
         int light  = Integer.parseInt(infomation.getLux());
-        int hum = Integer.parseInt(infomation.getSoilHumidity());
+        int hum = Math.round(Float.parseFloat(infomation.getSoilHumidity()));
         int temp = Integer.parseInt(infomation.getTemperature());
 
         int trueLight = Integer.parseInt(MainActivity.flower.getFlowerLux());
-        int trueHum = Integer.parseInt(MainActivity.flower.getFlowerSoilHum());
+        int trueHum = Math.round(Float.parseFloat(infomation.getSoilHumidity()));
         int trueTemp = Integer.parseInt(MainActivity.flower.getFlowerTemp());
-        if(light>trueLight+50){
+        if(light>trueLight+100){
             level_light.setText("过强");
             light_lv3.setBackgroundResource(R.drawable.round_view_red);
-        }else if(light<trueLight-50){
+        }else if(light<trueLight-100){
             level_light.setText("较弱");
             light_lv1.setBackgroundResource(R.drawable.round_view_red);
         }else{
@@ -163,10 +169,10 @@ public class DataFragment extends Fragment {
             light_lv2.setBackgroundResource(R.drawable.round_view_green);
         }
 
-        if(hum>trueHum+50){
+        if(hum>trueHum+5){
             level_water.setText("过高");
             water_lv3.setBackgroundResource(R.drawable.round_view_red);
-        }else if(hum<trueHum-50){
+        }else if(hum<trueHum-5){
             level_water.setText("较低");
             water_lv1.setBackgroundResource(R.drawable.round_view_red);
         }else{

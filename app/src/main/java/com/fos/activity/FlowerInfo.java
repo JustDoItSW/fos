@@ -2,6 +2,7 @@ package com.fos.activity;
 
 import android.content.Intent;
 import android.media.Image;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +15,8 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.fos.R;
+import com.fos.entity.Flower;
+import com.fos.fragment.DataFragment;
 import com.fos.util.InfomationAnalysis;
 import com.fos.util.LoadImageUtil;
 
@@ -33,6 +36,7 @@ public class FlowerInfo extends AppCompatActivity {
     private TextView flowerName_info,table_flowerInfo;
     private ListView list_flowerInfo;
     private SimpleAdapter simpleAdapter;
+    private Flower flower;
     private com.fos.entity.FlowerInfo flowerInfo;
     private String[] strData = {"土壤","光照","浇水","施肥"};
     private List<Map<String,String>> data;
@@ -61,6 +65,32 @@ public class FlowerInfo extends AppCompatActivity {
         btn_finish = (Button)findViewById(R.id.btn_finish);
         list_flowerInfo = (ListView)findViewById(R.id.list_flowerInfo) ;
 
+        btn_finish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.editor.putString("flowerName",flower.getFlowerName().toString());
+                MainActivity.editor.putString("light",flower.getFlowerLux().toString());
+                MainActivity.editor.putString("hum",flower.getFlowerSoilHum().toString());
+                MainActivity.editor.putString("temp",flower.getFlowerTemp().toString());
+                MainActivity.editor.putString("image",flower.getFlowerImage().toString());
+                //   MainActivity.editor.putString("nut",data.get(position).getFlowerN());
+                MainActivity.editor.commit();
+
+                MainActivity.flower.setFlowerName(flower.getFlowerName().toString());
+                MainActivity.flower.setFlowerLux(flower.getFlowerLux().toString());
+                MainActivity.flower.setFlowerSoilHum(flower.getFlowerSoilHum().toString());
+                MainActivity.flower.setFlowerTemp(flower.getFlowerTemp().toString());
+                MainActivity.flower.setFlowerImage(flower.getFlowerImage().toString());
+                // MainActivity.flower.set
+
+                Message message = new Message();
+                message.what = 0x004;
+                message.setData(new Bundle());
+                DataFragment.handler.sendMessage(message);
+
+            }
+        });
+
     }
     private void getIntentData(){
         intent = getIntent();
@@ -71,9 +101,16 @@ public class FlowerInfo extends AppCompatActivity {
             table_flowerInfo.setText(intent.getExtras().getString("flowerName"));
             btn_finish.setVisibility(View.GONE);
         }
-        flowerName_info.setText(intent.getExtras().getString("flowerName"));
-        LoadImageUtil.onLoadImage(image_flowerInfo, intent.getExtras().getString("flowerImage"));
-        flowerInfo = InfomationAnalysis.jsonToFlowerInfo(intent.getExtras().getString("flowerInfo"));
+        flower = new Flower();
+        flower.setFlowerInfo(intent.getExtras().getString("flowerInfo"));
+        flower.setFlowerTemp(intent.getExtras().getString("temp"));
+        flower.setFlowerLux(intent.getExtras().getString("light"));
+        flower.setFlowerSoilHum(intent.getExtras().getString("hum"));
+        flower.setFlowerName(intent.getExtras().getString("flowerName"));
+        flower.setFlowerImage(intent.getExtras().getString("flowerImage"));
+        flowerName_info.setText(flower.getFlowerName().toString());
+        LoadImageUtil.onLoadImage(image_flowerInfo, flower.getFlowerImage().toString());
+        flowerInfo = InfomationAnalysis.jsonToFlowerInfo(flower.getFlowerInfo().toString());
 
     }
 

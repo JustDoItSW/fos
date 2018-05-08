@@ -150,7 +150,7 @@ public class SelectFlower extends AppCompatActivity {
     private void initListView(){
         myListViewAdapter  =  new MyListViewAdapter(SelectFlower.this,R.layout.layout_flowerlist,data);
         listView.setAdapter(myListViewAdapter);
-        listView.setOnItemClickListener(listViewOnItemClickListener());
+        listView.setOnItemClickListener(onItemClickListener);
     }
 
     /**
@@ -187,30 +187,22 @@ public class SelectFlower extends AppCompatActivity {
         }
         myListViewAdapter.notifyDataSetChanged();
     }
-
-    private AdapterView.OnItemClickListener listViewOnItemClickListener(){
-        AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String str = data.get(position).getFlowerName();
-                String str2 = data.get(position).getFlowerImage();
-                String str3 = data.get(position).getFlowerInfo();
-                MainActivity.editor.putString("flowerName",str);
-                MainActivity.flower.setFlowerName(str);
-                MainActivity.editor.commit();
-
-                Log.e("info","选中的花名为:"+str+"");
-                Bundle  bundle = new Bundle();
-                bundle.putString("flowerName",str);
-                bundle.putString("flowerImage",str2);
-                bundle.putString("flowerInfo",str3);
-                bundle.putBoolean("isSelect",true);
-                Intent intent = new Intent(SelectFlower.this,FlowerInfo.class);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        };
-        return onItemClickListener;
-    }
+    AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Log.e("info","选中的花名为:"+data.get(position).getFlowerName()+"");
+            Bundle  bundle = new Bundle();
+            bundle.putString("flowerName",data.get(position).getFlowerName());
+            bundle.putString("flowerImage",data.get(position).getFlowerImage());
+            bundle.putString("flowerInfo",data.get(position).getFlowerInfo());
+            bundle.putString("light",data.get(position).getFlowerLux());
+            bundle.putString("hum",data.get(position).getFlowerSoilHum());
+            bundle.putString("temp",data.get(position).getFlowerTemp());
+            bundle.putBoolean("isSelect",true);
+            Intent intent = new Intent(SelectFlower.this,FlowerInfo.class);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        }
+    };
 
 }

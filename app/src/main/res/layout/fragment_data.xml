@@ -62,7 +62,7 @@
         android:id="@+id/vp_data"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.4"
+        android:layout_weight="0.45"
         android:layout_below="@+id/menu_data"
         >
     </com.fos.util.MyViewPager>
@@ -120,7 +120,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.4"
+        android:layout_weight="0.35"
         android:orientation="vertical"
         android:background="@android:color/white"
         android:weightSum="1">
@@ -398,10 +398,6 @@
 
         </LinearLayout>
 
-
     </LinearLayout>
-
-
-
 
 </LinearLayout>
