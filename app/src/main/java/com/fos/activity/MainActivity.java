@@ -78,7 +78,14 @@ public class MainActivity extends AppCompatActivity {
         initFlower();
         init();
         setupViewPager();//初始化viewpager
-        setGuideView();
+
+        sharedPreferences=getSharedPreferences(PREFERENCE_NAME,MODE);
+        editor=sharedPreferences.edit();
+        /**
+         * 判断用户是否选择了植物，通过sharedPreferences查看已经存入的植物名称
+         */
+        if((sharedPreferences.getString("flowerName","")).equals(""))
+            setGuideView();
     }
 
     private void allScreen(){
