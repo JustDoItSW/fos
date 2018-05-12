@@ -8,7 +8,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -22,6 +25,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,8 +63,10 @@ public class ControlFragment extends Fragment {
     private Shimmer  shimmer;
     public static Handler  handler;
     private static ControlFragment controlFragment;
+    private BottomSheetBehavior bottomSheetBehavior;
     private View view;
-    private FloatingActionButton fab_light,fab_heating,fab_nut,fab_watering,fab_ctrl;
+   // private FloatingActionButton fab_light,fab_heating,fab_nut,fab_watering,fab_ctrl;
+    private ImageView fab_light,fab_heating,fab_nut,fab_watering,fab_ctrl;
     private KeyguardManager mKeyguardManager = null;
     private KeyguardManager.KeyguardLock mKeyguardLock = null;
     private PowerManager pm;
@@ -99,6 +105,7 @@ public class ControlFragment extends Fragment {
         initInternet();
         initVideo();
         init();
+        initBottomSheet();
         return view;
     }
 
@@ -133,6 +140,9 @@ public class ControlFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 MainActivity.menu_tab.setVisibility(MainActivity.menu_tab.getVisibility()== View.GONE?View.VISIBLE:View.GONE);
+                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }
             }
         });
         _videoView.setFullScreen(true);
@@ -142,11 +152,16 @@ public class ControlFragment extends Fragment {
         _scanner.scanAll();
     }
     private void init(){
-        fab_light =  (FloatingActionButton)view.findViewById(R.id.fab_light) ;
-        fab_heating =  (FloatingActionButton)view.findViewById(R.id.fab_heating) ;
-        fab_watering =  (FloatingActionButton)view.findViewById(R.id.fab_watering) ;
-        fab_nut =  (FloatingActionButton)view.findViewById(R.id.fab_nut) ;
-        fab_ctrl =  (FloatingActionButton)view.findViewById(R.id.fab_ctrl) ;
+//        fab_light =  (FloatingActionButton)view.findViewById(R.id.fab_light) ;
+//        fab_heating =  (FloatingActionButton)view.findViewById(R.id.fab_heating) ;
+//        fab_watering =  (FloatingActionButton)view.findViewById(R.id.fab_watering) ;
+//        fab_nut =  (FloatingActionButton)view.findViewById(R.id.fab_nut) ;
+//        fab_ctrl =  (FloatingActionButton)view.findViewById(R.id.fab_ctrl) ;
+        fab_light =  (ImageView)view.findViewById(R.id.fab_light) ;
+        fab_heating =  (ImageView)view.findViewById(R.id.fab_heating) ;
+        fab_watering =  (ImageView)view.findViewById(R.id.fab_watering) ;
+        fab_nut =  (ImageView)view.findViewById(R.id.fab_nut) ;
+        fab_ctrl =  (ImageView)view.findViewById(R.id.fab_ctrl) ;
         fab_light.setOnClickListener(onClickListener);
         fab_heating.setOnClickListener(onClickListener);
         fab_watering.setOnClickListener(onClickListener);
@@ -163,9 +178,9 @@ public class ControlFragment extends Fragment {
                         String str = bundle.getString("info");
                         Log.e("Ctrl收到：", str);
                         Infomation infomation = InfomationAnalysis.jsonToData(str);
-                        fab_light.setTitle("光强:"+infomation.getLux()+"lux");
-                        fab_heating.setTitle("温度:"+infomation.getTemperature()+"°");
-                        fab_watering.setTitle("土壤湿度:"+Integer.parseInt(infomation.getSoilHumidity())/10+"%");
+//                        fab_light.setTitle("光强:"+infomation.getLux()+"lux");
+//                        fab_heating.setTitle("温度:"+infomation.getTemperature()+"°");
+//                        fab_watering.setTitle("土壤湿度:"+Integer.parseInt(infomation.getSoilHumidity())/10+"%");
                       //  fab_nut.setTitle("肥力:"+);
 
                 }catch(Exception e){
@@ -175,9 +190,54 @@ public class ControlFragment extends Fragment {
         };
     }
 
+    public void initBottomSheet(){
+        bottomSheetBehavior = BottomSheetBehavior.from(view.findViewById(R.id.rl_test));
+        RelativeLayout relativeLayout = (RelativeLayout)view.findViewById(R.id.rl_test);
+        final ImageView imageView = (ImageView)view.findViewById(R.id.openBottomSheet);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(v.isSelected()){
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    v.setSelected(false);
+                }else {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    v.setSelected(true);
+                }
+            }
+
+        });
+        relativeLayout.setOnClickListener(null);
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED ||bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
+                    imageView.setSelected(false);
+                }else{
+                    imageView.setSelected(true);
+                }
+            }
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED ||bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
+                    imageView.setSelected(false);
+                }else{
+                    imageView.setSelected(true);
+                }
+            }
+        });
+    }
     View.OnClickListener onClickListener= new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+           // bottomSheetDialog.show();
+                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                } else if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                }else if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                }
             if(MainActivity.Client_phone !=null){
                 switch (v.getId()){
                     case  R.id.fab_light:
@@ -223,12 +283,12 @@ public class ControlFragment extends Fragment {
                     case R.id.fab_ctrl:
                         if(fab_ctrl.isSelected()){
                             MainActivity.Client_phone.clientSendMessage("smart");
-                            fab_ctrl.setTitle("当前状态：自动");
+                        //    fab_ctrl.setTitle("当前状态：自动");
                             fab_ctrl.setSelected(false);
                         }else{
                             MainActivity.Client_phone.clientSendMessage("smart"+MainActivity.flower.getFlowerName());
                             fab_ctrl.setSelected(true);
-                            fab_ctrl.setTitle("当前状态：手动");
+                          //  fab_ctrl.setTitle("当前状态：手动");
                         }
                     default:
                         break;

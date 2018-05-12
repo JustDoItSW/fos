@@ -12,7 +12,7 @@
 
     <color name="indicator_1">#55B3C2</color>
     <color name="indicator_2">#64A4A4</color>
-    <color name="indicator_3">#2ccaab</color>
+    <color name="indicator_3">@color/ThemeColor</color>
     <color name="indicator_4">#FDBC7D</color>
 
     <color name="press_white">#f1f1f1</color>
@@ -20,4 +20,6 @@
 
     <color name="transparent">#00000000</color>
     <color name="shadow">#cc222222</color>
+
+    <color name="ThemeColor">#2c99e9</color>
 </resources>
