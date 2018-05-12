@@ -35,6 +35,7 @@ import com.fos.R;
 import com.fos.entity.Flower;
 import com.fos.service.Client_phone;
 import com.fos.service.MainService;
+import com.fos.service.netty.SimpleClient;
 import com.fos.util.ActivityCollector;
 import com.fos.util.GuideView;
 import com.fos.util.MyFragmentPagerAdapter;
@@ -65,7 +66,8 @@ public class MainActivity extends AppCompatActivity {
     private ServiceConnection serviceConnection;
     public static Handler  handler;
     private Thread queryThread;
-    public static Client_phone Client_phone;
+//    public static Client_phone Client_phone;
+    public static SimpleClient Client_phone;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
         port =  (EditText)findViewById(R.id.port);
 
         ip.setText("47.106.161.42");
+//        ip.setText("192.168.23.1");
         port.setText("8000");
 
         menu_tab.setOnClickListener(onClickListener);
@@ -181,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if(isChecked) {
                 if (MainActivity.Client_phone == null) {
-                    MainActivity.Client_phone = new Client_phone(ip.getText().toString(), Integer.parseInt(port.getText().toString()));
+                    MainActivity.Client_phone = new SimpleClient(ip.getText().toString(), Integer.parseInt(port.getText().toString()));
                     queryThread = new Thread(){
                         @Override
                         public void run() {
