@@ -49,7 +49,7 @@ public class MyLineChart {
         axisYValueList = new ArrayList<>();
         initAxisX();
         initAxisY();
-        initLine();
+      //  initLine();
         initDatas(lineList);
         lineChartView.setLineChartData(lineChartData);
         lineChartView.setBackgroundColor(Color.WHITE);
@@ -190,9 +190,9 @@ public class MyLineChart {
         }else {
             //重新绘制折线图
             count = 2;
-            pointValueList = new ArrayList<>();
-            axisXValueList = new ArrayList<>();
-            lineList = new ArrayList<>();
+            pointValueList.clear();
+            axisXValueList.clear();
+            lineList.clear();
             lineChartData = initDatas(null);
             lineChartView.setLineChartData(lineChartData);
         }

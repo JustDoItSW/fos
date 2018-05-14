@@ -125,8 +125,8 @@ public class MainActivity extends AppCompatActivity {
         ip =  (EditText)findViewById(R.id.ip);
         port =  (EditText)findViewById(R.id.port);
 
-        ip.setText("47.106.161.42");
-//        ip.setText("192.168.23.1");
+       // ip.setText("47.106.161.42");
+       ip.setText("192.168.23.1");
         port.setText("8000");
 
         menu_tab.setOnClickListener(onClickListener);
@@ -184,11 +184,11 @@ public class MainActivity extends AppCompatActivity {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if(isChecked) {
                 if (MainActivity.Client_phone == null) {
-                    MainActivity.Client_phone = new SimpleClient(ip.getText().toString(), Integer.parseInt(port.getText().toString()));
                     queryThread = new Thread(){
                         @Override
                         public void run() {
                             super.run();
+                            MainActivity.Client_phone = new SimpleClient(ip.getText().toString(), Integer.parseInt(port.getText().toString()));
                             try {
                                 while (true){
                                     sleep(10000);

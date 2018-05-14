@@ -37,22 +37,22 @@ public class SimpleClientHandler extends SimpleChannelInboundHandler<String> {
         Message msg = new Message();
         Message msg2 =  new Message();
         msg.what = 0x001;
-        msg.what = 0x001;
+        msg2.what = 0x001;
         Bundle bundle = new Bundle();
         bundle.putString("info", str);
         msg.setData(bundle);
+        msg2.setData(bundle);
         try {
-            if(InfomationAnalysis.judgeInfo(str) == null){
-                Message msg3 = new Message();
-                msg2.setData(bundle);
-                ControlFragment.handler.sendMessage(msg);
-                DataFragment.handler.sendMessage(msg3);
-            }else if(InfomationAnalysis.judgeInfo(str).equals("error")){
+            String className = InfomationAnalysis.judgeInfo(str);
+            if(className.equals("error")){
                 msg.what =  0x003;
                 FlowerFragment.handler.sendMessage(msg);
                 msg2.what = 0x003;
                 SelectFlower.handler.sendMessage(msg2);
-            }else {
+            }else if(className.equals("Data")) {
+                ControlFragment.handler.sendMessage(msg);
+                DataFragment.handler.sendMessage(msg2);
+            }else if(className.equals("Flower")){
                 FlowerFragment.handler.sendMessage(msg);
                 SelectFlower.handler.sendMessage(msg2);
             }

@@ -158,10 +158,10 @@ public class DataFragment extends Fragment {
         int trueLight = Integer.parseInt(MainActivity.flower.getFlowerLux());
         int trueHum = Math.round(Float.parseFloat(infomation.getSoilHumidity()));
         int trueTemp = Integer.parseInt(MainActivity.flower.getFlowerTemp());
-        if(light>trueLight+100){
+        if(light>trueLight+200){
             level_light.setText("过强");
             light_lv3.setBackgroundResource(R.drawable.round_view_red);
-        }else if(light<trueLight-100){
+        }else if(light<trueLight-200){
             level_light.setText("较弱");
             light_lv1.setBackgroundResource(R.drawable.round_view_red);
         }else{
@@ -194,7 +194,7 @@ public class DataFragment extends Fragment {
     }
 
     private void setCurrentTextView(TextView  textView){
-//        textView.setSelected(true);
+        textView.setSelected(true);
 //        textView.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
         textView.getPaint().setAntiAlias(true);
     }
@@ -224,25 +224,27 @@ public class DataFragment extends Fragment {
         public void onPageSelected(int position) {
             switch (position){
                 case 0:
-                    setAllSelected();
-                    menu_temp.setSelected(true);
+                        setAllSelected();
+                        menu_temp.setSelected(true);
+                        break;
 
-                    break;
                 case 1:
-                    setAllSelected();
-                    menu_hum.setSelected(true);
+                        setAllSelected();
+                        menu_hum.setSelected(true);
+                        break;
 
-                    break;
                 case 2:
-                    setAllSelected();
-                    menu_soilHum.setSelected(true);
+                        setAllSelected();
+                        menu_soilHum.setSelected(true);
+                        break;
 
-                    break;
                 case 3:
-                    setAllSelected();
-                    menu_lux.setSelected(true);
+                        setAllSelected();
+                        menu_lux.setSelected(true);
+                        break;
 
-                    break;
+                    default:
+                        break;
 
             }
         }
@@ -257,25 +259,21 @@ public class DataFragment extends Fragment {
                     setAllSelected();
                     setCurrentTextView(menu_temp);
                     myViewPager.setCurrentItem(0);
-
                     break;
                 case R.id.menu_hum:
                     setAllSelected();
                     setCurrentTextView(menu_hum);
                     myViewPager.setCurrentItem(1);
-
                     break;
                 case R.id.menu_soilHum:
                     setAllSelected();
                     setCurrentTextView(menu_soilHum);
                     myViewPager.setCurrentItem(2);
-
                     break;
                 case R.id.menu_lux:
                     setAllSelected();
                     setCurrentTextView(menu_lux);
                     myViewPager.setCurrentItem(3);
-
                     break;
             }
         }

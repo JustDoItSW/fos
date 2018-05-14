@@ -9,6 +9,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.fos.entity.Flower;
 import com.fos.entity.FlowerInfo;
 import com.fos.entity.Infomation;
+import com.fos.entity.JudgeClass;
 
 import java.util.List;
 
@@ -40,14 +41,16 @@ public class InfomationAnalysis {
         try {
             if(info!=null) {
                 JSONArray myJsonArray = JSONArray.parseArray(info);
-                String str = JSONObject.parseObject(myJsonArray.get(0).toString(), Flower.class).getFlowerName();
+                String str = JSONObject.parseObject(myJsonArray.get(0).toString(), JudgeClass.class).getClassName();
+                if(str.equals("Flower") && JSONObject.parseObject(myJsonArray.get(0).toString(), Flower.class).getFlowerName().equals("error")){
+                    return "error";
+                }
                 return str;
             }
-            else
-                return null;
+            return null;
         }catch (Exception  e){
             e.printStackTrace();
-            return null;
+            return "Data";
         }
     }
 
