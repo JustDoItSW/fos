@@ -10,6 +10,7 @@ import com.fos.entity.Flower;
 import com.fos.entity.FlowerInfo;
 import com.fos.entity.Infomation;
 import com.fos.entity.JudgeClass;
+import com.fos.entity.UserInfo;
 
 import java.util.List;
 
@@ -41,7 +42,8 @@ public class InfomationAnalysis {
         try {
             if(info!=null) {
                 JSONArray myJsonArray = JSONArray.parseArray(info);
-                String str = JSONObject.parseObject(myJsonArray.get(0).toString(), JudgeClass.class).getClassName();
+               // String str = JSONObject.parseObject(myJsonArray.get(0).toString(), JudgeClass.class).getClassName();
+                String str = JSON.parseObject(myJsonArray.get(0).toString()).getString("className");
                 if(str.equals("Flower") && JSONObject.parseObject(myJsonArray.get(0).toString(), Flower.class).getFlowerName().equals("error")){
                     return "error";
                 }
@@ -89,4 +91,16 @@ public class InfomationAnalysis {
             return null;
     }
 
+    public static String BeantoUserInfo(UserInfo userInfo){
+        return JSON.toJSONString(userInfo);
+    }
+
+    public static UserInfo jsonToUserInfo(String s){
+        if(s!=null) {
+            UserInfo u= JSON.parseObject(s, UserInfo.class);
+            return u;
+        }else{
+            return null;
+        }
+    }
 }

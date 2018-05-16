@@ -36,9 +36,11 @@ import com.demo.sdk.Module;
 import com.demo.sdk.Player;
 import com.demo.sdk.Scanner;
 import com.fos.R;
+import com.fos.activity.LoginActivity;
 import com.fos.activity.MainActivity;
 import com.fos.entity.Infomation;
 import com.fos.service.Client_phone;
+import com.fos.service.netty.Client;
 import com.fos.util.InfomationAnalysis;
 import com.fos.util.LogUtil;
 import com.fos.util.RemoteTunnel;
@@ -238,64 +240,74 @@ public class ControlFragment extends Fragment {
                 }else if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 }
-            if(MainActivity.Client_phone !=null){
+          //  if(LoginActivity.Client_phone !=null){
                 switch (v.getId()){
                     case  R.id.fab_light:
                         if(fab_light.isSelected()) {
-                            MainActivity.Client_phone.clientSendMessage("e");
+                            //LoginActivity.Client_phone.clientSendMessage("e");
+                            Client.getClient("e");
                             fab_light.setSelected(false);
                         }
                         else {
-                            MainActivity.Client_phone.clientSendMessage("b");
+                           // LoginActivity.Client_phone.clientSendMessage("b");
+                            Client.getClient("b");
                             fab_light.setSelected(true);
                         }
                         break;
                     case R.id.fab_watering:
                         if(fab_watering.isSelected()) {
-                            MainActivity.Client_phone.clientSendMessage("5");
+                        //    LoginActivity.Client_phone.clientSendMessage("5");
+                            Client.getClient("5");
                             fab_watering.setSelected(false);
                         }
                         else {
-                            MainActivity.Client_phone.clientSendMessage("m");
+                         //   LoginActivity.Client_phone.clientSendMessage("m");
+                            Client.getClient("m");
                             fab_watering.setSelected(true);
                         }
                         break;
                     case R.id.fab_heating:
                         if(fab_heating.isSelected()) {
-                            MainActivity.Client_phone.clientSendMessage("s");
+                            //LoginActivity.Client_phone.clientSendMessage("s");
+                            Client.getClient("s");
                             fab_heating.setSelected(false);
                         }
                         else {
-                            MainActivity.Client_phone.clientSendMessage("p");
+                           // LoginActivity.Client_phone.clientSendMessage("p");
+                            Client.getClient("p");
                             fab_heating.setSelected(true);
                         }
                         break;
                     case R.id.fab_nut:
                         if(fab_nut.isSelected()) {
-                            MainActivity.Client_phone.clientSendMessage("y");
+                           // LoginActivity.Client_phone.clientSendMessage("y");
+                            Client.getClient("y");
                             fab_nut.setSelected(false);
                         }
                         else {
-                            MainActivity.Client_phone.clientSendMessage("v");
+                           // LoginActivity.Client_phone.clientSendMessage("v");
+                            Client.getClient("v");
                             fab_nut.setSelected(true);
                         }
                         break;
                     case R.id.fab_ctrl:
                         if(fab_ctrl.isSelected()){
-                            MainActivity.Client_phone.clientSendMessage("smart");
+                           // LoginActivity.Client_phone.clientSendMessage("smart");
+                            Client.getClient("smart");
                         //    fab_ctrl.setTitle("当前状态：自动");
                             fab_ctrl.setSelected(false);
                         }else{
-                            MainActivity.Client_phone.clientSendMessage("smart"+MainActivity.flower.getFlowerName());
+                          //  LoginActivity.Client_phone.clientSendMessage("smart"+MainActivity.flower.getFlowerName());
+                            Client.getClient("smart"+MainActivity.flower.getFlowerName());
                             fab_ctrl.setSelected(true);
                           //  fab_ctrl.setTitle("当前状态：手动");
                         }
                     default:
                         break;
                 }
-            }else{
-                Toast.makeText(getActivity(),"请先登录服务器！",Toast.LENGTH_LONG).show();
-            }
+//            }else{
+//                Toast.makeText(getActivity(),"请先登录服务器！",Toast.LENGTH_LONG).show();
+//            }
 
         }
     };

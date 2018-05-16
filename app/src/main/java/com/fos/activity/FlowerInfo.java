@@ -46,7 +46,6 @@ public class FlowerInfo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flower_info);
         init();
-        getIntentData();
         initData();
         initListView();
     }
@@ -65,6 +64,7 @@ public class FlowerInfo extends AppCompatActivity {
         btn_finish = (Button)findViewById(R.id.btn_finish);
         list_flowerInfo = (ListView)findViewById(R.id.list_flowerInfo) ;
 
+        getIntentData();
         btn_finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

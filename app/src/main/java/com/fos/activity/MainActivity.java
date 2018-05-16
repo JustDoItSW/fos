@@ -35,9 +35,11 @@ import com.fos.R;
 import com.fos.entity.Flower;
 import com.fos.service.Client_phone;
 import com.fos.service.MainService;
+import com.fos.service.netty.Client;
 import com.fos.service.netty.SimpleClient;
 import com.fos.util.ActivityCollector;
 import com.fos.util.GuideView;
+import com.fos.util.InfomationAnalysis;
 import com.fos.util.MyFragmentPagerAdapter;
 import com.fos.util.MyViewPager;
 
@@ -56,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private MyViewPager myViewPager;
     private ImageView left_menu,text_control,text_data,text_flower;
     private Switch loginControl;
-    private EditText ip,port;
+    private TextView main_userName;
     private DrawerLayout dl;
     private RelativeLayout main_relativeLayout;
     private MyFragmentPagerAdapter myFragmentPagerAdapter;
@@ -67,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     public static Handler  handler;
     private Thread queryThread;
 //    public static Client_phone Client_phone;
-    public static SimpleClient Client_phone;
+   // public static SimpleClient Client_phone;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
     private void init(){
 
         intent = new Intent(MainActivity.this, MainService.class);
+        Intent i = getIntent();
 
         dl = (DrawerLayout)findViewById(R.id.dl);
         main_relativeLayout =  (RelativeLayout)findViewById(R.id.main_relativeLayout);
@@ -122,13 +125,9 @@ public class MainActivity extends AppCompatActivity {
         myViewPager = (MyViewPager)findViewById(R.id.vp);
         btn_selectFlower  = (Button)findViewById(R.id.btn_selectFlower);
         loginControl = (Switch)findViewById(R.id.loginControl);
-        ip =  (EditText)findViewById(R.id.ip);
-        port =  (EditText)findViewById(R.id.port);
+        main_userName = (TextView) findViewById(R.id.main_userName);
 
-       // ip.setText("47.106.161.42");
-       ip.setText("192.168.23.1");
-        port.setText("8000");
-
+        main_userName.setText(i.getExtras().getString("userName"));
         menu_tab.setOnClickListener(onClickListener);
         loginControl.setOnCheckedChangeListener(checkedChangeListener);
         text_control.setSelected(true);
@@ -183,22 +182,44 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if(isChecked) {
-                if (MainActivity.Client_phone == null) {
-                    queryThread = new Thread(){
+//                if (LoginActivity.Client_phone == null) {
+//                    queryThread = new Thread(){
+//                        @Override
+//                        public void run() {
+//                            super.run();
+//                            try {
+//                                while (true){
+//                                    sleep(10000);
+//                                    Log.e("info","开始查询");
+////                                    if (LoginActivity.Client_phone != null) {
+////                                        LoginActivity.Client_phone.clientSendMessage("i");
+////                                    }
+//                                    Client.getClient("i");
+//                                    sleep(50000);
+//                                }
+//                            }catch(Exception e){
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    };
+//                    queryThread.start();
+//                }
+                if(Client.isExist()) {
+                    queryThread = new Thread() {
                         @Override
                         public void run() {
                             super.run();
-                            MainActivity.Client_phone = new SimpleClient(ip.getText().toString(), Integer.parseInt(port.getText().toString()));
                             try {
-                                while (true){
+                                while (true) {
                                     sleep(10000);
-                                    Log.e("info","开始查询");
-                                    if (MainActivity.Client_phone != null) {
-                                        MainActivity.Client_phone.clientSendMessage("i");
-                                    }
+                                    Log.e("info", "开始查询");
+//                                    if (LoginActivity.Client_phone != null) {
+//                                        LoginActivity.Client_phone.clientSendMessage("i");
+//                                    }
+                                    Client.getClient("i");
                                     sleep(50000);
                                 }
-                            }catch(Exception e){
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
@@ -207,13 +228,18 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             else {
-                if (MainActivity.Client_phone != null) {
-                    if(queryThread!=null) {
-                        queryThread.interrupt();
-                        queryThread = null;
-                    }
-                    MainActivity.Client_phone.close();
-                    MainActivity.Client_phone = null;
+//                if (LoginActivity.Client_phone != null) {
+//                    if(queryThread!=null) {
+//                        queryThread.interrupt();
+//                        queryThread = null;
+//                    }
+//                    LoginActivity.Client_phone.close();
+//                    LoginActivity.Client_phone = null;
+//                }
+                if(Client.isExist())
+                if(queryThread!=null) {
+                    queryThread.interrupt();
+                    queryThread = null;
                 }
             }
         }
@@ -347,14 +373,7 @@ public class MainActivity extends AppCompatActivity {
         RelativeLayout.LayoutParams params1=new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
         selectFlowerBtn_img.setLayoutParams(params1);
 
-        /**
-         * 引导显示文字
-         */
-//        final TextView tv=new TextView(this);
-//        tv.setText("点击这里选择植物哦");
-//        tv.setTextColor(getResources().getColor(R.color.white));
-//        tv.setTextSize(30);
-//        tv.setGravity(Gravity.CENTER);
+
 
         guideView_selectFlowerBtn=GuideView.Builder
                 .newInstance(this)

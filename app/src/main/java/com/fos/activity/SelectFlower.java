@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.fos.R;
 import com.fos.dao.FlowerDao;
 import com.fos.entity.Flower;
+import com.fos.service.netty.Client;
 import com.fos.util.InfomationAnalysis;
 import com.fos.util.MyListViewAdapter;
 
@@ -73,10 +74,13 @@ public class SelectFlower extends AppCompatActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 String flowerName = edit_search_select.getText().toString();
                 if (!flowerName.equals("")) {
-                    if (MainActivity.Client_phone != null) {
-                        if (actionId== EditorInfo.IME_ACTION_SEARCH) {
-                            MainActivity.Client_phone.clientSendMessage("search" + flowerName);
-                        }
+//                    if (LoginActivity.Client_phone != null) {
+//                        if (actionId== EditorInfo.IME_ACTION_SEARCH) {
+//                            LoginActivity.Client_phone.clientSendMessage("search" + flowerName);
+//                        }
+//                    }
+                    if (actionId== EditorInfo.IME_ACTION_SEARCH) {
+                        Client.getClient("search" + flowerName);
                     }
                 }
                 return false;
@@ -102,8 +106,13 @@ public class SelectFlower extends AppCompatActivity {
                 }
                 else{
                     delSearch_select.setVisibility(View.VISIBLE);
-                    if (MainActivity.Client_phone != null) {
-                        MainActivity.Client_phone.clientSendMessage("search" + edit_search_select.getText());
+//                    if (LoginActivity.Client_phone != null) {
+//                        LoginActivity.Client_phone.clientSendMessage("search" + edit_search_select.getText());
+//                    }else{
+//                        searchFlower(edit_search_select.getText().toString());
+//                    }
+                    if(Client.isExist()){
+                        Client.getClient("search" + edit_search_select.getText());
                     }else{
                         searchFlower(edit_search_select.getText().toString());
                     }

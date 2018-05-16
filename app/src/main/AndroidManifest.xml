@@ -24,16 +24,20 @@
         <activity
             android:name=".activity.StartActivity"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden">
+
+        </activity>
+        <activity android:name=".activity.SelectFlower" />
+        <activity android:name=".activity.FlowerInfo" />
+        <activity android:name=".activity.MainActivity" />
+        <activity android:name=".activity.GuideLauncherActivity" />
+        <activity android:name=".activity.LoginActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.SelectFlower" />
-        <activity android:name=".activity.FlowerInfo" />
-        <activity android:name=".activity.MainActivity" />
-        <activity android:name=".activity.GuideLauncherActivity"></activity>
+        <activity android:name=".activity.RegisterActivity"></activity>
     </application>
 
 </manifest>

@@ -106,6 +106,7 @@
                 android:background="@drawable/round_view"/>
 
             <TextView
+                android:id="@+id/main_userName"
                 android:text="Apersonalive"
                 android:layout_marginLeft="10dp"
                 android:layout_alignParentBottom="true"

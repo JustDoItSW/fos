@@ -27,10 +27,12 @@ import android.widget.TextView;
 
 import com.fos.R;
 import com.fos.activity.FlowerInfo;
+import com.fos.activity.LoginActivity;
 import com.fos.activity.MainActivity;
 import com.fos.activity.SelectFlower;
 import com.fos.dao.FlowerDao;
 import com.fos.entity.Flower;
+import com.fos.service.netty.Client;
 import com.fos.util.InfomationAnalysis;
 import com.fos.util.LoadImageUtil;
 import com.fos.util.MyListViewAdapter;
@@ -93,10 +95,13 @@ public class FlowerFragment extends Fragment {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 String flowerName = edit_search.getText().toString();
                 if (!flowerName.equals("")) {
-                    if (MainActivity.Client_phone != null) {
-                        if (actionId==EditorInfo.IME_ACTION_SEARCH) {
-                            MainActivity.Client_phone.clientSendMessage("search" + flowerName);
-                        }
+//                    if (LoginActivity.Client_phone != null) {
+//                        if (actionId==EditorInfo.IME_ACTION_SEARCH) {
+//                            LoginActivity.Client_phone.clientSendMessage("search" + flowerName);
+//                        }
+//                    }
+                    if (actionId== EditorInfo.IME_ACTION_SEARCH) {
+                        Client.getClient("search" + flowerName);
                     }
                 }
                 return false;
@@ -122,8 +127,13 @@ public class FlowerFragment extends Fragment {
                 }
                 else{
                     delSearch.setVisibility(View.VISIBLE);
-                    if (MainActivity.Client_phone != null) {
-                            MainActivity.Client_phone.clientSendMessage("search" + edit_search.getText());
+//                    if (LoginActivity.Client_phone != null) {
+//                        LoginActivity.Client_phone.clientSendMessage("search" + edit_search.getText());
+//                    }else{
+//                        searchFlower(edit_search.getText().toString());
+//                    }
+                    if(Client.isExist()){
+                        Client.getClient("search" + edit_search.getText().toString());
                     }else{
                         searchFlower(edit_search.getText().toString());
                     }

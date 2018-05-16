@@ -3,6 +3,7 @@ package com.fos.service.netty;
 import android.os.Bundle;
 import android.os.Message;
 
+import com.fos.activity.LoginActivity;
 import com.fos.activity.SelectFlower;
 import com.fos.fragment.ControlFragment;
 import com.fos.fragment.DataFragment;
@@ -42,23 +43,35 @@ public class SimpleClientHandler extends SimpleChannelInboundHandler<String> {
         bundle.putString("info", str);
         msg.setData(bundle);
         msg2.setData(bundle);
-        try {
-            String className = InfomationAnalysis.judgeInfo(str);
-            if(className.equals("error")){
-                msg.what =  0x003;
-                FlowerFragment.handler.sendMessage(msg);
-                msg2.what = 0x003;
-                SelectFlower.handler.sendMessage(msg2);
-            }else if(className.equals("Data")) {
-                ControlFragment.handler.sendMessage(msg);
-                DataFragment.handler.sendMessage(msg2);
-            }else if(className.equals("Flower")){
-                FlowerFragment.handler.sendMessage(msg);
-                SelectFlower.handler.sendMessage(msg2);
+        if(str.equals("")){
+            /**
+             * 登录成功
+             */
+            msg.what = 0x002;
+            LoginActivity.handler.sendMessage(msg);
+        }else if(str.equals("")){
+            msg.what = 0x003;
+            LoginActivity.handler.sendMessage(msg);
+        }else {
+            try {
+                String className = InfomationAnalysis.judgeInfo(str);
+                if (className.equals("error")) {
+                    msg.what = 0x003;
+                    FlowerFragment.handler.sendMessage(msg);
+                    msg2.what = 0x003;
+                    SelectFlower.handler.sendMessage(msg2);
+                } else if (className.equals("Data")) {
+                    ControlFragment.handler.sendMessage(msg);
+                    DataFragment.handler.sendMessage(msg2);
+                } else if (className.equals("Flower")) {
+                    FlowerFragment.handler.sendMessage(msg);
+                    SelectFlower.handler.sendMessage(msg2);
+                } else if (className.equals("UserInfo")) {
+                    LoginActivity.handler.sendMessage(msg);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        }catch (Exception e ){
-            e.printStackTrace();
         }
-        LogUtil.i("MING", "control发送");
     }
 }
