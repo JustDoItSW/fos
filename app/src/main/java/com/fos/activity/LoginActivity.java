@@ -98,20 +98,30 @@ public class LoginActivity extends AppCompatActivity {
                 String str = bundle.getString("info");
                 Log.e("Login收到：", str);
                 if(msg.what == 0x001) {
+                    /**
+                     * 注册成功
+                     */
                     UserInfo userInfo = InfomationAnalysis.jsonToUserInfo(str);
                     objectAnimator8.start();
                     login_userID.setText(userInfo.getUserId().toString());
                     login_password.setText(register_password.getText().toString());
-
-
+                    btn_register.setEnabled(true);
+                    btn_register.setText("注册");
+                    register_userName.setText("");
+                    register_password.setText("");
+                    register_certainPW.setText("");
+                    register_userName.setEnabled(true);
+                    register_password.setEnabled(true);
+                    register_certainPW.setEnabled(true);
+                    backLogin.setEnabled(true);
                 }else if(msg.what == 0x002){
                     /**
                      * 登录成功
                      */
                     Bundle  b = new Bundle();
-                    b.putString("userName",str);
+                    b.putString("userName",InfomationAnalysis.jsonToUserInfo(str).getUserName());
                     Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-                    intent.putExtras(bundle);
+                    intent.putExtras(b);
                     startActivity(intent);
 
                 }else if(msg.what == 0x003){

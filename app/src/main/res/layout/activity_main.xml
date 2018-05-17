@@ -158,7 +158,15 @@
             android:id="@+id/btn_selectFlower"
             android:text="选择植物"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:background="#ffffff"/>
+
+        <Button
+            android:id="@+id/btn_community"
+            android:text="社区"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"/>
 
     </LinearLayout>
 

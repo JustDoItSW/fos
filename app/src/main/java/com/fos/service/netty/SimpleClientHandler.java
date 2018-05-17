@@ -43,13 +43,10 @@ public class SimpleClientHandler extends SimpleChannelInboundHandler<String> {
         bundle.putString("info", str);
         msg.setData(bundle);
         msg2.setData(bundle);
-        if(str.equals("")){
+        if(str.equals("loginError")){
             /**
-             * 登录成功
+             * 登录失败
              */
-            msg.what = 0x002;
-            LoginActivity.handler.sendMessage(msg);
-        }else if(str.equals("")){
             msg.what = 0x003;
             LoginActivity.handler.sendMessage(msg);
         }else {
@@ -67,7 +64,13 @@ public class SimpleClientHandler extends SimpleChannelInboundHandler<String> {
                     FlowerFragment.handler.sendMessage(msg);
                     SelectFlower.handler.sendMessage(msg2);
                 } else if (className.equals("UserInfo")) {
-                    LoginActivity.handler.sendMessage(msg);
+                    if(!InfomationAnalysis.jsonToUserInfo(str).getUserId().toString().equals("")){
+                        LoginActivity.handler.sendMessage(msg);//注册成功
+                    }else if(!InfomationAnalysis.jsonToUserInfo(str).getUserName().toString().equals("")){
+                        msg.what=0x002;
+                        LoginActivity.handler.sendMessage(msg);//登录成功
+                    }
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();

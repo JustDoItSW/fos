@@ -52,7 +52,8 @@ public class InfomationAnalysis {
             return null;
         }catch (Exception  e){
             e.printStackTrace();
-            return "Data";
+            String str2 = JSON.parseObject(info).getString("className");
+            return str2;
         }
     }
 

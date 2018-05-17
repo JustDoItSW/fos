@@ -1,6 +1,8 @@
 package com.fos.service.netty;
 
 
+import android.widget.Toast;
+
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
@@ -45,7 +47,12 @@ public class SimpleClient {
      * @param str 待发送数据
      */
     public void clientSendMessage(String str) {
-        channel.writeAndFlush(str + "\r\n");
+        try {
+            channel.writeAndFlush(str + "\r\n");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
     /**
      * 关闭资源

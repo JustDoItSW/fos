@@ -23,24 +23,21 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activity.StartActivity"
-            android:windowSoftInputMode="stateHidden|stateAlwaysHidden">
-
-        </activity>
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden"></activity>
         <activity android:name=".activity.SelectFlower" />
         <activity android:name=".activity.FlowerInfo" />
         <activity android:name=".activity.MainActivity">
-
+        </activity>
+        <activity android:name=".activity.GuideLauncherActivity" />
+        <activity android:name=".activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.GuideLauncherActivity" />
-        <activity android:name=".activity.LoginActivity" >
-
-        </activity>
-        <activity android:name=".activity.RegisterActivity"></activity>
+        <activity android:name=".activity.RegisterActivity" />
+        <activity android:name=".activity.CommunityActivity"></activity>
     </application>
 
 </manifest>

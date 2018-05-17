@@ -112,8 +112,8 @@ public class MainActivity extends AppCompatActivity {
     private void init(){
 
         intent = new Intent(MainActivity.this, MainService.class);
-    //    Intent i = getIntent();
-
+        Intent i = getIntent();
+        Log.e("info",i.getExtras().getString("userName"));
         dl = (DrawerLayout)findViewById(R.id.dl);
         main_relativeLayout =  (RelativeLayout)findViewById(R.id.main_relativeLayout);
         left_linearLayout  =(LinearLayout)findViewById(R.id.left_relativeLayout);
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
         loginControl = (Switch)findViewById(R.id.loginControl);
         main_userName = (TextView) findViewById(R.id.main_userName);
 
-//        main_userName.setText(i.getExtras().getString("userName"));
+       main_userName.setText(i.getExtras().getString("userName"));
         menu_tab.setOnClickListener(onClickListener);
         loginControl.setOnCheckedChangeListener(checkedChangeListener);
         text_control.setSelected(true);
@@ -274,6 +274,11 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.btn_selectFlower:
                     Intent intent  = new Intent(MainActivity.this,SelectFlower.class);
                     startActivity(intent);
+                    break;
+                case R.id.btn_community:
+                    Intent intent2  = new Intent(MainActivity.this,CommunityActivity.class);
+                    startActivity(intent2);
+                    break;
                 default:
                         break;
             }
