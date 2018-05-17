@@ -233,13 +233,6 @@ public class ControlFragment extends Fragment {
         @Override
         public void onClick(View v) {
            // bottomSheetDialog.show();
-                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                } else if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                }else if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                }
           //  if(LoginActivity.Client_phone !=null){
                 switch (v.getId()){
                     case  R.id.fab_light:

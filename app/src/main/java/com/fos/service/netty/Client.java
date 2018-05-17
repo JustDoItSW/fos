@@ -1,5 +1,7 @@
 package com.fos.service.netty;
 
+import android.util.Log;
+
 import com.fos.activity.LoginActivity;
 import com.fos.util.InfomationAnalysis;
 
@@ -20,14 +22,17 @@ public class Client {
                     @Override
                     public void run() {
                         simpleClient = new SimpleClient("47.106.161.42", 8000);
-                        if(str.equals("")){
+                        Log.e("info","成功连接服务器！");
+                        if(!str.equals("")){
                             simpleClient.clientSendMessage(str);
+                            Log.e("info","成功发送"+str);
                         }
                     }
                 }).start();
             }else{
-                if(str.equals("")){
+                if(!str.equals("")){
                     simpleClient.clientSendMessage(str);
+                    Log.e("info","成功发送"+str);
                 }
             }
 

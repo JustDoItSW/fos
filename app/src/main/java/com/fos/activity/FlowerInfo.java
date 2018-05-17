@@ -87,6 +87,7 @@ public class FlowerInfo extends AppCompatActivity {
                 message.what = 0x004;
                 message.setData(new Bundle());
                 DataFragment.handler.sendMessage(message);
+                finish();
 
             }
         });

@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
     private void init(){
 
         intent = new Intent(MainActivity.this, MainService.class);
-        Intent i = getIntent();
+    //    Intent i = getIntent();
 
         dl = (DrawerLayout)findViewById(R.id.dl);
         main_relativeLayout =  (RelativeLayout)findViewById(R.id.main_relativeLayout);
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
         loginControl = (Switch)findViewById(R.id.loginControl);
         main_userName = (TextView) findViewById(R.id.main_userName);
 
-        main_userName.setText(i.getExtras().getString("userName"));
+//        main_userName.setText(i.getExtras().getString("userName"));
         menu_tab.setOnClickListener(onClickListener);
         loginControl.setOnCheckedChangeListener(checkedChangeListener);
         text_control.setSelected(true);

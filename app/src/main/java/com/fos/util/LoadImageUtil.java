@@ -25,7 +25,7 @@ import java.util.logging.LogRecord;
 
 public class LoadImageUtil {
 
-    private static ExecutorService executorService = Executors.newFixedThreadPool(5);
+    private static ExecutorService executorService = Executors.newFixedThreadPool(20);
     public static Map<ImageView,String> imageViews = Collections.synchronizedMap(new WeakHashMap<ImageView, String>());
     public static void  onLoadImage(final ImageView imageView, final String urlPath){
         imageViews.put(imageView, urlPath);
