@@ -81,7 +81,7 @@ public class FlowerInfo extends AppCompatActivity {
                 MainActivity.flower.setFlowerSoilHum(flower.getFlowerSoilHum().toString());
                 MainActivity.flower.setFlowerTemp(flower.getFlowerTemp().toString());
                 MainActivity.flower.setFlowerImage(flower.getFlowerImage().toString());
-                // MainActivity.flower.set
+
 
                 Message message = new Message();
                 message.what = 0x004;
