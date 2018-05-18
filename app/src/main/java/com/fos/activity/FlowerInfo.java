@@ -77,6 +77,11 @@ public class FlowerInfo extends AppCompatActivity {
                 MainActivity.editor.commit();
 
                 MainActivity.flower.setFlowerName(flower.getFlowerName().toString());
+                /**
+                 * 这里选择了植物的花名，是否选择植物标识置为true
+                 */
+                MainActivity.isSelectedFlower=true;
+
                 MainActivity.flower.setFlowerLux(flower.getFlowerLux().toString());
                 MainActivity.flower.setFlowerSoilHum(flower.getFlowerSoilHum().toString());
                 MainActivity.flower.setFlowerTemp(flower.getFlowerTemp().toString());

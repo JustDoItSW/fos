@@ -39,7 +39,6 @@ import com.fos.service.netty.Client;
 import com.fos.service.netty.SimpleClient;
 import com.fos.util.ActivityCollector;
 import com.fos.util.GuideView;
-import com.fos.util.InfomationAnalysis;
 import com.fos.util.MyFragmentPagerAdapter;
 import com.fos.util.MyViewPager;
 
@@ -68,8 +67,12 @@ public class MainActivity extends AppCompatActivity {
     private ServiceConnection serviceConnection;
     public static Handler  handler;
     private Thread queryThread;
+    /**
+     * 用户是否已经选择了植物
+     */
+    public static boolean isSelectedFlower=false;
 //    public static Client_phone Client_phone;
-   // public static SimpleClient Client_phone;
+    public static SimpleClient Client_phone;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,6 +111,12 @@ public class MainActivity extends AppCompatActivity {
         flower.setFlowerSoilHum(sharedPreferences.getString("hum","50"));
         flower.setFlowerTemp(sharedPreferences.getString("temp","25"));
         flower.setFlowerImage(sharedPreferences.getString("image",""));
+        if(!sharedPreferences.getString("flowerName","").equals("未选择")&&!sharedPreferences.getString("flowerName","").equals("")){
+            /**
+             * 这里选择了植物的花名，是否选择植物标识置为true
+             */
+            MainActivity.isSelectedFlower=true;
+        }
     }
     private void init(){
 
@@ -125,9 +134,11 @@ public class MainActivity extends AppCompatActivity {
         myViewPager = (MyViewPager)findViewById(R.id.vp);
         btn_selectFlower  = (Button)findViewById(R.id.btn_selectFlower);
         loginControl = (Switch)findViewById(R.id.loginControl);
+
         main_userName = (TextView) findViewById(R.id.main_userName);
 
-       main_userName.setText(i.getExtras().getString("userName"));
+        main_userName.setText(i.getExtras().getString("userName"));
+
         menu_tab.setOnClickListener(onClickListener);
         loginControl.setOnCheckedChangeListener(checkedChangeListener);
         text_control.setSelected(true);
@@ -175,6 +186,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     *  获得当前的所需要的温湿度信息（每隔60s）
+     */
     /**
      *  获得当前的所需要的温湿度信息（每隔60s）
      */
@@ -237,10 +251,10 @@ public class MainActivity extends AppCompatActivity {
 //                    LoginActivity.Client_phone = null;
 //                }
                 if(Client.isExist())
-                if(queryThread!=null) {
-                    queryThread.interrupt();
-                    queryThread = null;
-                }
+                    if(queryThread!=null) {
+                        queryThread.interrupt();
+                        queryThread = null;
+                    }
             }
         }
 
@@ -378,7 +392,14 @@ public class MainActivity extends AppCompatActivity {
         RelativeLayout.LayoutParams params1=new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
         selectFlowerBtn_img.setLayoutParams(params1);
 
-
+        /**
+         * 引导显示文字
+         */
+//        final TextView tv=new TextView(this);
+//        tv.setText("点击这里选择植物哦");
+//        tv.setTextColor(getResources().getColor(R.color.white));
+//        tv.setTextSize(30);
+//        tv.setGravity(Gravity.CENTER);
 
         guideView_selectFlowerBtn=GuideView.Builder
                 .newInstance(this)
