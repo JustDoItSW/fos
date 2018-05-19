@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSON;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.fos.entity.Community;
 import com.fos.entity.Flower;
 import com.fos.entity.FlowerInfo;
 import com.fos.entity.Infomation;
@@ -103,5 +104,25 @@ public class InfomationAnalysis {
         }else{
             return null;
         }
+    }
+
+    public static Community[] jsonToCommunity(String info){
+        try {
+            if(info!= null) {
+                Log.e("info", "开始解析社区");
+                JSONArray myJsonArray = JSONArray.parseArray(info);
+                Community[] communities = new Community[myJsonArray.size()];
+                for (int i = 0; i < myJsonArray.size(); i++) {
+                    communities[i] = JSONObject.parseObject(myJsonArray.get(i).toString(), Community.class);
+                }
+                return communities;
+            }
+            else{
+                return null;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 }

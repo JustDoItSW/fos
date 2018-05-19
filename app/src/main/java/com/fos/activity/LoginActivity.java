@@ -5,6 +5,7 @@ import android.animation.AnimatorInflater;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -16,12 +17,15 @@ import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,8 +37,20 @@ import com.fos.util.InfomationAnalysis;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 public class LoginActivity extends AppCompatActivity {
 
+    public static final String PREFERENCE_NAME = "UserContent";
+    //Preferece机制的操作模式
+    public static int MODE = MODE_PRIVATE;
+    public static SharedPreferences.Editor editor;
+    private SharedPreferences sharedPreferences;
     private Button btn_login,btn_register;
     private EditText login_userID,login_password,register_userName,register_password,register_certainPW;
     private RelativeLayout login_ui,register_ui;
@@ -45,6 +61,7 @@ public class LoginActivity extends AppCompatActivity {
     private ObjectAnimator objectAnimator,objectAnimator2,objectAnimator3,objectAnimator4,objectAnimator5,objectAnimator6,objectAnimator7,objectAnimator8,objectAnimator9,objectAnimator10;
     private View view_rotation,view2_rotation;
     private ListView list_userID;
+    private List<String> userList;
     private String ip = "47.106.161.42";
     private int port = 8000;
    // public static SimpleClient Client_phone;
@@ -56,6 +73,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         initView();
+        getCountInfo();
         initAnimator();
         objectAnimator.start();
         objectAnimator3.start();
@@ -89,6 +107,7 @@ public class LoginActivity extends AppCompatActivity {
         backLogin.setOnClickListener(onClickListener);
         register_userName.setOnClickListener(onClickListener);
         btn_register.setOnClickListener(onClickListener);
+        list_userID.setOnItemClickListener(onItemClickListener);
 
         handler  = new Handler(){
             @Override
@@ -118,11 +137,18 @@ public class LoginActivity extends AppCompatActivity {
                     /**
                      * 登录成功
                      */
+
+                    saveCountInfo();
                     Bundle  b = new Bundle();
                     b.putString("userName",InfomationAnalysis.jsonToUserInfo(str).getUserName());
                     Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                     intent.putExtras(b);
                     startActivity(intent);
+                    login_userID.setEnabled(true);
+                    login_password.setEnabled(true);
+                    btn_login.setEnabled(true);
+                    btn_login.setText("登录");
+                    finish();
 
                 }else if(msg.what == 0x003){
                     Toast.makeText(LoginActivity.this,"账号或密码不正确！",Toast.LENGTH_SHORT).show();
@@ -137,13 +163,13 @@ public class LoginActivity extends AppCompatActivity {
 
        objectAnimator  = ObjectAnimator.ofFloat(view_rotation,"rotation",0,15);
        objectAnimator2  = ObjectAnimator.ofFloat(view_rotation,"rotation",15,0);
-        objectAnimator.setDuration(2000);
-        objectAnimator2.setDuration(2000);
+        objectAnimator.setDuration(500);
+        objectAnimator2.setDuration(500);
 
         objectAnimator3 = ObjectAnimator.ofFloat(ll_input,"translationY",0,100);
         objectAnimator4 = ObjectAnimator.ofFloat(ll_input,"translationY",100,0);
-        objectAnimator3.setDuration(2000);
-        objectAnimator4.setDuration(2000);
+        objectAnimator3.setDuration(500);
+        objectAnimator4.setDuration(500);
 
         objectAnimator5 = ObjectAnimator.ofFloat(login_ui,"rotationY",0,90);
         objectAnimator6 = ObjectAnimator.ofFloat(login_ui,"rotationY",90,0);
@@ -157,8 +183,8 @@ public class LoginActivity extends AppCompatActivity {
 
         objectAnimator9 = ObjectAnimator.ofFloat(view2_rotation,"rotation",0,-15);
         objectAnimator10 = ObjectAnimator.ofFloat(view2_rotation,"rotation",-15,0);
-        objectAnimator9.setDuration(2000);
-        objectAnimator10.setDuration(2000);
+        objectAnimator9.setDuration(500);
+        objectAnimator10.setDuration(500);
 
         objectAnimator5.addListener(new Animator.AnimatorListener() {
             @Override
@@ -211,6 +237,59 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    private void saveCountInfo(){
+        sharedPreferences = getSharedPreferences(PREFERENCE_NAME,MODE);
+        editor = sharedPreferences.edit();
+        Set<String> idSet;
+        idSet = sharedPreferences.getStringSet("userID",null);
+        if(idSet!=null){
+            idSet.add(login_userID.getText().toString());
+            editor.remove("userID");
+            editor.commit();
+            editor.putStringSet("userID",idSet);
+            editor.commit();
+        }else{
+            idSet = new HashSet<String>();
+            idSet.add(login_userID.getText().toString());
+            editor.remove("userID");
+            editor.commit();
+            editor.putStringSet("userID",idSet);
+            editor.commit();
+        }
+    }
+
+    private void getCountInfo(){
+        sharedPreferences = getSharedPreferences(PREFERENCE_NAME,MODE);
+        editor = sharedPreferences.edit();
+        Set<String> idSet;
+        idSet = sharedPreferences.getStringSet("userID",null);
+        if(idSet != null){
+            List<Map<String,Object>> data = new ArrayList<Map<String,Object>>();
+            Map<String,Object> item;
+            userList = new ArrayList<>(idSet);
+            for(int i = 0;i<userList.size();i++){
+                item = new HashMap<String, Object>();
+                item.put("userID",userList.get(i));
+                item.put("userIcon",null);
+                data.add(item);
+            }
+            ArrayAdapter arrayAdapter = new ArrayAdapter(LoginActivity.this,android.R.layout.simple_list_item_1,userList);
+            SimpleAdapter simpleAdapter = new SimpleAdapter(LoginActivity.this,data,R.layout.layout_userid,new String[]{"userIcon","userID"},new int[]{R.id.userIconList,R.id.userIDList});
+            list_userID.setAdapter(simpleAdapter);
+        }
+    }
+
+    AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            login_userID.setText(userList.get(position));
+            downPush.setSelected(false);
+            objectAnimator.start();
+            objectAnimator3.start();
+            list_userID.setVisibility(View.GONE);
+            login_password.setVisibility(View.VISIBLE);
+        }
+    };
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -221,18 +300,26 @@ public class LoginActivity extends AppCompatActivity {
                         v.setSelected(true);
                         objectAnimator2.start();
                         objectAnimator4.start();
+                        getCountInfo();
                         list_userID.setVisibility(View.VISIBLE);
-                        ;
+                        login_password.setVisibility(View.GONE);
+
                     }else {
                         v.setSelected(false);
                         objectAnimator.start();
                         objectAnimator3.start();
+                        list_userID.setVisibility(View.GONE);
+                        login_password.setVisibility(View.VISIBLE);
                     }
                     break;
                 case R.id.btn_login:
                     if(login_userID.getText().toString().equals("")||login_password.getText().toString().equals("")){
                         Toast.makeText(LoginActivity.this,"账号或密码不能为空！",Toast.LENGTH_SHORT).show();
                     }else {
+                        login_userID.setEnabled(false);
+                        login_password.setEnabled(false);
+                        btn_login.setEnabled(false);
+                        btn_login.setText("正在登录");
                         final UserInfo userInfo = new UserInfo();
                         userInfo.setClassName("UserInfo");
                         userInfo.setUserId(login_userID.getText().toString());

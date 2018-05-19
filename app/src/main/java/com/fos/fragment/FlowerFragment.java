@@ -84,6 +84,7 @@ public class FlowerFragment extends Fragment {
     private void init(){
 
         flowerDao  = FlowerDao.getInstance();
+        flowerDao.delAll();
         listView = (ListView)view.findViewById(R.id.list_flowerData);
         layout_notFind  =(LinearLayout)view.findViewById(R.id.layout_notFind);
         text_notFind = (TextView)view.findViewById(R.id.text_notFind);

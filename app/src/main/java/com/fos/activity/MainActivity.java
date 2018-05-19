@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout dl;
     private RelativeLayout main_relativeLayout;
     private MyFragmentPagerAdapter myFragmentPagerAdapter;
-    private Button btn_selectFlower;
+    private Button btn_selectFlower,btn_community;
     private Intent intent;
     private MainService infomationService;
     private ServiceConnection serviceConnection;
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
 
         intent = new Intent(MainActivity.this, MainService.class);
         Intent i = getIntent();
-        Log.e("info",i.getExtras().getString("userName"));
+//        Log.e("info",i.getExtras().getString("userName"));
         dl = (DrawerLayout)findViewById(R.id.dl);
         main_relativeLayout =  (RelativeLayout)findViewById(R.id.main_relativeLayout);
         left_linearLayout  =(LinearLayout)findViewById(R.id.left_relativeLayout);
@@ -133,11 +133,12 @@ public class MainActivity extends AppCompatActivity {
         text_flower =  (ImageView)findViewById(R.id.text_flower);
         myViewPager = (MyViewPager)findViewById(R.id.vp);
         btn_selectFlower  = (Button)findViewById(R.id.btn_selectFlower);
+        btn_community  = (Button)findViewById(R.id.btn_community);
         loginControl = (Switch)findViewById(R.id.loginControl);
 
         main_userName = (TextView) findViewById(R.id.main_userName);
 
-        main_userName.setText(i.getExtras().getString("userName"));
+   //     main_userName.setText(i.getExtras().getString("userName"));
 
         menu_tab.setOnClickListener(onClickListener);
         loginControl.setOnCheckedChangeListener(checkedChangeListener);
@@ -158,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
         text_data.setOnClickListener(onClickListener);
         text_flower.setOnClickListener(onClickListener);
         btn_selectFlower.setOnClickListener(onClickListener);
+        btn_community.setOnClickListener(onClickListener);
         dl.setDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
@@ -290,8 +292,8 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                     break;
                 case R.id.btn_community:
-                    Intent intent2  = new Intent(MainActivity.this,CommunityActivity.class);
-                    startActivity(intent2);
+                    Intent intent1  = new Intent(MainActivity.this,CommunityActivity.class);
+                    startActivity(intent1);
                     break;
                 default:
                         break;

@@ -22,7 +22,7 @@ public class Client {
                     @Override
                     public void run() {
                         //simpleClient = new SimpleClient("47.106.161.42", 8000);
-                        simpleClient = new SimpleClient("192.168.23.1", 8000);
+                        simpleClient = new SimpleClient("47.106.161.42", 8000);
                         Log.e("info","成功连接服务器！");
                         if(!str.equals("")||simpleClient != null){
                             simpleClient.clientSendMessage(str);

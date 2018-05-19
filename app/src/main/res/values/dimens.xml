@@ -5,4 +5,6 @@
     <dimen name="si_default_text_size">18sp</dimen>
     <dimen name="si_default_radius_max">24dp</dimen>
     <dimen name="si_default_radius_min">12dp</dimen>
+
+    <dimen name="dp_0_5">0.5dp</dimen>
 </resources>

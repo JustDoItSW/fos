@@ -22,23 +22,23 @@ import java.util.Map;
 
 public class MyListViewAdapter extends BaseAdapter {
     private Context context;
-    private List<Flower> mlist;
+    private List<Flower> mList;
     private LayoutInflater mlayoutinflater;
     private int resource;
-    public MyListViewAdapter(Context context, int resource,List<Flower> mlist){
-        this.mlist=mlist;
+    public MyListViewAdapter(Context context, int resource,List<Flower> mList){
+        this.mList=mList;
         this.resource  = resource;
         mlayoutinflater=LayoutInflater.from(context);
     }
     @Override
     public int getCount() {
 
-        return mlist.size();
+        return mList.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return mlist.get(i);
+        return mList.get(i);
     }
 
     @Override
@@ -61,12 +61,12 @@ public class MyListViewAdapter extends BaseAdapter {
         else {
             viewholder=(ViewHolder)view.getTag();
         }
-        Flower flower=mlist.get(i);
+        Flower flower=mList.get(i);
         viewholder.imageView.setImageResource(R.mipmap.ic_launcher_round);
         //调用方法传递所需信息
-        LoadImageUtil.onLoadImage(viewholder.imageView, mlist.get(i).getFlowerImage());
-        Log.e("info", "当前图片地址："+mlist.get(i).getFlowerImage());
-        viewholder.imageView.setTag(mlist.get(i).getFlowerImage());
+        LoadImageUtil.onLoadImage(viewholder.imageView, mList.get(i).getFlowerImage());
+        Log.e("info", "当前图片地址："+mList.get(i).getFlowerImage());
+        viewholder.imageView.setTag(mList.get(i).getFlowerImage());
         viewholder.flowerName.setText(flower.getFlowerName());
         viewholder.flowerOtherName.setText(flower.getFlowerName());
         return view;

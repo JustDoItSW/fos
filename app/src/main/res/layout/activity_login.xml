@@ -78,7 +78,8 @@
                     android:id="@+id/list_userID"
                     android:visibility="gone"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"></ListView>
+                    android:layout_height="wrap_content"
+                    android:divider="#00ffffff"></ListView>
 
                 <EditText
                     android:id="@+id/login_password"

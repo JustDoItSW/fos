@@ -36,9 +36,11 @@ import com.demo.sdk.Module;
 import com.demo.sdk.Player;
 import com.demo.sdk.Scanner;
 import com.fos.R;
+import com.fos.activity.LoginActivity;
 import com.fos.activity.MainActivity;
 import com.fos.entity.Infomation;
 import com.fos.service.Client_phone;
+import com.fos.service.netty.Client;
 import com.fos.util.InfomationAnalysis;
 import com.fos.util.LogUtil;
 import com.fos.util.RemoteTunnel;
@@ -66,6 +68,7 @@ public class ControlFragment extends Fragment {
     private BottomSheetBehavior bottomSheetBehavior;
     private View view;
    // private FloatingActionButton fab_light,fab_heating,fab_nut,fab_watering,fab_ctrl;
+    private TextView nowState;
     private ImageView fab_light,fab_heating,fab_nut,fab_watering,fab_ctrl;
     private KeyguardManager mKeyguardManager = null;
     private KeyguardManager.KeyguardLock mKeyguardLock = null;
@@ -91,7 +94,7 @@ public class ControlFragment extends Fragment {
     private boolean _stopTraffic = false;
     private int _connectTime=0;
     private Scanner _scanner;
-    private boolean isSmart=false;
+    private boolean isSmart  = false;
 
     public static ControlFragment newInstance(){
         if(controlFragment == null )
@@ -163,6 +166,8 @@ public class ControlFragment extends Fragment {
         fab_watering =  (ImageView)view.findViewById(R.id.fab_watering) ;
         fab_nut =  (ImageView)view.findViewById(R.id.fab_nut) ;
         fab_ctrl =  (ImageView)view.findViewById(R.id.fab_ctrl) ;
+        nowState = (TextView)view.findViewById(R.id.nowState);
+
         fab_light.setOnClickListener(onClickListener);
         fab_heating.setOnClickListener(onClickListener);
         fab_watering.setOnClickListener(onClickListener);
@@ -231,15 +236,6 @@ public class ControlFragment extends Fragment {
     View.OnClickListener onClickListener= new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-           // bottomSheetDialog.show();
-//                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-//                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-//                } else if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-//                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-//                }else if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
-//                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-//                }
-//            if(MainActivity.Client_phone !=null){
 
 
             /**
@@ -255,10 +251,12 @@ public class ControlFragment extends Fragment {
                         MainActivity.Client_phone.clientSendMessage("smart");
                         //    fab_ctrl.setTitle("当前状态：自动");
                         Toast.makeText(getActivity(),"开启智能模式",Toast.LENGTH_SHORT).show();
+                        nowState.setText("当前智能模式：开启");
                         fab_ctrl.setSelected(false);
                         isSmart = true;
                     } else {
                         MainActivity.Client_phone.clientSendMessage("smart" + MainActivity.flower.getFlowerName());
+                        nowState.setText("当前智能模式：关闭");
                         fab_ctrl.setSelected(true);
                         //  fab_ctrl.setTitle("当前状态：手动");
                         Toast.makeText(getActivity(),"关闭智能模式",Toast.LENGTH_SHORT).show();
@@ -270,36 +268,44 @@ public class ControlFragment extends Fragment {
                         case R.id.fab_light:
                             if (fab_light.isSelected()) {
                                 MainActivity.Client_phone.clientSendMessage("e");
+                                nowState.setText("当前灯光状态：关闭");
                                 fab_light.setSelected(false);
                             } else {
                                 MainActivity.Client_phone.clientSendMessage("b");
+                                nowState.setText("当前灯光状态：开启");
                                 fab_light.setSelected(true);
                             }
                             break;
                         case R.id.fab_watering:
                             if (fab_watering.isSelected()) {
                                 MainActivity.Client_phone.clientSendMessage("5");
+                                nowState.setText("当前浇水状态：关闭");
                                 fab_watering.setSelected(false);
                             } else {
                                 MainActivity.Client_phone.clientSendMessage("m");
+                                nowState.setText("当前浇水状态：开启");
                                 fab_watering.setSelected(true);
                             }
                             break;
                         case R.id.fab_heating:
                             if (fab_heating.isSelected()) {
                                 MainActivity.Client_phone.clientSendMessage("s");
+                                nowState.setText("当前加热状态：关闭");
                                 fab_heating.setSelected(false);
                             } else {
                                 MainActivity.Client_phone.clientSendMessage("p");
+                                nowState.setText("当前加热状态：开启");
                                 fab_heating.setSelected(true);
                             }
                             break;
                         case R.id.fab_nut:
                             if (fab_nut.isSelected()) {
                                 MainActivity.Client_phone.clientSendMessage("y");
+                                nowState.setText("当前施肥状态：关闭");
                                 fab_nut.setSelected(false);
                             } else {
                                 MainActivity.Client_phone.clientSendMessage("v");
+                                nowState.setText("当前施肥状态：开启");
                                 fab_nut.setSelected(true);
                             }
                             break;
@@ -317,8 +323,10 @@ public class ControlFragment extends Fragment {
                             break;
                     }
                 } else {
-                    if(v.getId()==R.id.fab_ctrl)
+                    if(v.getId()==R.id.fab_ctrl) {
                         Toast.makeText(getActivity(), "关闭智能模式", Toast.LENGTH_SHORT).show();
+                        nowState.setText("当前智能模式：关闭");
+                    }
                     else
                         Toast.makeText(getActivity(), "智能模式下指令没用哟", Toast.LENGTH_SHORT).show();
                 }

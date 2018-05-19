@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.fos.activity.CommunityActivity"
     android:orientation="vertical"
+    tools:context="com.fos.activity.CreateCommunityActivity"
     android:background="#ffffff">
 
     <RelativeLayout
@@ -17,7 +17,7 @@
         android:weightSum="1">
 
         <RelativeLayout
-            android:id="@+id/exit_community"
+            android:id="@+id/exit_create"
             android:layout_marginLeft="15dp"
             style="@style/tab_menu_text">
             <ImageView
@@ -27,7 +27,7 @@
 
         </RelativeLayout>
         <TextView
-            android:text="社区"
+            android:text="发布"
             android:textSize="15dp"
             android:textColor="@android:color/white"
             android:layout_centerInParent="true"
@@ -35,8 +35,8 @@
             android:layout_height="wrap_content"/>
 
         <Button
-            android:id="@+id/createCom"
-            android:text="发布"
+            android:id="@+id/new_community"
+            android:text="提交"
             android:textSize="15dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
@@ -47,12 +47,43 @@
             android:layout_height="30dp" />
     </RelativeLayout>
 
-    <ListView
-        android:id="@+id/allCommunity"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></ListView>
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp">
 
+        <EditText
+            android:padding="5dp"
+            android:id="@+id/edit_community"
+            android:hint="说点什么吧..."
+            android:gravity="top"
+            android:maxLines="10"
+            android:textSize="13dp"
+            android:layout_marginBottom="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="@drawable/search_edit"/>
+
+        <TextView
+            android:id="@+id/count_context"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/edit_community"
+            android:text="0/200"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:layout_below="@+id/count_context"
+            android:id="@+id/addImage"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop"
+            android:background="@drawable/btn_round"
+            android:src="@mipmap/ic_add"/>
+
+
+    </RelativeLayout>
 
 </LinearLayout>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
-    android:background="#00000000"
+    android:background="#00ffffff"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -22,8 +22,9 @@
             android:src="@drawable/bottomsheetclick"/>
 
         <TextView
+            android:id="@+id/nowState"
             android:layout_marginTop="5dp"
-            android:text="当前灯光开启"
+            android:text=""
             android:textColor="#bfbfbf"
             android:gravity="center"
             android:layout_width="match_parent"
