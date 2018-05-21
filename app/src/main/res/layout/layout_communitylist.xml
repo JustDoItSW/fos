@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="1">
 
 
     <LinearLayout
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -57,81 +60,94 @@
         android:textColor="@android:color/black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-    <GridLayout
+    <android.support.v7.widget.GridLayout
         android:id="@+id/grid_image"
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:columnCount="2"
-        android:rowCount="2"
-        >
-    </GridLayout>
+        app:columnCount="3"
+        app:rowCount="3">
+    </android.support.v7.widget.GridLayout>
+    <GridView
+        android:id="@+id/gridView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:numColumns="3"
+        android:horizontalSpacing="1dp"
+        android:verticalSpacing="1dp"
+        ></GridView>
 
     <LinearLayout
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/count_support"
             android:layout_width="0dp"
             android:layout_height="30dp"
             android:layout_weight="1"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:gravity="center"
+            android:paddingLeft="25dp"
+            android:textSize="11dp"
+            android:gravity="center|left"
             android:text="270"
-            android:drawableLeft="@drawable/light"/>
+            android:drawablePadding="5dp"
+            android:drawableLeft="@drawable/support"
+           />
 
         <View
-            android:layout_width="0.01dp"
+            android:layout_width="0.1dp"
             android:layout_height="match_parent"
-            android:background="#44bfbfbf"/>
+            android:background="#66bfbfbf"/>
 
         <TextView
             android:id="@+id/count_browse"
             android:layout_width="0dp"
             android:layout_height="30dp"
             android:layout_weight="1"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:gravity="center"
+            android:paddingLeft="25dp"
+            android:textSize="11dp"
+            android:gravity="center|left"
             android:text="270"
-            android:drawableLeft="@drawable/light"/>
+            android:drawablePadding="5dp"
+            android:drawableLeft="@mipmap/ic_browse"/>
 
         <View
-            android:layout_width="0.01dp"
+            android:layout_width="0.1dp"
             android:layout_height="match_parent"
-            android:background="#44bfbfbf"/>
+            android:background="#66bfbfbf"/>
 
         <TextView
             android:id="@+id/count_evaluate"
             android:layout_width="0dp"
             android:layout_height="30dp"
             android:layout_weight="1"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:gravity="center"
+            android:paddingLeft="25dp"
+            android:textSize="11dp"
+            android:gravity="center|left"
             android:text="270"
-            android:drawableLeft="@drawable/light"/>
+            android:drawablePadding="5dp"
+            android:drawableLeft="@mipmap/ic_evaluate"/>
 
         <View
-            android:layout_width="0.01dp"
+            android:layout_width="0.1dp"
             android:layout_height="match_parent"
-            android:background="#44bfbfbf"/>
+            android:background="#66bfbfbf"/>
 
         <TextView
             android:id="@+id/count_share"
             android:layout_width="0dp"
             android:layout_height="30dp"
             android:layout_weight="1"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:gravity="center"
+            android:paddingLeft="25dp"
+            android:textSize="11dp"
+            android:gravity="center|left"
             android:text="270"
-            android:drawableLeft="@drawable/light"/>
+            android:drawablePadding="5dp"
+            android:drawableLeft="@mipmap/ic_share"/>
 
     </LinearLayout>
 

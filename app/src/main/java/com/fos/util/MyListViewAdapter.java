@@ -56,19 +56,21 @@ public class MyListViewAdapter extends BaseAdapter {
             viewholder.imageView=(ImageView)view.findViewById(R.id.image_flower);
             viewholder.flowerName= (TextView)view.findViewById(R.id.text_flowerName);
             viewholder.flowerOtherName=(TextView)view.findViewById(R.id.text_flowerOtherName);
+
+            Flower flower=mList.get(i);
+            viewholder.imageView.setImageResource(R.mipmap.ic_launcher_round);
+            //调用方法传递所需信息
+            LoadImageUtil.onLoadImage(viewholder.imageView, mList.get(i).getFlowerImage());
+            Log.e("info", "当前图片地址："+mList.get(i).getFlowerImage());
+            viewholder.imageView.setTag(mList.get(i).getFlowerImage());
+            viewholder.flowerName.setText(flower.getFlowerName());
+            viewholder.flowerOtherName.setText(flower.getFlowerName());
             view.setTag(viewholder);
         }
         else {
             viewholder=(ViewHolder)view.getTag();
         }
-        Flower flower=mList.get(i);
-        viewholder.imageView.setImageResource(R.mipmap.ic_launcher_round);
-        //调用方法传递所需信息
-        LoadImageUtil.onLoadImage(viewholder.imageView, mList.get(i).getFlowerImage());
-        Log.e("info", "当前图片地址："+mList.get(i).getFlowerImage());
-        viewholder.imageView.setTag(mList.get(i).getFlowerImage());
-        viewholder.flowerName.setText(flower.getFlowerName());
-        viewholder.flowerOtherName.setText(flower.getFlowerName());
+
         return view;
     }
     class ViewHolder{

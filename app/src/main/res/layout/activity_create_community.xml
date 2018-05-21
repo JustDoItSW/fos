@@ -70,7 +70,7 @@
             android:id="@+id/count_context"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/edit_community"
-            android:text="0/200"
+            android:text="0/2000"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 

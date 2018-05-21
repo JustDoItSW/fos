@@ -25,7 +25,7 @@ import java.util.logging.LogRecord;
 
 public class LoadImageUtil {
 
-    private static ExecutorService executorService = Executors.newFixedThreadPool(20);
+    private static ExecutorService executorService = Executors.newFixedThreadPool(50);
     public static Map<ImageView,String> imageViews = Collections.synchronizedMap(new WeakHashMap<ImageView, String>());
     public static void  onLoadImage(final ImageView imageView, final String urlPath){
         imageViews.put(imageView, urlPath);
@@ -33,13 +33,52 @@ public class LoadImageUtil {
             @Override
             public void handleMessage(Message msg) {
                     if ((Bitmap) msg.obj != null) {
-                        if (imageView.getWidth() <= 50)
-                            imageView.setImageBitmap(BitmapSetting.resizeBitmap(BitmapSetting.getOvalBitmap((Bitmap) msg.obj), 50, 50));
-                        else
+                        if (imageView.getWidth() >= 50)
                             imageView.setImageBitmap(BitmapSetting.resizeBitmap(BitmapSetting.getOvalBitmap((Bitmap) msg.obj), imageView.getWidth(), imageView.getHeight()));
-
+                        else
+                            imageView.setImageBitmap(BitmapSetting.resizeBitmap(BitmapSetting.getOvalBitmap((Bitmap) msg.obj), 50, 50));
                     }
                 }
+
+        };
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    if(imageViewReused(imageView, urlPath))
+                        return;
+                    Log.e("info",Thread.currentThread().getName() + "线程被调用了。");
+                    URL imageUrl =new URL(urlPath);
+                    Log.e("info", "下载图片地址："+urlPath);
+                    HttpURLConnection connection = (HttpURLConnection)imageUrl.openConnection();
+                    connection.setInstanceFollowRedirects(true);
+                    InputStream inputStream = connection.getInputStream();
+                    Bitmap bitmap  = BitmapFactory.decodeStream(inputStream);
+                    connection.disconnect();
+                    if(imageViewReused(imageView, urlPath))
+                        return;
+                    Message msg = new Message();
+                    msg.obj = bitmap;
+                    handler.sendMessage(msg);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                Log.e("info",Thread.currentThread().getName() + "线程结束。");
+            }
+        });
+
+    }
+
+    public static void  onLoadListImage(final ImageView imageView, final String urlPath){
+        imageViews.put(imageView, urlPath);
+        final Handler handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                if ((Bitmap) msg.obj != null) {
+
+                    imageView.setImageBitmap((Bitmap) msg.obj);
+                }
+            }
 
         };
         executorService.submit(new Runnable() {
