@@ -1,5 +1,6 @@
 package com.fos.activity;
 
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -18,13 +19,15 @@ public class CreateCommunityActivity extends AppCompatActivity {
     private RelativeLayout exit_create;
     private Button new_community;
     private EditText edit_community;
-    private TextView count_context;
+    private TextView count_context,photograph,album;
     private ImageView addImage;
+    private AlertDialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_community);
         init();
+        createMyDialog();
     }
 
     private void init(){
@@ -44,6 +47,22 @@ public class CreateCommunityActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * 创建选择图片方式对话框
+     */
+    private void createMyDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(CreateCommunityActivity.this);
+        dialog  = builder.create();
+        View dialogView = View.inflate(CreateCommunityActivity.this,R.layout.selectimage,null);
+        dialog.setView(dialogView);
+        photograph = (TextView)dialogView.findViewById(R.id.photograph);
+        album = (TextView)dialogView.findViewById(R.id.album);
+
+        photograph.setOnClickListener(onClickListener);//拍照
+        album.setOnClickListener(onClickListener);//相册
+
+    }
+
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -58,7 +77,16 @@ public class CreateCommunityActivity extends AppCompatActivity {
                 case R.id.count_context:
                     break;
                 case R.id.addImage:
+                    dialog.show();
                     break;
+                case R.id.photograph:
+                    dialog.dismiss();
+                    break;
+                case R.id.album:
+                    dialog.dismiss();
+                    break;
+                    default:
+                        break;
             }
         }
     };

@@ -3,6 +3,7 @@ package com.fos.activity;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayout;
@@ -134,6 +135,9 @@ public class CommunityActivity extends AppCompatActivity {
         listView.setOnItemClickListener(onItemClickListener);
     }
 
+
+
+
     View.OnClickListener  onClickListener  =  new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -146,6 +150,7 @@ public class CommunityActivity extends AppCompatActivity {
                 case R.id.createCom:
                     Intent intent = new Intent(CommunityActivity.this,CreateCommunityActivity.class);
                     startActivity(intent);
+
                     default:
                         break;
             }
