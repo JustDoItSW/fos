@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
 
         main_userName = (TextView) findViewById(R.id.main_userName);
 
-   //     main_userName.setText(i.getExtras().getString("userName"));
+        main_userName.setText(i.getExtras().getString("userName"));
 
         menu_tab.setOnClickListener(onClickListener);
         loginControl.setOnCheckedChangeListener(checkedChangeListener);
