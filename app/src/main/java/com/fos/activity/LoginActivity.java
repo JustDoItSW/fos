@@ -152,6 +152,10 @@ public class LoginActivity extends AppCompatActivity {
 
                 }else if(msg.what == 0x003){
                     Toast.makeText(LoginActivity.this,"账号或密码不正确！",Toast.LENGTH_SHORT).show();
+                    login_userID.setEnabled(true);
+                    login_password.setEnabled(true);
+                    btn_login.setEnabled(true);
+                    btn_login.setText("登录");
                 }
             }
         };

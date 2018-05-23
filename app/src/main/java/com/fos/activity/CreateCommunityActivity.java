@@ -1,13 +1,18 @@
 package com.fos.activity;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -26,6 +31,8 @@ import android.widget.TextView;
 import com.fos.R;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -113,15 +120,17 @@ public class CreateCommunityActivity extends AppCompatActivity {
                     dialog.show();
                     break;
                 case R.id.photograph:
+                    dialog.dismiss();
                     Intent intent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     startActivityForResult(intent,CAMERA_REQUEST_CODE);
-                    dialog.dismiss();
+
                     break;
                 case R.id.album:
+                    dialog.dismiss();
                     Intent intent1=new Intent(Intent.ACTION_GET_CONTENT);
                     intent1.setType("image/*");
                     startActivityForResult(intent1,GALLY_REQUEST_CODE);
-                    dialog.dismiss();
+
                     break;
                     default:
                         break;
@@ -137,17 +146,25 @@ public class CreateCommunityActivity extends AppCompatActivity {
             } else {
                 Bundle extras = data.getExtras();
                 if (extras != null) {
-                    Bitmap bm = extras.getParcelable("data");
+                    final Bitmap bm = extras.getParcelable("data");
 
                     String uri = MediaStore.Images.Media.insertImage(getContentResolver(), bm, null, null);
-                    Log.e("onResponse", "saveBitmap: url=" + uri);
-                    Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                    CreateCommunityActivity.this.sendBroadcast(intent);
-                    Log.e("onResponse", "插入到相册");
+//
+////                    Uri uri=saveBitmap(bm);
 
-//                    Uri uri=saveBitmap(bm);
                     String path = UriToPath(Uri.parse(uri));
-                    imageView.setImageBitmap(bm);
+                    Log.e("onResponse","判断前"+path);
+                    File file=new File(path);
+                    if(!file.exists()) {
+                        Log.e("onResponse","相册中图片不存在");
+                        imageView.setImageBitmap(bm);
+                        mThreadPool.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                updateToCamera(CreateCommunityActivity.this, bm);
+                            }
+                        });
+                    }
                     if (path != null && path.length() != 0) {
                         upLoadPicture(path);
                     }
@@ -164,10 +181,163 @@ public class CreateCommunityActivity extends AppCompatActivity {
              */
             Uri uri=data.getData();
             String path = UriToPath(uri);
+            if(path==null) {
+               path = getPath(CreateCommunityActivity.this, uri);
+            }
             if(path!=null) {
+                Log.e("onResponse","path====>"+path);
                 upLoadPicture(path);
+            }else{
+                Log.e("onResponse", "onActivityResult: path为空" );
             }
         }
+    }
+
+    /**
+     * 此方法用来更新到系统相册里面去
+     * @param createCommunityActivity
+     * @param bm
+     */
+    private void updateToCamera(CreateCommunityActivity createCommunityActivity, Bitmap bm) {
+        File appDir=new File(Environment.getExternalStorageDirectory().getAbsolutePath(),"DCIM/Camera");
+        if(!appDir.exists()){
+            appDir.mkdirs();
+        }
+        String fileName=System.currentTimeMillis()+".jpg";
+        File file=new File(appDir,fileName);
+        try{
+            try {
+                FileOutputStream fos=new FileOutputStream(file);
+                bm.compress(Bitmap.CompressFormat.JPEG,100,fos);
+                fos.flush();
+                fos.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }finally {
+            ScannerByReceiver(createCommunityActivity,file.getAbsolutePath());
+            if(!bm.isRecycled()){
+                System.gc();
+            }
+        }
+    }
+
+    /**
+     * 广播通知系统扫描
+     * @param createCommunityActivity
+     * @param absoluteFile
+     */
+    private void ScannerByReceiver(CreateCommunityActivity createCommunityActivity, String absoluteFile) {
+        createCommunityActivity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,Uri.parse("file://"+absoluteFile)));
+    }
+
+//    private void updatecim(Uri uri){
+//        Log.e("onResponse", "saveBitmap: url=" + uri);
+//        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+//        intent.setData(uri);
+//        CreateCommunityActivity.this.sendBroadcast(intent);
+//
+////        Bitmap bitmap= BitmapFactory.decodeFile(uri.getPath());
+////        MediaStore.Images.Media.insertImage(getContentResolver(),bitmap,"","");
+//
+//        Log.e("onResponse", "插入到相册");
+//    }
+
+    /**
+     * 解决部分手机获取不到图片的问题
+     * @param context
+     * @param uri
+     * @return
+     */
+    public String getPath(final Context context, final Uri uri){
+        final boolean isKitKat=Build.VERSION.SDK_INT>=19;
+
+        ContentResolver resolver=getContentResolver();
+        Bitmap bm= null;
+        try {
+            bm = MediaStore.Images.Media.getBitmap(resolver,uri);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        imageView.setImageBitmap(ThumbnailUtils.extractThumbnail(bm,100,100));
+
+        if(isKitKat && DocumentsContract.isDocumentUri(context,uri)){
+            if(isExternalStorageDocument(uri)){
+                final String docId=DocumentsContract.getDocumentId(uri);
+                final String[] split=docId.split(":");
+                final String type=split[0];
+                
+                if("primary".equalsIgnoreCase(type)){
+                    return Environment.getExternalStorageDirectory()+"/"+split[1];
+                }
+            }else if(isDownloadsDocument(uri)){
+                final String id=DocumentsContract.getDocumentId(uri);
+                final Uri contentUri= ContentUris.withAppendedId(
+                        Uri.parse("content://downloads/public_downloads"),Long.valueOf(id));
+                return getDataColumn(context,contentUri,null,null);
+            }
+            else if(isMediaDocument(uri)){
+                final String docId=DocumentsContract.getDocumentId(uri);
+                final String[] split=docId.split(":");
+                final String type=split[0];
+                
+                Uri contentUri=null;
+                if("image".equals(type)){
+                    contentUri=MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                }else if("video".equals(type)){
+                    contentUri= MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                }else if("audio".equals(type)){
+                    contentUri= MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                }
+                
+                final String selection="_id=?";
+                final String[] selectionArgs=new String[]{split[1]};
+                return getDataColumn(context,contentUri,selection,selectionArgs);
+            }
+        }else if("content".equalsIgnoreCase(uri.getScheme())){
+//            if(isGooglePhotoUri(uri)){
+//                return uri.getLastPathSegment();
+//            }
+            return getDataColumn(context,uri,null,null);
+        }else if("file".equalsIgnoreCase(uri.getScheme())){
+            return uri.getPath();
+        }else{
+
+        }
+        return null;
+    }
+
+
+    private static boolean isMediaDocument(Uri uri) {
+        return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+    private static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
+        Cursor cursor=null;
+        final String column="_data";
+        final String[] projection={column};
+        try{
+            cursor=context.getContentResolver().query(uri,projection,selection,selectionArgs,null);
+            if(cursor!=null&&cursor.moveToFirst()){
+                final int index=cursor.getColumnIndexOrThrow(column);
+                return cursor.getString(index);
+            }
+        }finally {
+            if(cursor!=null){
+                cursor.close();
+            }
+        }
+        return null;
+    }
+
+    private static boolean isDownloadsDocument(Uri uri) {
+        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
+    }
+
+    private static boolean isExternalStorageDocument(Uri uri) {
+        return "com.android.externalstorage.documents".equals(uri.getAuthority());
     }
 
     private void upLoadPicture(final String path) {
@@ -187,27 +357,34 @@ public class CreateCommunityActivity extends AppCompatActivity {
         String path=null;
         try {
             ContentResolver resolver=getContentResolver();
+            Log.e("onResponse", "getString: "+0 );
             Bitmap bm= MediaStore.Images.Media.getBitmap(resolver,uri);
+            Log.e("onResponse", "getString: "+1 );
             imageView.setImageBitmap(ThumbnailUtils.extractThumbnail(bm,100,100));
-
+            Log.e("onResponse", "getString: "+2 );
             String[] proj={MediaStore.Images.Media.DATA};
+            Log.e("onResponse", "getString: "+3);
             Cursor cursor;
             if(Build.VERSION.SDK_INT<11){
                 /**
                  * cursor 的managedQuery方法过时替换
                  */
                 cursor=managedQuery(uri,proj,null,null,null);
+                Log.e("onResponse", "getString: "+4.1 );
             }else{
                 CursorLoader cursorLoader=new CursorLoader(this,uri,null,null,null,null);
                 cursor=cursorLoader.loadInBackground();
+                Log.e("onResponse", "getString: "+4.2 );
             }
             int column_index=cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            Log.e("onResponse", "getString: "+5 );
             cursor.moveToFirst();
             path=cursor.getString(column_index);
+            Log.e("onResponse", "getString: "+6+path );
         } catch (Exception e) {
             e.printStackTrace();
+            return path;
         }
-        Log.e("onResponse===",path);
         return path;
     }
 
