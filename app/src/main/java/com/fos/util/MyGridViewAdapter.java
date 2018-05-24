@@ -50,6 +50,7 @@ public class MyGridViewAdapter extends BaseAdapter {
             viewHolder = new ViewHolder();
             convertView=mLayoutInflater.inflate(resource,null);
             viewHolder.imageView=(ImageView)convertView.findViewById(R.id.gridview_image);
+
             ViewGroup.LayoutParams para = viewHolder.imageView.getLayoutParams();
             DisplayMetrics dm = context.getResources().getDisplayMetrics();
             if(arr.length ==  1)
@@ -63,11 +64,15 @@ public class MyGridViewAdapter extends BaseAdapter {
             viewHolder.imageView.setLayoutParams(para);
             viewHolder.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             LoadImageUtil.onLoadListImage(viewHolder.imageView,arr[position]);
+
+
             convertView.setTag(viewHolder);
 
         }else{
             viewHolder=(ViewHolder)convertView.getTag();
         }
+
+
 
         return convertView;
     }

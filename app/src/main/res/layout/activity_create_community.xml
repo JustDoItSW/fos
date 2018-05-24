@@ -63,7 +63,7 @@
             android:textSize="13dp"
             android:layout_marginBottom="5dp"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="1dp"
             android:background="@drawable/search_edit"/>
 
         <TextView
@@ -77,18 +77,29 @@
         <ImageView
             android:layout_below="@+id/count_context"
             android:id="@+id/addImage"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="1dp"
+            android:layout_height="1dp"
             android:scaleType="centerCrop"
             android:background="@drawable/btn_round"
             android:src="@mipmap/ic_add"/>
+
+        <GridView
+            android:id="@+id/create_gridView"
+            android:layout_below="@+id/count_context"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:numColumns="3"
+            android:horizontalSpacing="5dp"
+            android:verticalSpacing="5dp">
+        </GridView>
 
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:id="@+id/imageView"
             android:layout_alignTop="@+id/addImage"
-            android:layout_toRightOf="@+id/addImage"/>
+            android:layout_toRightOf="@+id/addImage"
+            android:scaleType="centerCrop"/>
 
 
     </RelativeLayout>

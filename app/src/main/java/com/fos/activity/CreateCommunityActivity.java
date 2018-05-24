@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
@@ -20,20 +21,29 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.fos.R;
+import com.fos.util.MyGridViewAdapter;
+import com.fos.util.MyGridViewAdapter2;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -53,6 +63,11 @@ public class CreateCommunityActivity extends AppCompatActivity {
     private TextView count_context,photograph,album;
     private ImageView addImage,imageView;
     private AlertDialog dialog;
+    private GridView create_gridView;
+    private DisplayMetrics dm;
+    private List<Bitmap> datas ;
+    private List<String > datas2;
+    private MyGridViewAdapter2 myGridViewAdapter2;
     /**
      * 返回码
      */
@@ -68,15 +83,18 @@ public class CreateCommunityActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_community);
         init();
         createMyDialog();
+        initGridView();
     }
 
     private void init(){
+        dm = CreateCommunityActivity.this.getResources().getDisplayMetrics();
         exit_create = (RelativeLayout)findViewById(R.id.exit_create);
         new_community  =  (Button)findViewById(R.id.new_community);
         edit_community =  (EditText)findViewById(R.id.edit_community);
         count_context =(TextView)findViewById(R.id.count_context);
         addImage = (ImageView)findViewById(R.id.addImage);
         imageView = findViewById(R.id.imageView);
+        create_gridView = (GridView)findViewById(R.id.create_gridView);
 
         exit_create.setOnClickListener(onClickListener);
         new_community.setOnClickListener(onClickListener);
@@ -85,6 +103,22 @@ public class CreateCommunityActivity extends AppCompatActivity {
         addImage.setOnClickListener(onClickListener);
         edit_community.addTextChangedListener(textWatcher);
 
+
+    }
+
+    private void initGridView(){
+        datas  =  new ArrayList<>();
+        datas2  = new ArrayList<>();
+        myGridViewAdapter2 = new MyGridViewAdapter2(datas2,CreateCommunityActivity.this);
+        create_gridView.setAdapter(myGridViewAdapter2);
+        create_gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.e("info","点击的图片为："+position);
+              //  if(datas.size() == (position))
+                dialog.show();
+            }
+        });
     }
 
     /**
@@ -149,15 +183,17 @@ public class CreateCommunityActivity extends AppCompatActivity {
                     final Bitmap bm = extras.getParcelable("data");
 
                     String uri = MediaStore.Images.Media.insertImage(getContentResolver(), bm, null, null);
-//
-////                    Uri uri=saveBitmap(bm);
-
+//                Uri uri=saveBitmap(bm);
                     String path = UriToPath(Uri.parse(uri));
                     Log.e("onResponse","判断前"+path);
                     File file=new File(path);
                     if(!file.exists()) {
                         Log.e("onResponse","相册中图片不存在");
-                        imageView.setImageBitmap(bm);
+                       // imageView.setImageBitmap(bm);
+                        datas.add(bm);
+                        datas2.add(path);
+                        myGridViewAdapter2.notifyDataSetChanged();
+
                         mThreadPool.execute(new Runnable() {
                             @Override
                             public void run() {
@@ -183,6 +219,8 @@ public class CreateCommunityActivity extends AppCompatActivity {
             String path = UriToPath(uri);
             if(path==null) {
                path = getPath(CreateCommunityActivity.this, uri);
+               datas2.add(path);
+               myGridViewAdapter2.notifyDataSetChanged();
             }
             if(path!=null) {
                 Log.e("onResponse","path====>"+path);
@@ -261,7 +299,10 @@ public class CreateCommunityActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        imageView.setImageBitmap(ThumbnailUtils.extractThumbnail(bm,100,100));
+       // imageView.setImageBitmap(ThumbnailUtils.extractThumbnail(bm,100,100));
+        datas.add(bm);
+
+        myGridViewAdapter2.notifyDataSetChanged();
 
         if(isKitKat && DocumentsContract.isDocumentUri(context,uri)){
             if(isExternalStorageDocument(uri)){
@@ -355,12 +396,13 @@ public class CreateCommunityActivity extends AppCompatActivity {
     private String UriToPath(Uri uri) {
         Log.e("onResponse", "getString: URI="+uri );
         String path=null;
+        Bitmap bm=null;
         try {
             ContentResolver resolver=getContentResolver();
             Log.e("onResponse", "getString: "+0 );
-            Bitmap bm= MediaStore.Images.Media.getBitmap(resolver,uri);
+            bm= MediaStore.Images.Media.getBitmap(resolver,uri);
             Log.e("onResponse", "getString: "+1 );
-            imageView.setImageBitmap(ThumbnailUtils.extractThumbnail(bm,100,100));
+          //  imageView.setImageBitmap(ThumbnailUtils.extractThumbnail(bm,100,100));
             Log.e("onResponse", "getString: "+2 );
             String[] proj={MediaStore.Images.Media.DATA};
             Log.e("onResponse", "getString: "+3);
@@ -385,6 +427,8 @@ public class CreateCommunityActivity extends AppCompatActivity {
             e.printStackTrace();
             return path;
         }
+        datas.add(bm);
+        myGridViewAdapter2.notifyDataSetChanged();
         return path;
     }
 

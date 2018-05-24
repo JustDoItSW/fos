@@ -54,7 +54,6 @@ public class CommunityActivity extends AppCompatActivity {
         createCom = (Button)findViewById(R.id.createCom);
         exit_community = (RelativeLayout)findViewById(R.id.exit_community);
         listView = (ListView)findViewById(R.id.allCommunity);
-        grid_image =  (GridLayout)findViewById(R.id.grid_image);
 
         createCom.setOnClickListener(onClickListener);
         exit_community.setOnClickListener(onClickListener);

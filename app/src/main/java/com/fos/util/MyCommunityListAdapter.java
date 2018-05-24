@@ -63,7 +63,6 @@ public class MyCommunityListAdapter extends BaseAdapter {
             viewholder.userIcon=(ImageView)convertView.findViewById(R.id.image_comIcon);
             viewholder.userID= (TextView)convertView.findViewById(R.id.community_userName);
             viewholder.date=(TextView)convertView.findViewById(R.id.community_date);
-            viewholder.grid_image = (android.support.v7.widget.GridLayout)convertView.findViewById(R.id.grid_image);
             viewholder.comContext= (TextView)convertView.findViewById(R.id.comContext);
             viewholder.count_support= (TextView)convertView.findViewById(R.id.count_support);
             viewholder.count_browse= (TextView)convertView.findViewById(R.id.count_browse);
@@ -122,7 +121,6 @@ public class MyCommunityListAdapter extends BaseAdapter {
         public TextView date;
         public ImageView userIcon;
         public TextView comContext;
-        public android.support.v7.widget.GridLayout grid_image;
         public TextView count_support;
         public TextView count_browse;
         public TextView count_evaluate;

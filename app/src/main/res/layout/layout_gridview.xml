@@ -4,9 +4,28 @@
     android:layout_height="match_parent"
     >
 
-    <ImageView
-        android:id="@+id/gridview_image"
+    <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/gridview_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+        <!--<ImageView-->
+            <!--android:id="@+id/removeImage"-->
+            <!--android:layout_width="20dp"-->
+            <!--android:layout_height="20dp"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_alignParentTop="true"-->
+            <!--android:src="@mipmap/ic_removeimage"/>-->
+
+        <Button
+            android:id="@+id/bt_del"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/bt_dynamic_del" />
+    </RelativeLayout>
+
 </android.support.constraint.ConstraintLayout>

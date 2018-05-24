@@ -149,7 +149,7 @@ public class ControlFragment extends Fragment {
                 }
             }
         });
-        _videoView.setFullScreen(true);
+   //     _videoView.setFullScreen(true);
         _deviceId = "brexco.2.us.ytong.rakwireless.com";
         _devicePsk = "admin";
         _fps = 20;
