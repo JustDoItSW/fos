@@ -32,8 +32,13 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fos.R;
+import com.fos.entity.Community;
+import com.fos.entity.UserInfo;
+import com.fos.service.netty.Client;
+import com.fos.util.InfomationAnalysis;
 import com.fos.util.MyGridViewAdapter;
 import com.fos.util.MyGridViewAdapter2;
 
@@ -41,7 +46,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -145,6 +152,12 @@ public class CreateCommunityActivity extends AppCompatActivity {
                     finish();
                     break;
                 case R.id.new_community:
+                    if(edit_community.getText().toString().equals("")){
+                        Toast.makeText(CreateCommunityActivity.this,"动态内容不能为空！",Toast.LENGTH_SHORT).show();
+                    }else if(datas2.size() == 0){
+                        sendCommunityToService(null);
+                    }else
+                         upLoadPicture(datas2.get(0));
                     break;
                 case R.id.edit_community:
                     break;
@@ -202,7 +215,7 @@ public class CreateCommunityActivity extends AppCompatActivity {
                         });
                     }
                     if (path != null && path.length() != 0) {
-                        upLoadPicture(path);
+                     //   upLoadPicture(path);
                     }
                 }
             }
@@ -224,7 +237,7 @@ public class CreateCommunityActivity extends AppCompatActivity {
             }
             if(path!=null) {
                 Log.e("onResponse","path====>"+path);
-                upLoadPicture(path);
+           //     upLoadPicture(path);
             }else{
                 Log.e("onResponse", "onActivityResult: path为空" );
             }
@@ -458,6 +471,7 @@ public class CreateCommunityActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 final String res=response.body().string();
                 Log.e("onResponse:",res);
+                sendCommunityToService(res);
 //                runOnUiThread(new Runnable() {
 //                    @Override
 //                    public void run() {
@@ -466,6 +480,18 @@ public class CreateCommunityActivity extends AppCompatActivity {
 //                });
             }
         });
+    }
+    private void sendCommunityToService(String res){
+        UserInfo userInfo   = new UserInfo();
+        userInfo.setUserName(MainActivity.userInfo.getUserName());
+
+        Community community = new Community();
+        community.setPicture(res);
+        community.setClassName("Community");
+        community.setTime(new SimpleDateFormat("yyyy-MM-dd    hh:mm:ss").format(new Date(System.currentTimeMillis())));
+        community.setContent(edit_community.getText().toString());
+        community.setUserInfo(InfomationAnalysis.BeantoUserInfo(userInfo));
+        Client.getClient(InfomationAnalysis.BeanToCommunity(community));
     }
 
     TextWatcher textWatcher  =  new TextWatcher() {
@@ -481,7 +507,7 @@ public class CreateCommunityActivity extends AppCompatActivity {
 
         @Override
         public void afterTextChanged(Editable s) {
-            count_context.setText(edit_community.getText().length()+"/2000");
+            count_context.setText(edit_community.getText().length()+"/200");
         }
     };
 }

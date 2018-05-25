@@ -25,6 +25,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.fos.R;
 import com.fos.activity.MainActivity;
 import com.fos.entity.Infomation;
@@ -136,7 +138,12 @@ public class DataFragment extends Fragment {
         };
     }
     private  void initUserFlower(){
-        LoadImageUtil.onLoadImage(image_flowerInfo,MainActivity.flower.getFlowerImage());
+        Glide.with(getContext())
+                .load(MainActivity.flower.getFlowerImage())
+                .priority(Priority.HIGH)
+                .into(image_flowerInfo);
+        image_flowerInfo.setScaleType(ImageView.ScaleType.CENTER_CROP);
+       // LoadImageUtil.onLoadImage(image_flowerInfo,MainActivity.flower.getFlowerImage());
         data_flowerName.setText(MainActivity.flower.getFlowerName());
         data_flowerName_g.setText(MainActivity.flower.getFlowerName());
     }

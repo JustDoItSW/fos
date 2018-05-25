@@ -10,6 +10,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.fos.R;
 import com.fos.entity.Flower;
 
@@ -67,7 +69,12 @@ public class MyListViewAdapter extends BaseAdapter {
 
         Flower flower=mList.get(i);
         //调用方法传递所需信息
-        LoadImageUtil.onLoadImage(viewholder.imageView, mList.get(i).getFlowerImage());
+       // LoadImageUtil.onLoadImage(viewholder.imageView, mList.get(i).getFlowerImage());
+        Glide.with(context)
+                .load(mList.get(i).getFlowerImage())
+                .priority(Priority.HIGH)
+                .into(viewholder.imageView);
+        viewholder.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         Log.e("info", "当前图片地址："+mList.get(i).getFlowerImage());
         viewholder.imageView.setTag(mList.get(i).getFlowerImage());
         viewholder.flowerName.setText(flower.getFlowerName());

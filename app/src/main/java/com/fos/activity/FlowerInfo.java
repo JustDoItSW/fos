@@ -14,6 +14,8 @@ import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.fos.R;
 import com.fos.entity.Flower;
 import com.fos.fragment.DataFragment;
@@ -115,7 +117,12 @@ public class FlowerInfo extends AppCompatActivity {
         flower.setFlowerName(intent.getExtras().getString("flowerName"));
         flower.setFlowerImage(intent.getExtras().getString("flowerImage"));
         flowerName_info.setText(flower.getFlowerName().toString());
-        LoadImageUtil.onLoadImage(image_flowerInfo, flower.getFlowerImage().toString());
+        Glide.with(FlowerInfo.this)
+                .load(flower.getFlowerImage().toString())
+                .priority(Priority.HIGH)
+                .into(image_flowerInfo);
+        image_flowerInfo.setScaleType(ImageView.ScaleType.CENTER_CROP);
+       // LoadImageUtil.onLoadImage(image_flowerInfo, flower.getFlowerImage().toString());
         flowerInfo = InfomationAnalysis.jsonToFlowerInfo(flower.getFlowerInfo().toString());
 
     }

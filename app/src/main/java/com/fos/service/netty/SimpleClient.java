@@ -20,7 +20,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 public class SimpleClient {
     private String host;
     private int port;
-    private Channel channel;
+    public Channel channel;
     private EventLoopGroup group;
 
     public SimpleClient(String host,int port){

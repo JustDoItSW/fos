@@ -33,6 +33,7 @@ import android.widget.TextView;
 
 import com.fos.R;
 import com.fos.entity.Flower;
+import com.fos.entity.UserInfo;
 import com.fos.service.Client_phone;
 import com.fos.service.MainService;
 import com.fos.service.netty.Client;
@@ -67,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
     private ServiceConnection serviceConnection;
     public static Handler  handler;
     private Thread queryThread;
+    public static UserInfo userInfo;
+    private Intent i;
     /**
      * 用户是否已经选择了植物
      */
@@ -82,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         ActivityCollector.finishAll();
         ActivityCollector.addActivity(this);
 
-        initFlower();
+        initUser();
         init();
         setupViewPager();//初始化viewpager
 
@@ -100,7 +103,9 @@ public class MainActivity extends AppCompatActivity {
             getWindow().setNavigationBarColor(Color.TRANSPARENT);
         }
     }
-    private void initFlower(){
+    private void initUser(){
+        i = getIntent();
+        userInfo.setUserName(i.getExtras().getString("userName"));
         sharedPreferences = getSharedPreferences(PREFERENCE_NAME,MODE);
         editor = sharedPreferences.edit();
         if((sharedPreferences.getString("flowerName","")).equals(""))
@@ -118,10 +123,11 @@ public class MainActivity extends AppCompatActivity {
             MainActivity.isSelectedFlower=true;
         }
     }
+
     private void init(){
 
         intent = new Intent(MainActivity.this, MainService.class);
-        Intent i = getIntent();
+
 //        Log.e("info",i.getExtras().getString("userName"));
         dl = (DrawerLayout)findViewById(R.id.dl);
         main_relativeLayout =  (RelativeLayout)findViewById(R.id.main_relativeLayout);

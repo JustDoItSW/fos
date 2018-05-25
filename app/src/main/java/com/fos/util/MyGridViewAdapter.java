@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.fos.R;
 
 import java.util.List;
@@ -51,19 +53,7 @@ public class MyGridViewAdapter extends BaseAdapter {
             convertView=mLayoutInflater.inflate(resource,null);
             viewHolder.imageView=(ImageView)convertView.findViewById(R.id.gridview_image);
 
-            ViewGroup.LayoutParams para = viewHolder.imageView.getLayoutParams();
-            DisplayMetrics dm = context.getResources().getDisplayMetrics();
-            if(arr.length ==  1)
-                para.width = dm.widthPixels-2;
-            else if(arr.length ==  2)
-                para.width = (dm.widthPixels-3)/2;
-            else {
-                para.width = (dm.widthPixels - 4) / 3;
-            }
-            para.height = para.width;
-            viewHolder.imageView.setLayoutParams(para);
-            viewHolder.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            LoadImageUtil.onLoadListImage(viewHolder.imageView,arr[position]);
+
 
 
             convertView.setTag(viewHolder);
@@ -71,6 +61,25 @@ public class MyGridViewAdapter extends BaseAdapter {
         }else{
             viewHolder=(ViewHolder)convertView.getTag();
         }
+
+        ViewGroup.LayoutParams para = viewHolder.imageView.getLayoutParams();
+        DisplayMetrics dm = context.getResources().getDisplayMetrics();
+        if(arr.length ==  1)
+            para.width = dm.widthPixels-2;
+        else if(arr.length ==  2)
+            para.width = (dm.widthPixels-3)/2;
+        else {
+            para.width = (dm.widthPixels - 4) / 3;
+        }
+        para.height = para.width;
+        viewHolder.imageView.setLayoutParams(para);
+
+        // LoadImageUtil.onLoadListImage(viewHolder.imageView,arr[position]);
+        Glide.with(context)
+                .load(arr[position])
+                .priority(Priority.HIGH)
+                .into(viewHolder.imageView);
+        viewHolder.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
 
 

@@ -125,4 +125,8 @@ public class InfomationAnalysis {
         }
         return null;
     }
+
+    public static String BeanToCommunity(Community community){
+        return JSON.toJSONString(community);
+    }
 }

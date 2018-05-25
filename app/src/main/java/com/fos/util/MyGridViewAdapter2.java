@@ -33,7 +33,7 @@ public class MyGridViewAdapter2 extends BaseAdapter {
      * 可以动态设置最多上传几张，之后就不显示+号了，用户也无法上传了
      * 默认9张
      */
-    private int maxImages = 3;
+    private int maxImages = 9;
 
     public MyGridViewAdapter2(List<String> datas, Context context) {
         this.datas = datas;
@@ -123,7 +123,7 @@ public class MyGridViewAdapter2 extends BaseAdapter {
                     .centerCrop()
                     .into(viewHolder.ivimage);
             //  viewHolder.ivimage.setBackgroundResource(R.mipmap.image_add);
-            viewHolder.ivimage.setScaleType(ImageView.ScaleType.FIT_XY);
+            viewHolder.ivimage.setScaleType(ImageView.ScaleType.CENTER_CROP);
             viewHolder.button.setVisibility(View.GONE);
         }
 
@@ -143,7 +143,7 @@ public class MyGridViewAdapter2 extends BaseAdapter {
             button = (Button) root.findViewById(R.id.bt_del);
             ViewGroup.LayoutParams para =ivimage.getLayoutParams();
             DisplayMetrics dm = context.getResources().getDisplayMetrics();
-            para.width = (dm.widthPixels-30)/3;
+            para.width = (dm.widthPixels-50)/3;
             para.height = para.width;
             ivimage.setLayoutParams(para);
             ivimage.setScaleType(ImageView.ScaleType.CENTER_CROP);
