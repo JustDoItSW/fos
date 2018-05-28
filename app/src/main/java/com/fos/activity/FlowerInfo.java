@@ -19,6 +19,7 @@ import com.bumptech.glide.Priority;
 import com.fos.R;
 import com.fos.entity.Flower;
 import com.fos.fragment.DataFragment;
+import com.fos.util.BitmapSetting;
 import com.fos.util.InfomationAnalysis;
 import com.fos.util.LoadImageUtil;
 
@@ -119,10 +120,11 @@ public class FlowerInfo extends AppCompatActivity {
         flowerName_info.setText(flower.getFlowerName().toString());
         Glide.with(FlowerInfo.this)
                 .load(flower.getFlowerImage().toString())
+                .transform(new BitmapSetting(FlowerInfo.this))
                 .priority(Priority.HIGH)
                 .into(image_flowerInfo);
         image_flowerInfo.setScaleType(ImageView.ScaleType.CENTER_CROP);
-       // LoadImageUtil.onLoadImage(image_flowerInfo, flower.getFlowerImage().toString());
+      //  LoadImageUtil.onLoadImage(image_flowerInfo, flower.getFlowerImage().toString());
         flowerInfo = InfomationAnalysis.jsonToFlowerInfo(flower.getFlowerInfo().toString());
 
     }

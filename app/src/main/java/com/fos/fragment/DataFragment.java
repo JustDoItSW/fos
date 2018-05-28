@@ -30,6 +30,7 @@ import com.bumptech.glide.Priority;
 import com.fos.R;
 import com.fos.activity.MainActivity;
 import com.fos.entity.Infomation;
+import com.fos.util.BitmapSetting;
 import com.fos.util.InfomationAnalysis;
 import com.fos.util.LoadImageUtil;
 import com.fos.util.MyDataFragmentPagerAdapter;
@@ -140,10 +141,11 @@ public class DataFragment extends Fragment {
     private  void initUserFlower(){
         Glide.with(getContext())
                 .load(MainActivity.flower.getFlowerImage())
+                .transform(new BitmapSetting(getContext()))
                 .priority(Priority.HIGH)
                 .into(image_flowerInfo);
         image_flowerInfo.setScaleType(ImageView.ScaleType.CENTER_CROP);
-       // LoadImageUtil.onLoadImage(image_flowerInfo,MainActivity.flower.getFlowerImage());
+     //   LoadImageUtil.onLoadImage(image_flowerInfo,MainActivity.flower.getFlowerImage());
         data_flowerName.setText(MainActivity.flower.getFlowerName());
         data_flowerName_g.setText(MainActivity.flower.getFlowerName());
     }
@@ -167,10 +169,10 @@ public class DataFragment extends Fragment {
         int trueLight = Integer.parseInt(MainActivity.flower.getFlowerLux());
         int trueHum = Math.round(Float.parseFloat(infomation.getSoilHumidity()));
         int trueTemp = Integer.parseInt(MainActivity.flower.getFlowerTemp());
-        if(light>trueLight+200){
+        if(light>(trueLight+200)){
             level_light.setText("过强");
             light_lv3.setBackgroundResource(R.drawable.round_view_red);
-        }else if(light<trueLight-200){
+        }else if(light<(trueLight-200)){
             level_light.setText("较弱");
             light_lv1.setBackgroundResource(R.drawable.round_view_red);
         }else{
@@ -178,10 +180,10 @@ public class DataFragment extends Fragment {
             light_lv2.setBackgroundResource(R.drawable.round_view_green);
         }
 
-        if(hum>trueHum+5){
+        if(hum>(trueHum+15)){
             level_water.setText("过高");
             water_lv3.setBackgroundResource(R.drawable.round_view_red);
-        }else if(hum<trueHum-5){
+        }else if(hum<(trueHum-15)){
             level_water.setText("较低");
             water_lv1.setBackgroundResource(R.drawable.round_view_red);
         }else{
@@ -189,22 +191,20 @@ public class DataFragment extends Fragment {
             water_lv2.setBackgroundResource(R.drawable.round_view_green);
         }
 
-        if(temp>trueTemp+5){
+        if(temp>(trueTemp+5)){
             level_temp.setText("过高");
             temp_lv3.setBackgroundResource(R.drawable.round_view_red);
-        }else if(temp<trueLight-5){
+        }else if(temp<(trueTemp-10)){
             level_temp.setText("较低");
             temp_lv1.setBackgroundResource(R.drawable.round_view_red);
         }else{
             level_temp.setText("合适");
-            temp_lv2.setBackgroundResource(R.drawable.round_view_red);
+            temp_lv2.setBackgroundResource(R.drawable.round_view_green);
         }
-
     }
 
     private void setCurrentTextView(TextView  textView){
         textView.setSelected(true);
-//        textView.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
         textView.getPaint().setAntiAlias(true);
     }
     private void setAllSelected(){

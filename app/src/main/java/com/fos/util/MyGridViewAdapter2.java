@@ -133,7 +133,6 @@ public class MyGridViewAdapter2 extends BaseAdapter {
 
     public class ViewHolder {
         public final ImageView ivimage;
-       // public final ImageView  removeImage;
         public final Button button;
         public final View root;
 

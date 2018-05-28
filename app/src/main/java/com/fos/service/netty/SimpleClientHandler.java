@@ -3,8 +3,11 @@ package com.fos.service.netty;
 import android.os.Bundle;
 import android.os.Message;
 
+import com.fos.activity.CommunityActivity;
+import com.fos.activity.CreateCommunityActivity;
 import com.fos.activity.LoginActivity;
 import com.fos.activity.SelectFlower;
+import com.fos.entity.Community;
 import com.fos.fragment.ControlFragment;
 import com.fos.fragment.DataFragment;
 import com.fos.fragment.FlowerFragment;
@@ -49,7 +52,11 @@ public class SimpleClientHandler extends SimpleChannelInboundHandler<String> {
              */
             msg.what = 0x003;
             LoginActivity.handler.sendMessage(msg);
-        }else {
+        }
+        else if(str.equals("submitCommunitySuccessful") || str.equals("submitCommunityFailure")){
+
+            CreateCommunityActivity.handler.sendMessage(msg);
+        } else{
             try {
                 String className = InfomationAnalysis.judgeInfo(str);
                 if (className.equals("error")) {
@@ -60,7 +67,10 @@ public class SimpleClientHandler extends SimpleChannelInboundHandler<String> {
                 } else if (className.equals("Data")) {
                     ControlFragment.handler.sendMessage(msg);
                     DataFragment.handler.sendMessage(msg2);
-                } else if (className.equals("Flower")) {
+                } else if(className.equals("Community")) {
+                    CommunityActivity.handler.sendMessage(msg);
+
+                }else if (className.equals("Flower")) {
                     FlowerFragment.handler.sendMessage(msg);
                     SelectFlower.handler.sendMessage(msg2);
                 } else if (className.equals("UserInfo")) {

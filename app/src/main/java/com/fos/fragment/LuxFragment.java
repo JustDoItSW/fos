@@ -41,7 +41,7 @@ public class LuxFragment extends Fragment {
 
 
         lineChartView = (LineChartView)view.findViewById(R.id.lineChart_lux);
-        myLineChart =  new MyLineChart(1000,0,0,300,lineChartView,"l");
+        myLineChart =  new MyLineChart(1000,0,0,300,lineChartView,"L");
 
     }
 }

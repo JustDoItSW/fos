@@ -84,6 +84,7 @@ public class FlowerFragment extends Fragment {
     private void init(){
 
         flowerDao  = FlowerDao.getInstance();
+       // flowerDao.delAll();
         listView = (ListView)view.findViewById(R.id.list_flowerData);
         layout_notFind  =(LinearLayout)view.findViewById(R.id.layout_notFind);
         text_notFind = (TextView)view.findViewById(R.id.text_notFind);
@@ -223,7 +224,7 @@ public class FlowerFragment extends Fragment {
             String str2 = data.get(position).getFlowerImage();
             String str3 = data.get(position).getFlowerInfo();
 
-            Log.e("info","选中的花名为:"+position+" "+str+"");
+            Log.e("info","选中的花名为:"+position+" "+str+""+str2);
             Bundle  bundle = new Bundle();
             bundle.putString("flowerName",str);
             bundle.putString("flowerImage",str2);

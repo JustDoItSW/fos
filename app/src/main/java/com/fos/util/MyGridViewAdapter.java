@@ -52,10 +52,6 @@ public class MyGridViewAdapter extends BaseAdapter {
             viewHolder = new ViewHolder();
             convertView=mLayoutInflater.inflate(resource,null);
             viewHolder.imageView=(ImageView)convertView.findViewById(R.id.gridview_image);
-
-
-
-
             convertView.setTag(viewHolder);
 
         }else{
@@ -76,7 +72,7 @@ public class MyGridViewAdapter extends BaseAdapter {
 
         // LoadImageUtil.onLoadListImage(viewHolder.imageView,arr[position]);
         Glide.with(context)
-                .load(arr[position])
+                .load("http://"+arr[position])
                 .priority(Priority.HIGH)
                 .into(viewHolder.imageView);
         viewHolder.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);

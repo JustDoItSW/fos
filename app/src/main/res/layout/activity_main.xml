@@ -96,7 +96,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/ic_leftbackground"/>
+                android:background="@color/ThemeColor"/>
+                <!--android:src="@mipmap/ic_leftbackground"-->
+
             <ImageView
                 android:id="@+id/user_icon"
                 android:layout_marginLeft="10dp"
@@ -124,6 +126,7 @@
             android:layout_alignParentBottom="true"
             >
             <Switch
+                android:visibility="invisible"
                 android:id="@+id/loginControl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -154,6 +157,16 @@
                 />
 
         </LinearLayout>
+        <!--<TextView-->
+            <!--android:text="社区"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:drawableLeft="@drawable/support"/>-->
+        <!--<TextView-->
+            <!--android:text="选择植物"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:drawableLeft="@drawable/support"/>-->
         <Button
             android:id="@+id/btn_selectFlower"
             android:text="选择植物"

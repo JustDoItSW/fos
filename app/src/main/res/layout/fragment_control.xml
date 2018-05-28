@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ffffff"
     >
 
     <LinearLayout
@@ -21,18 +22,15 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:orientation="vertical">
-                <com.romainpiel.shimmer.ShimmerTextView
+                <com.mingle.widget.LoadingView
                     android:id="@+id/video_connecting_text"
-                    android:layout_width="wrap_content"
-                    android:gravity="center"
-                    android:hint="@string/device_connect_psk_hint"
-                    android:textSize="@dimen/add_title_height"
-                    android:text="@string/device_connectting_text"
-                    android:layout_height="wrap_content" />
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:loadingText="加载中..." />
             </LinearLayout>
             <com.demo.sdk.DisplayView
                 android:id="@+id/video_view"
-                android:scaleType="centerCrop"
+                android:scaleType="fitCenter"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
             <!--<com.getbase.floatingactionbutton.FloatingActionsMenu-->

@@ -26,7 +26,9 @@
         <activity
             android:name=".activity.StartActivity"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
-        <activity android:name=".activity.SelectFlower" />
+        <activity android:name=".activity.SelectFlower" >
+
+        </activity>
         <activity android:name=".activity.FlowerInfo" />
         <activity android:name=".activity.MainActivity"
             android:windowSoftInputMode="adjustPan|stateHidden">

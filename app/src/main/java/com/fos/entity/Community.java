@@ -8,7 +8,7 @@ public class Community {
     /**
      * 用户对象
      */
-    private String  userInfo;
+    private UserInfo userInfo;
     /**
      * 用户发动态时间
      */
@@ -40,10 +40,10 @@ public class Community {
 
 
 
-    public String getUserInfo() {
+    public UserInfo getUserInfo() {
         return userInfo;
     }
-    public void setUserInfo(String userInfo) {
+    public void setUserInfo(UserInfo userInfo) {
         this.userInfo = userInfo;
     }
     public String getTime() {

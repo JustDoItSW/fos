@@ -105,7 +105,9 @@ public class MainActivity extends AppCompatActivity {
     }
     private void initUser(){
         i = getIntent();
+        userInfo = new UserInfo();
         userInfo.setUserName(i.getExtras().getString("userName"));
+        userInfo.setUserId(i.getExtras().getString("userID"));
         sharedPreferences = getSharedPreferences(PREFERENCE_NAME,MODE);
         editor = sharedPreferences.edit();
         if((sharedPreferences.getString("flowerName","")).equals(""))
@@ -128,7 +130,6 @@ public class MainActivity extends AppCompatActivity {
 
         intent = new Intent(MainActivity.this, MainService.class);
 
-//        Log.e("info",i.getExtras().getString("userName"));
         dl = (DrawerLayout)findViewById(R.id.dl);
         main_relativeLayout =  (RelativeLayout)findViewById(R.id.main_relativeLayout);
         left_linearLayout  =(LinearLayout)findViewById(R.id.left_relativeLayout);
@@ -141,11 +142,26 @@ public class MainActivity extends AppCompatActivity {
         btn_selectFlower  = (Button)findViewById(R.id.btn_selectFlower);
         btn_community  = (Button)findViewById(R.id.btn_community);
         loginControl = (Switch)findViewById(R.id.loginControl);
-
         main_userName = (TextView) findViewById(R.id.main_userName);
+        queryThread = new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    while (true) {
+                        sleep(30000);
+                        Log.e("info", "开始查询");
+                        Client.getClient("i");
+                      // sleep(20000);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        queryThread.start();
 
         main_userName.setText(i.getExtras().getString("userName"));
-
         menu_tab.setOnClickListener(onClickListener);
         loginControl.setOnCheckedChangeListener(checkedChangeListener);
         text_control.setSelected(true);
@@ -204,28 +220,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if(isChecked) {
-//                if (LoginActivity.Client_phone == null) {
-//                    queryThread = new Thread(){
-//                        @Override
-//                        public void run() {
-//                            super.run();
-//                            try {
-//                                while (true){
-//                                    sleep(10000);
-//                                    Log.e("info","开始查询");
-////                                    if (LoginActivity.Client_phone != null) {
-////                                        LoginActivity.Client_phone.clientSendMessage("i");
-////                                    }
-//                                    Client.getClient("i");
-//                                    sleep(50000);
-//                                }
-//                            }catch(Exception e){
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    };
-//                    queryThread.start();
-//                }
                 if(Client.isExist()) {
                     queryThread = new Thread() {
                         @Override
@@ -235,9 +229,6 @@ public class MainActivity extends AppCompatActivity {
                                 while (true) {
                                     sleep(10000);
                                     Log.e("info", "开始查询");
-//                                    if (LoginActivity.Client_phone != null) {
-//                                        LoginActivity.Client_phone.clientSendMessage("i");
-//                                    }
                                     Client.getClient("i");
                                     sleep(50000);
                                 }
@@ -250,14 +241,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             else {
-//                if (LoginActivity.Client_phone != null) {
-//                    if(queryThread!=null) {
-//                        queryThread.interrupt();
-//                        queryThread = null;
-//                    }
-//                    LoginActivity.Client_phone.close();
-//                    LoginActivity.Client_phone = null;
-//                }
                 if(Client.isExist())
                     if(queryThread!=null) {
                         queryThread.interrupt();

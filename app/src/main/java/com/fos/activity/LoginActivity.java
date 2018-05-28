@@ -141,13 +141,14 @@ public class LoginActivity extends AppCompatActivity {
                     saveCountInfo();
                     Bundle  b = new Bundle();
                     b.putString("userName",InfomationAnalysis.jsonToUserInfo(str).getUserName());
+                    b.putString("userID",login_userID.getText().toString());
                     Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                     intent.putExtras(b);
                     startActivity(intent);
-                    login_userID.setEnabled(true);
-                    login_password.setEnabled(true);
-                    btn_login.setEnabled(true);
-                    btn_login.setText("登录");
+//                    login_userID.setEnabled(true);
+//                    login_password.setEnabled(true);
+//                    btn_login.setEnabled(true);
+//                    btn_login.setText("登录");
                     finish();
 
                 }else if(msg.what == 0x003){

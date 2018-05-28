@@ -46,15 +46,22 @@
             android:layout_width="50dp"
             android:layout_height="30dp" />
     </RelativeLayout>
-
-        <ListView
-            android:id="@+id/allCommunity"
-            android:layout_marginLeft="1dp"
-            android:layout_marginRight="1dp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="none"
-            />
+            <com.scwang.smartrefresh.layout.SmartRefreshLayout
+                android:id="@+id/refreshLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:srlEnableAutoLoadmore="false"
+                app:srlEnableFooterTranslationContent="false"
+                app:srlEnableHeaderTranslationContent="false"
+                >
+                <ListView
+                    android:id="@+id/allCommunity"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="none"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginRight="1dp"/>
+            </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
 
 

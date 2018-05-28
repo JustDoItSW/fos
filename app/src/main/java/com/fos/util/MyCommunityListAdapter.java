@@ -69,49 +69,44 @@ public class MyCommunityListAdapter extends BaseAdapter {
             viewholder.count_evaluate= (TextView)convertView.findViewById(R.id.count_evaluate);
             viewholder.count_share= (TextView)convertView.findViewById(R.id.count_share);
             viewholder.gridView =(GridView)convertView.findViewById(R.id.gridView);
-
-            LoadImageUtil.onLoadImage(viewholder.userIcon, "http://img2.imgtn.bdimg.com/it/u=3234961814,2409259132&fm=27&gp=0.jpg");
-            //    viewholder.userIcon.setTag(mList.get(i).getFlowerImage());
-            viewholder.userID.setText(mapList.get(position).get("userName").toString());
-            viewholder.date.setText(mapList.get(position).get("data").toString());
-            viewholder.comContext.setText(mapList.get(position).get("comContext").toString());
-            viewholder.count_support.setText(mapList.get(position).get("count_support").toString());
-            viewholder.count_browse.setText(mapList.get(position).get("count_browse").toString());
-            viewholder.count_evaluate.setText(mapList.get(position).get("count_evaluate").toString());
-            viewholder.count_share.setText(mapList.get(position).get("count_share").toString());
-
-            viewholder.count_share.setTag("count_share");
-            viewholder.count_support.setTag("count_support");
-            viewholder.count_browse.setTag("count_browse");
-            viewholder.count_evaluate.setTag("count_evaluate");
-            allImageUri =  mapList.get(position).get("picture").toString();
-
-            if(getImageCount(position) == 1) {
-                viewholder.gridView.setNumColumns(1);
-            }
-            if(getImageCount(position) == 2) {
-                viewholder.gridView.setNumColumns(2);
-            }
-            if(getImageCount(position) >= 3){
-                ViewGroup.LayoutParams para = viewholder.gridView.getLayoutParams();
-                DisplayMetrics dm = context.getResources().getDisplayMetrics();
-                para.height = (int)(Math.ceil(getImageCount(position)/3f))*((dm.widthPixels-4)/3);
-                viewholder.gridView.setLayoutParams(para);
-            }
-            viewholder.gridView.setAdapter(new MyGridViewAdapter(context,R.layout.layout_gridview,getAllImageUri(position)));
-
-            viewholder.count_support.setOnClickListener(onClickListener);
-            viewholder.count_browse.setOnClickListener(onClickListener);
-            viewholder.count_evaluate.setOnClickListener(onClickListener);
-            viewholder.count_share.setOnClickListener(onClickListener);
-
-
             convertView.setTag(viewholder);
         }
         else {
             viewholder=(ViewHolder)convertView.getTag();
         }
         //调用方法传递所需信息
+        viewholder.userID.setText(mapList.get(position).get("userName").toString());
+        viewholder.date.setText(mapList.get(position).get("date").toString());
+        viewholder.comContext.setText(mapList.get(position).get("comContext").toString());
+        viewholder.count_support.setText(mapList.get(position).get("count_support").toString());
+        viewholder.count_browse.setText(mapList.get(position).get("count_browse").toString());
+        viewholder.count_evaluate.setText(mapList.get(position).get("count_evaluate").toString());
+        viewholder.count_share.setText(mapList.get(position).get("count_share").toString());
+
+
+        if(!mapList.get(position).get("picture").toString().equals("")) {
+            if(viewholder.gridView.getTag().equals(mapList.get(position).get("picture").toString().equals(""))){
+                if (getImageCount(mapList.get(position).get("picture").toString()) == 1) {
+                    viewholder.gridView.setNumColumns(1);
+                }
+                if (getImageCount(mapList.get(position).get("picture").toString()) == 2) {
+                    viewholder.gridView.setNumColumns(2);
+                }
+                if (getImageCount(mapList.get(position).get("picture").toString()) >= 3) {
+                    ViewGroup.LayoutParams para = viewholder.gridView.getLayoutParams();
+                    DisplayMetrics dm = context.getResources().getDisplayMetrics();
+                    para.height = (int) (Math.ceil(getImageCount(mapList.get(position).get("picture").toString()) / 3f)) * ((dm.widthPixels - 4) / 3);
+                    viewholder.gridView.setLayoutParams(para);
+                }
+                viewholder.gridView.setAdapter(new MyGridViewAdapter(context, R.layout.layout_gridview, getAllImageUri(mapList.get(position).get("picture").toString())));
+                viewholder.gridView.setTag(mapList.get(position).get("picture").toString());
+            }
+        }
+
+        viewholder.count_support.setOnClickListener(onClickListener);
+        viewholder.count_browse.setOnClickListener(onClickListener);
+        viewholder.count_evaluate.setOnClickListener(onClickListener);
+        viewholder.count_share.setOnClickListener(onClickListener);
 
         return convertView;
     }
@@ -128,21 +123,17 @@ public class MyCommunityListAdapter extends BaseAdapter {
         public GridView gridView;
     }
 
-    public int getImageCount(int position){
-        String[] arr = allImageUri.split(";");
+    public int getImageCount(String str){
+        Log.e("info",str);
+        String[] arr = str.split(";");
         Log.e("info","图片数量"+arr.length);
         return arr.length;
 
     }
 
-    public String getImageUri(int position){
-        String[] arr = allImageUri.split(";");
-        return arr[position];
 
-    }
-
-    public String[] getAllImageUri(int position){
-        String[] arr = allImageUri.split(";");
+    public String[] getAllImageUri(String str){
+        String[] arr = str.split(";");
         return arr;
     }
 

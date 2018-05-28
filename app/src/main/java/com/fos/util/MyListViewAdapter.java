@@ -28,6 +28,7 @@ public class MyListViewAdapter extends BaseAdapter {
     private LayoutInflater mlayoutinflater;
     private int resource;
     public MyListViewAdapter(Context context, int resource,List<Flower> mList){
+        this.context = context;
         this.mList=mList;
         this.resource  = resource;
         mlayoutinflater=LayoutInflater.from(context);
@@ -54,17 +55,21 @@ public class MyListViewAdapter extends BaseAdapter {
         if(view==null){
             viewholder=new ViewHolder();
             //将item的layout文件转化为view，必须是item文件在之后的view中还要找到对应的控件
-            view=mlayoutinflater.inflate(resource,null);
+            view=mlayoutinflater.inflate(resource,viewGroup,false);
             viewholder.imageView=(ImageView)view.findViewById(R.id.image_flower);
             viewholder.flowerName= (TextView)view.findViewById(R.id.text_flowerName);
             viewholder.flowerOtherName=(TextView)view.findViewById(R.id.text_flowerOtherName);
 
-
-
-            view.setTag(viewholder);
+            //view.setTag(viewholder);
         }
         else {
-            viewholder=(ViewHolder)view.getTag();
+          //  viewholder=(ViewHolder)view.getTag();
+            viewholder=new ViewHolder();
+            //将item的layout文件转化为view，必须是item文件在之后的view中还要找到对应的控件
+            view=mlayoutinflater.inflate(resource,viewGroup,false);
+            viewholder.imageView=(ImageView)view.findViewById(R.id.image_flower);
+            viewholder.flowerName= (TextView)view.findViewById(R.id.text_flowerName);
+            viewholder.flowerOtherName=(TextView)view.findViewById(R.id.text_flowerOtherName);
         }
 
         Flower flower=mList.get(i);
@@ -72,6 +77,7 @@ public class MyListViewAdapter extends BaseAdapter {
        // LoadImageUtil.onLoadImage(viewholder.imageView, mList.get(i).getFlowerImage());
         Glide.with(context)
                 .load(mList.get(i).getFlowerImage())
+                .transform(new BitmapSetting(context))
                 .priority(Priority.HIGH)
                 .into(viewholder.imageView);
         viewholder.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);

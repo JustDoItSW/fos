@@ -13,6 +13,8 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -74,13 +76,15 @@ public class CreateCommunityActivity extends AppCompatActivity {
     private DisplayMetrics dm;
     private List<Bitmap> datas ;
     private List<String > datas2;
+    private String allUri = "";
     private MyGridViewAdapter2 myGridViewAdapter2;
+    public static Handler handler;
     /**
      * 返回码
      */
     private static int CAMERA_REQUEST_CODE=1;
     private static int GALLY_REQUEST_CODE=2;
-    private String mBaseUrl="http://192.168.23.1:8080/ImgDownLoadServlet/";
+    private String mBaseUrl="http://47.106.161.42/ImgServlet/";
     OkHttpClient okHttpClient=new OkHttpClient();
     public static ExecutorService mThreadPool= Executors.newCachedThreadPool();
 
@@ -109,6 +113,25 @@ public class CreateCommunityActivity extends AppCompatActivity {
         count_context.setOnClickListener(onClickListener);
         addImage.setOnClickListener(onClickListener);
         edit_community.addTextChangedListener(textWatcher);
+
+        handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                Bundle bundle  =  msg.getData();
+                String str = bundle.getString("info");
+                if(str.equals("submitCommunitySuccessful")) {
+                    Toast.makeText(CreateCommunityActivity.this, "发布成功！", Toast.LENGTH_LONG).show();
+                    Client.getClient("getCommunity");
+                    finish();
+                }else if(str.equals("submitCommunityFailure")){
+                    Toast.makeText(CreateCommunityActivity.this, "发布失败！", Toast.LENGTH_LONG).show();
+                    edit_community.setEnabled(true);
+                    create_gridView.setEnabled(true);
+                    new_community.setEnabled(true);
+                }
+            }
+        };
 
 
     }
@@ -154,10 +177,18 @@ public class CreateCommunityActivity extends AppCompatActivity {
                 case R.id.new_community:
                     if(edit_community.getText().toString().equals("")){
                         Toast.makeText(CreateCommunityActivity.this,"动态内容不能为空！",Toast.LENGTH_SHORT).show();
-                    }else if(datas2.size() == 0){
+                    }else {
+                        edit_community.setEnabled(false);
+                        create_gridView.setEnabled(false);
+                        new_community.setEnabled(false);
+                        if(datas2.size() == 0){
                         sendCommunityToService(null);
-                    }else
-                         upLoadPicture(datas2.get(0));
+                        }else {
+                            for (int i = 0; i < datas2.size(); i++) {
+                                upLoadPicture(datas2.get(i));
+                            }
+                        }
+                    }
                     break;
                 case R.id.edit_community:
                     break;
@@ -230,13 +261,14 @@ public class CreateCommunityActivity extends AppCompatActivity {
              */
             Uri uri=data.getData();
             String path = UriToPath(uri);
+            Log.e("onResponse","UriToPath====>"+path);
             if(path==null) {
                path = getPath(CreateCommunityActivity.this, uri);
-               datas2.add(path);
-               myGridViewAdapter2.notifyDataSetChanged();
             }
             if(path!=null) {
-                Log.e("onResponse","path====>"+path);
+                Log.e("onResponse","getPath====>"+path);
+                datas2.add(path);
+                myGridViewAdapter2.notifyDataSetChanged();
            //     upLoadPicture(path);
             }else{
                 Log.e("onResponse", "onActivityResult: path为空" );
@@ -470,8 +502,13 @@ public class CreateCommunityActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 final String res=response.body().string();
-                Log.e("onResponse:",res);
-                sendCommunityToService(res);
+                Log.e("onResponse from tomcat:",res);
+                allUri= allUri+res+";";
+                Log.e("info","allUri.split(\";\").length "+allUri.split(";").length);
+                if(allUri.split(";").length  == datas2.size()) {
+                    sendCommunityToService(allUri);
+                    allUri = "";
+                }
 //                runOnUiThread(new Runnable() {
 //                    @Override
 //                    public void run() {
@@ -484,13 +521,14 @@ public class CreateCommunityActivity extends AppCompatActivity {
     private void sendCommunityToService(String res){
         UserInfo userInfo   = new UserInfo();
         userInfo.setUserName(MainActivity.userInfo.getUserName());
-
+        userInfo.setClassName("UserInfo");
+        userInfo.setUserId(MainActivity.userInfo.getUserId());
         Community community = new Community();
         community.setPicture(res);
         community.setClassName("Community");
-        community.setTime(new SimpleDateFormat("yyyy-MM-dd    hh:mm:ss").format(new Date(System.currentTimeMillis())));
+        community.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis())));
         community.setContent(edit_community.getText().toString());
-        community.setUserInfo(InfomationAnalysis.BeantoUserInfo(userInfo));
+        community.setUserInfo(userInfo);
         Client.getClient(InfomationAnalysis.BeanToCommunity(community));
     }
 

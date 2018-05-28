@@ -25,11 +25,13 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.demo.sdk.Controller;
 import com.demo.sdk.Enums;
 import com.demo.sdk.Module;
@@ -44,7 +46,7 @@ import com.fos.service.netty.Client;
 import com.fos.util.InfomationAnalysis;
 import com.fos.util.LogUtil;
 import com.fos.util.RemoteTunnel;
-import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.mingle.widget.LoadingView;
 import com.romainpiel.shimmer.Shimmer;
 import com.romainpiel.shimmer.ShimmerTextView;
 
@@ -60,9 +62,7 @@ import java.util.Map;
  */
 public class ControlFragment extends Fragment {
 
-    private TextView autoOrMan;
-    private ShimmerTextView shimmerTextView;
-    private Shimmer  shimmer;
+    private LoadingView video_connecting_layout;
     public static Handler  handler;
     private static ControlFragment controlFragment;
     private BottomSheetBehavior bottomSheetBehavior;
@@ -70,6 +70,7 @@ public class ControlFragment extends Fragment {
    // private FloatingActionButton fab_light,fab_heating,fab_nut,fab_watering,fab_ctrl;
     private TextView nowState;
     private ImageView fab_light,fab_heating,fab_nut,fab_watering,fab_ctrl;
+    private NumberProgressBar progress_water,progress_nut;
     private KeyguardManager mKeyguardManager = null;
     private KeyguardManager.KeyguardLock mKeyguardLock = null;
     private PowerManager pm;
@@ -167,14 +168,35 @@ public class ControlFragment extends Fragment {
         fab_nut =  (ImageView)view.findViewById(R.id.fab_nut) ;
         fab_ctrl =  (ImageView)view.findViewById(R.id.fab_ctrl) ;
         nowState = (TextView)view.findViewById(R.id.nowState);
+        progress_water = (NumberProgressBar)view.findViewById(R.id.progress_water);
+        progress_nut = (NumberProgressBar)view.findViewById(R.id.progress_nut);
+        progress_water.setProgress(10);
 
         fab_light.setOnClickListener(onClickListener);
         fab_heating.setOnClickListener(onClickListener);
         fab_watering.setOnClickListener(onClickListener);
         fab_nut.setOnClickListener(onClickListener);
-        fab_ctrl.setOnClickListener(onClickListener);
-        shimmerTextView=view.findViewById(R.id.video_connecting_text);
-        toggleAnimation(shimmerTextView);
+        fab_ctrl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(MainActivity.isSelectedFlower) {
+                    if (fab_ctrl.isSelected()) {
+                        Client.getClient("smart");
+                        nowState.setText("当前智能模式：关闭");
+                        fab_ctrl.setSelected(false);
+                        isSmart = false;
+                    } else {
+                        Client.getClient("smart" + MainActivity.flower.getFlowerName());
+                        nowState.setText("当前智能模式：开启");
+                        fab_ctrl.setSelected(true);
+                        isSmart = true;
+                    }
+                }else{
+                    Toast.makeText(getActivity(), "你还没有选择自己的植物哦,请选择你的植物", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        video_connecting_layout=view.findViewById(R.id.video_connecting_text);
         handler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
@@ -188,6 +210,9 @@ public class ControlFragment extends Fragment {
 //                        fab_heating.setTitle("温度:"+infomation.getTemperature()+"°");
 //                        fab_watering.setTitle("土壤湿度:"+Integer.parseInt(infomation.getSoilHumidity())/10+"%");
                       //  fab_nut.setTitle("肥力:"+);
+
+                    progress_water.setProgress(((3000-100*Integer.parseInt(infomation.getWaterHigh()))/30));
+                        progress_nut.setProgress((3000-100*Integer.parseInt(infomation.getWaterHigh())/30));
 
                 }catch(Exception e){
                     e.printStackTrace();
@@ -237,117 +262,70 @@ public class ControlFragment extends Fragment {
         @Override
         public void onClick(View v) {
 
-
             /**
              * 选择植物后才可以进行操作
              *
              */
             if(MainActivity.isSelectedFlower) {
-                /**
-                 * 智能模式下不能进行控制等操作，只有手动下能进行操作
-                 */
-                if (v.getId() == R.id.fab_ctrl) {
-                    if (fab_ctrl.isSelected()) {
-                        MainActivity.Client_phone.clientSendMessage("smart");
-                        //    fab_ctrl.setTitle("当前状态：自动");
-                        Toast.makeText(getActivity(),"开启智能模式",Toast.LENGTH_SHORT).show();
-                        nowState.setText("当前智能模式：开启");
-                        fab_ctrl.setSelected(false);
-                        isSmart = true;
-                    } else {
-                        MainActivity.Client_phone.clientSendMessage("smart" + MainActivity.flower.getFlowerName());
-                        nowState.setText("当前智能模式：关闭");
-                        fab_ctrl.setSelected(true);
-                        //  fab_ctrl.setTitle("当前状态：手动");
-                        Toast.makeText(getActivity(),"关闭智能模式",Toast.LENGTH_SHORT).show();
-                        isSmart = false;
-                    }
-                }
                 if (!isSmart) {
                     switch (v.getId()) {
                         case R.id.fab_light:
                             if (fab_light.isSelected()) {
-                                MainActivity.Client_phone.clientSendMessage("e");
+                                Client.getClient("e");
                                 nowState.setText("当前灯光状态：关闭");
                                 fab_light.setSelected(false);
                             } else {
-                                MainActivity.Client_phone.clientSendMessage("b");
+                                Client.getClient("b");
                                 nowState.setText("当前灯光状态：开启");
                                 fab_light.setSelected(true);
                             }
                             break;
                         case R.id.fab_watering:
                             if (fab_watering.isSelected()) {
-                                MainActivity.Client_phone.clientSendMessage("5");
+                                Client.getClient("5");
                                 nowState.setText("当前浇水状态：关闭");
                                 fab_watering.setSelected(false);
                             } else {
-                                MainActivity.Client_phone.clientSendMessage("m");
+                                Client.getClient("m");
                                 nowState.setText("当前浇水状态：开启");
                                 fab_watering.setSelected(true);
                             }
                             break;
                         case R.id.fab_heating:
                             if (fab_heating.isSelected()) {
-                                MainActivity.Client_phone.clientSendMessage("s");
+                                Client.getClient("s");
                                 nowState.setText("当前加热状态：关闭");
                                 fab_heating.setSelected(false);
                             } else {
-                                MainActivity.Client_phone.clientSendMessage("p");
+                                Client.getClient("p");
                                 nowState.setText("当前加热状态：开启");
                                 fab_heating.setSelected(true);
                             }
                             break;
                         case R.id.fab_nut:
                             if (fab_nut.isSelected()) {
-                                MainActivity.Client_phone.clientSendMessage("y");
+                                Client.getClient("y");
                                 nowState.setText("当前施肥状态：关闭");
                                 fab_nut.setSelected(false);
                             } else {
-                                MainActivity.Client_phone.clientSendMessage("v");
+                                Client.getClient("v");
                                 nowState.setText("当前施肥状态：开启");
                                 fab_nut.setSelected(true);
                             }
                             break;
-    //                    case R.id.fab_ctrl:
-    //                        if (fab_ctrl.isSelected()) {
-    //                            MainActivity.Client_phone.clientSendMessage("smart");
-    //                            //    fab_ctrl.setTitle("当前状态：自动");
-    //                            fab_ctrl.setSelected(false);
-    //                        } else {
-    //                            MainActivity.Client_phone.clientSendMessage("smart" + MainActivity.flower.getFlowerName());
-    //                            fab_ctrl.setSelected(true);
-    //                            //  fab_ctrl.setTitle("当前状态：手动");
-    //                        }
                         default:
                             break;
                     }
-                } else {
-                    if(v.getId()==R.id.fab_ctrl) {
-                        Toast.makeText(getActivity(), "关闭智能模式", Toast.LENGTH_SHORT).show();
-                        nowState.setText("当前智能模式：关闭");
-                    }
-                    else
-                        Toast.makeText(getActivity(), "智能模式下指令没用哟", Toast.LENGTH_SHORT).show();
                 }
+                else
+                    Toast.makeText(getActivity(), "智能模式下指令没用哟", Toast.LENGTH_SHORT).show();
+
             } else{
                 Toast.makeText(getActivity(), "你还没有选择自己的植物哦,请选择你的植物", Toast.LENGTH_SHORT).show();
             }
-//            }else{
-//                Toast.makeText(getActivity(),"请先登录服务器！",Toast.LENGTH_LONG).show();
-//            }
-
         }
     };
-    public void toggleAnimation(ShimmerTextView target) {
-        if (shimmer != null && shimmer.isAnimating()) {
-            shimmer.cancel();
-        } else {
-            shimmer = new Shimmer();
-            shimmer.setDuration(3000);
-            shimmer.start(target);
-        }
-    }
+
 
     /**
      * 连接远程的服务器，服务器端口554，映射客户端端口5555
@@ -369,7 +347,7 @@ public class ControlFragment extends Fragment {
                             result.equals("NTCS_CLOSED") ||
                             result.equals("NTCS_UNKNOWN") ||
                             result.equals("FAILED")) {
-                        Toast.makeText(getContext(), result,Toast.LENGTH_SHORT).show();
+                        Log.i("MING", result);
                         if (_remoteTunnel1 != null) {
                             _remoteTunnel1.closeTunnels();
                             _remoteTunnel1 = null;
