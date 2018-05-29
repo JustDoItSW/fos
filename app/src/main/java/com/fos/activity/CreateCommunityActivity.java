@@ -84,7 +84,7 @@ public class CreateCommunityActivity extends AppCompatActivity {
      */
     private static int CAMERA_REQUEST_CODE=1;
     private static int GALLY_REQUEST_CODE=2;
-    private String mBaseUrl="http://47.106.161.42/ImgServlet/";
+    private String mBaseUrl="http://47.106.161.42:8080/ImgServlet/";
     OkHttpClient okHttpClient=new OkHttpClient();
     public static ExecutorService mThreadPool= Executors.newCachedThreadPool();
 
@@ -521,7 +521,7 @@ public class CreateCommunityActivity extends AppCompatActivity {
     private void sendCommunityToService(String res){
         UserInfo userInfo   = new UserInfo();
         userInfo.setUserName(MainActivity.userInfo.getUserName());
-        userInfo.setClassName("UserInfo");
+        userInfo.setClassName( "UserInfo");
         userInfo.setUserId(MainActivity.userInfo.getUserId());
         Community community = new Community();
         community.setPicture(res);

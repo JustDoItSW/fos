@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static SharedPreferences.Editor editor;
     public static Flower flower;
+    public static String browseDate;
     //Preferece机制操作的文件名
     public static final String PREFERENCE_NAME = "SaveContent";
     //Preferece机制的操作模式
@@ -74,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
      * 用户是否已经选择了植物
      */
     public static boolean isSelectedFlower=false;
-//    public static Client_phone Client_phone;
     public static SimpleClient Client_phone;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
         flower.setFlowerSoilHum(sharedPreferences.getString("hum","50"));
         flower.setFlowerTemp(sharedPreferences.getString("temp","25"));
         flower.setFlowerImage(sharedPreferences.getString("image",""));
+        browseDate = sharedPreferences.getString("date","");
         if(!sharedPreferences.getString("flowerName","").equals("未选择")&&!sharedPreferences.getString("flowerName","").equals("")){
             /**
              * 这里选择了植物的花名，是否选择植物标识置为true

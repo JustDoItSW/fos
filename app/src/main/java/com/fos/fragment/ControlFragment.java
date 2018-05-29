@@ -1,5 +1,6 @@
 package com.fos.fragment;
 
+import android.animation.ObjectAnimator;
 import android.app.KeyguardManager;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
@@ -14,6 +15,7 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -96,6 +98,7 @@ public class ControlFragment extends Fragment {
     private int _connectTime=0;
     private Scanner _scanner;
     private boolean isSmart  = false;
+    private ObjectAnimator objectAnimator;
 
     public static ControlFragment newInstance(){
         if(controlFragment == null )
@@ -150,7 +153,17 @@ public class ControlFragment extends Fragment {
                 }
             }
         });
-   //     _videoView.setFullScreen(true);
+//        ViewGroup.LayoutParams para = _videoView.getLayoutParams();
+//        DisplayMetrics dm = getContext().getResources().getDisplayMetrics();
+//        para.width  = dm.heightPixels;
+//        para.height = dm.widthPixels;
+//        _videoView.setLayoutParams(para);
+//        _videoView.setFullScreen(true);
+//        ObjectAnimator objectAnimator  = ObjectAnimator.ofFloat(_videoView,"rotation",0,90);
+//        objectAnimator.setDuration(1);
+//        _videoView.setPivotX(dm.heightPixels/2);
+//        _videoView.setPivotY(dm.widthPixels/2);
+//        objectAnimator.start();
         _deviceId = "brexco.2.us.ytong.rakwireless.com";
         _devicePsk = "admin";
         _fps = 20;
@@ -212,7 +225,7 @@ public class ControlFragment extends Fragment {
                       //  fab_nut.setTitle("肥力:"+);
 
                     progress_water.setProgress(((3000-100*Integer.parseInt(infomation.getWaterHigh()))/30));
-                        progress_nut.setProgress((3000-100*Integer.parseInt(infomation.getWaterHigh())/30));
+                        progress_nut.setProgress(((3000-100*Integer.parseInt(infomation.getWaterHigh()))/30));
 
                 }catch(Exception e){
                     e.printStackTrace();

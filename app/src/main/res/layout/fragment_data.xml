@@ -104,7 +104,7 @@
                 android:layout_below="@+id/data_flowerName"/>
             <TextView
                 android:id="@+id/data_date"
-                android:text="已监测4天"
+                android:text="已监测22天"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"

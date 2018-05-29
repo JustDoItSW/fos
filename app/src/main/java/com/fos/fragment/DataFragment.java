@@ -38,6 +38,9 @@ import com.fos.util.MyFragmentPagerAdapter;
 import com.fos.util.MyViewPager;
 import com.fos.util.SpringIndicator.SpringIndicator;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 
@@ -53,7 +56,7 @@ public class DataFragment extends Fragment {
     private MyViewPager myViewPager;
     private MyDataFragmentPagerAdapter myFragmentPagerAdapter;
     private ImageView image_flowerInfo;
-    private TextView menu_temp,menu_hum,menu_soilHum,menu_lux,level_light,level_water,level_temp,level_nut,data_flowerName,data_flowerName_g;
+    private TextView menu_temp,menu_hum,menu_soilHum,menu_lux,level_light,level_water,level_temp,level_nut,data_flowerName,data_flowerName_g,data_date;
     private View light_lv1,light_lv2,light_lv3,water_lv1,water_lv2,water_lv3,temp_lv1,temp_lv2,temp_lv3,nut_lv1,nut_lv2,nut_lv3;
     public static Handler handler;
     private static DataFragment dataFragment;
@@ -84,6 +87,7 @@ public class DataFragment extends Fragment {
 
         data_flowerName = (TextView)view.findViewById(R.id.data_flowerName);
         data_flowerName_g = (TextView)view.findViewById(R.id.data_flowerName_g);
+        data_date = (TextView)view.findViewById(R.id.data_date);
 
         level_light = (TextView)view.findViewById(R.id.level_light);
         level_water = (TextView)view.findViewById(R.id.level_water);
@@ -148,6 +152,8 @@ public class DataFragment extends Fragment {
      //   LoadImageUtil.onLoadImage(image_flowerInfo,MainActivity.flower.getFlowerImage());
         data_flowerName.setText(MainActivity.flower.getFlowerName());
         data_flowerName_g.setText(MainActivity.flower.getFlowerName());
+
+        data_date.setText("已监测"+dateDiff(MainActivity.browseDate)+"天");
     }
     private void initLevel(){
         light_lv1.setBackgroundResource(R.drawable.round_view_gray);
@@ -287,5 +293,47 @@ public class DataFragment extends Fragment {
             }
         }
     };
+    public String dateDiff(String endTime) {
+        String strTime = null;
+        // 按照传入的格式生成一个simpledateformate对象
+        SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
+        long nd = 1000 * 24 * 60 * 60;// 一天的毫秒数
+        long nh = 1000 * 60 * 60;// 一小时的毫秒数
+        long nm = 1000 * 60;// 一分钟的毫秒数
+        long ns = 1000;// 一秒钟的毫秒数
+        long diff;
+        long day = 0;
+        Date curDate = new Date(System.currentTimeMillis());//获取当前时间
+        String str = sd.format(curDate);
+        try {
+            // 获得两个时间的毫秒时间差异
+            diff = sd.parse(str).getTime()
+                    - sd.parse(endTime).getTime();
+            day = diff / nd;// 计算差多少天
+            long hour = diff % nd / nh;// 计算差多少小时
+            long min = diff % nd % nh / nm;// 计算差多少分钟
+            long sec = diff % nd % nh % nm / ns;// 计算差多少秒
+            // 输出结果
+            if (day >= 1) {
+                strTime = day + "天" + hour + "时";
+            } else {
+                if (hour >= 1) {
+                    strTime = day + "天" + hour + "时" + min + "分";
+
+                } else {
+                    if (sec >= 1) {
+                        strTime = day + "天" + hour + "时" + min + "分" + sec + "秒";
+                    } else {
+                    }
+                }
+            }
+
+            return day+"";
+        } catch (ParseException e) {
+           // e.printStackTrace();
+        }
+        return 0+"";
+
+    }
 
 }

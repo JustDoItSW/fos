@@ -25,7 +25,9 @@ import com.fos.util.LoadImageUtil;
 
 import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,12 +73,14 @@ public class FlowerInfo extends AppCompatActivity {
         btn_finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis()));
                 MainActivity.editor.putString("flowerName",flower.getFlowerName().toString());
                 MainActivity.editor.putString("light",flower.getFlowerLux().toString());
                 MainActivity.editor.putString("hum",flower.getFlowerSoilHum().toString());
                 MainActivity.editor.putString("temp",flower.getFlowerTemp().toString());
                 MainActivity.editor.putString("image",flower.getFlowerImage().toString());
                 //   MainActivity.editor.putString("nut",data.get(position).getFlowerN());
+                MainActivity.editor.putString("date",date);
                 MainActivity.editor.commit();
 
                 MainActivity.flower.setFlowerName(flower.getFlowerName().toString());
@@ -89,6 +93,7 @@ public class FlowerInfo extends AppCompatActivity {
                 MainActivity.flower.setFlowerSoilHum(flower.getFlowerSoilHum().toString());
                 MainActivity.flower.setFlowerTemp(flower.getFlowerTemp().toString());
                 MainActivity.flower.setFlowerImage(flower.getFlowerImage().toString());
+                MainActivity.browseDate =  date;
 
 
                 Message message = new Message();

@@ -3,10 +3,10 @@ package com.fos.entity;
 import org.litepal.crud.DataSupport;
 
 /**
- * Created by Apersonalive on 2018/5/15.
+ * Created by Apersonalive on 2018/5/29.
  */
 
-public class UserInfo {
+public class User extends DataSupport{
 
     /**
 
@@ -25,27 +25,8 @@ public class UserInfo {
      * 用户头像
      */
     private String userHeadImage;
-    /**
-     * 用户Arduino板子序列号
-     */
-    private String userArduinoDeviceId;
-    /**
-     * 用户摄像头序列号
-     */
-    private String userCameraDeviceId;
-    /**
-     * 类名
-     */
-    private String className;
 
 
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
-    }
 
     public String getUserId() {
         return userId;
@@ -79,25 +60,10 @@ public class UserInfo {
         this.userHeadImage = userHeadImage;
     }
 
-    public String getUserArduinoDeviceId() {
-        return userArduinoDeviceId;
-    }
-
-    public void setUserArduinoDeviceId(String userArduinoDeviceId) {
-        this.userArduinoDeviceId = userArduinoDeviceId;
-    }
-
-    public String getUserCameraDeviceId() {
-        return userCameraDeviceId;
-    }
-
-    public void setUserCameraDeviceId(String userCameraDeviceId) {
-        this.userCameraDeviceId = userCameraDeviceId;
-    }
 
     public String toString(){
         return "UserInfo [userId="+ userId + ", userName=" + userName +", userPassword=" + userPassword +", userHeadImage=" + userHeadImage +
-                ", userArduinoDeviceId=" + userArduinoDeviceId +", userCameraDeviceId=" + userCameraDeviceId + ", className=" + className + "]";
+                 "]";
     }
 
 }

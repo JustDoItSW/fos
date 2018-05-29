@@ -81,7 +81,7 @@ public class MyListViewAdapter extends BaseAdapter {
                 .priority(Priority.HIGH)
                 .into(viewholder.imageView);
         viewholder.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        Log.e("info", "当前图片地址："+mList.get(i).getFlowerImage());
+      //  Log.e("info", "当前图片地址："+mList.get(i).getFlowerImage());
         viewholder.imageView.setTag(mList.get(i).getFlowerImage());
         viewholder.flowerName.setText(flower.getFlowerName());
         viewholder.flowerOtherName.setText(flower.getFlowerName());

@@ -29,12 +29,20 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.fos.R;
+import com.fos.dao.UserInfoDao;
+import com.fos.entity.User;
 import com.fos.entity.UserInfo;
 import com.fos.service.netty.Client;
 import com.fos.service.netty.SimpleClient;
+import com.fos.util.BitmapSetting;
 import com.fos.util.InfomationAnalysis;
+import com.fos.util.MyLoginListView;
 
+import org.litepal.crud.DataSupport;
+import org.litepal.util.Const;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
@@ -51,20 +59,22 @@ public class LoginActivity extends AppCompatActivity {
     public static int MODE = MODE_PRIVATE;
     public static SharedPreferences.Editor editor;
     private SharedPreferences sharedPreferences;
-    private Button btn_login,btn_register;
-    private EditText login_userID,login_password,register_userName,register_password,register_certainPW;
-    private RelativeLayout login_ui,register_ui;
-    private ImageView login_userIcon,downPush;
+    private Button btn_login, btn_register;
+    private EditText login_userID, login_password, register_userName, register_password, register_certainPW;
+    private RelativeLayout login_ui, register_ui;
+    private ImageView login_userIcon, downPush;
     private LinearLayout backLogin;
-    private TextView login_register,findPassword;
+    private TextView login_register, findPassword;
     private LinearLayout ll_input;
-    private ObjectAnimator objectAnimator,objectAnimator2,objectAnimator3,objectAnimator4,objectAnimator5,objectAnimator6,objectAnimator7,objectAnimator8,objectAnimator9,objectAnimator10;
-    private View view_rotation,view2_rotation;
+    private ObjectAnimator objectAnimator, objectAnimator2, objectAnimator3, objectAnimator4, objectAnimator5, objectAnimator6, objectAnimator7, objectAnimator8, objectAnimator9, objectAnimator10;
+    private View view_rotation, view2_rotation;
     private ListView list_userID;
-    private List<String> userList;
+  //  private List<String> userList;
+    private UserInfoDao userInfoDao;
+    private List<User> userInfoList;
     private String ip = "47.106.161.42";
     private int port = 8000;
-   // public static SimpleClient Client_phone;
+    // public static SimpleClient Client_phone;
     public static Handler handler;
 
 
@@ -81,25 +91,26 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void initView(){
-        btn_login =(Button)findViewById(R.id.btn_login);
-        login_password  =  (EditText)findViewById(R.id.login_password);
-        login_userID = (EditText)findViewById(R.id.login_userID);
-        login_userIcon = (ImageView)findViewById(R.id.login_userIcon);
-        downPush = (ImageView)findViewById(R.id.downPush);
-        login_register = (TextView)findViewById(R.id.login_register);
-        findPassword = (TextView)findViewById(R.id.findPassword);
-        ll_input  = (LinearLayout)findViewById(R.id.ll_input);
-        view_rotation = (View)findViewById(R.id.view_rotation);
-        list_userID  = (ListView)findViewById(R.id.list_userID);
-        login_ui = (RelativeLayout)findViewById(R.id.login_ui) ;
-        register_ui = (RelativeLayout)findViewById(R.id.register_ui) ;
-        backLogin = (LinearLayout)findViewById(R.id.backLogin);
-        view2_rotation = (View)findViewById(R.id.view2_rotation);
-        register_userName = (EditText)findViewById(R.id.register_userName);
-        register_password = (EditText)findViewById(R.id.register_password);
-        register_certainPW = (EditText)findViewById(R.id.register_certainPW);
-        btn_register = (Button)findViewById(R.id.btn_register);
+    private void initView() {
+        userInfoDao = UserInfoDao.getInstance();
+        btn_login = (Button) findViewById(R.id.btn_login);
+        login_password = (EditText) findViewById(R.id.login_password);
+        login_userID = (EditText) findViewById(R.id.login_userID);
+        login_userIcon = (ImageView) findViewById(R.id.login_userIcon);
+        downPush = (ImageView) findViewById(R.id.downPush);
+        login_register = (TextView) findViewById(R.id.login_register);
+        findPassword = (TextView) findViewById(R.id.findPassword);
+        ll_input = (LinearLayout) findViewById(R.id.ll_input);
+        view_rotation = (View) findViewById(R.id.view_rotation);
+        list_userID = (ListView) findViewById(R.id.list_userID);
+        login_ui = (RelativeLayout) findViewById(R.id.login_ui);
+        register_ui = (RelativeLayout) findViewById(R.id.register_ui);
+        backLogin = (LinearLayout) findViewById(R.id.backLogin);
+        view2_rotation = (View) findViewById(R.id.view2_rotation);
+        register_userName = (EditText) findViewById(R.id.register_userName);
+        register_password = (EditText) findViewById(R.id.register_password);
+        register_certainPW = (EditText) findViewById(R.id.register_certainPW);
+        btn_register = (Button) findViewById(R.id.btn_register);
 
         downPush.setOnClickListener(onClickListener);
         btn_login.setOnClickListener(onClickListener);
@@ -109,14 +120,14 @@ public class LoginActivity extends AppCompatActivity {
         btn_register.setOnClickListener(onClickListener);
         list_userID.setOnItemClickListener(onItemClickListener);
 
-        handler  = new Handler(){
+        handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 Bundle bundle = msg.getData();
                 String str = bundle.getString("info");
                 Log.e("Login收到：", str);
-                if(msg.what == 0x001) {
+                if (msg.what == 0x001) {
                     /**
                      * 注册成功
                      */
@@ -133,16 +144,16 @@ public class LoginActivity extends AppCompatActivity {
                     register_password.setEnabled(true);
                     register_certainPW.setEnabled(true);
                     backLogin.setEnabled(true);
-                }else if(msg.what == 0x002){
+                } else if (msg.what == 0x002) {
                     /**
                      * 登录成功
                      */
 
                     saveCountInfo();
-                    Bundle  b = new Bundle();
-                    b.putString("userName",InfomationAnalysis.jsonToUserInfo(str).getUserName());
-                    b.putString("userID",login_userID.getText().toString());
-                    Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                    Bundle b = new Bundle();
+                    b.putString("userName", InfomationAnalysis.jsonToUserInfo(str).getUserName());
+                    b.putString("userID", login_userID.getText().toString());
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtras(b);
                     startActivity(intent);
 //                    login_userID.setEnabled(true);
@@ -151,8 +162,8 @@ public class LoginActivity extends AppCompatActivity {
 //                    btn_login.setText("登录");
                     finish();
 
-                }else if(msg.what == 0x003){
-                    Toast.makeText(LoginActivity.this,"账号或密码不正确！",Toast.LENGTH_SHORT).show();
+                } else if (msg.what == 0x003) {
+                    Toast.makeText(LoginActivity.this, "账号或密码不正确！", Toast.LENGTH_SHORT).show();
                     login_userID.setEnabled(true);
                     login_password.setEnabled(true);
                     btn_login.setEnabled(true);
@@ -164,30 +175,30 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void initAnimator(){
+    private void initAnimator() {
 
-       objectAnimator  = ObjectAnimator.ofFloat(view_rotation,"rotation",0,15);
-       objectAnimator2  = ObjectAnimator.ofFloat(view_rotation,"rotation",15,0);
+        objectAnimator = ObjectAnimator.ofFloat(view_rotation, "rotation", 0, 15);
+        objectAnimator2 = ObjectAnimator.ofFloat(view_rotation, "rotation", 15, 0);
         objectAnimator.setDuration(500);
         objectAnimator2.setDuration(500);
 
-        objectAnimator3 = ObjectAnimator.ofFloat(ll_input,"translationY",0,100);
-        objectAnimator4 = ObjectAnimator.ofFloat(ll_input,"translationY",100,0);
+        objectAnimator3 = ObjectAnimator.ofFloat(ll_input, "translationY", 0, 100);
+        objectAnimator4 = ObjectAnimator.ofFloat(ll_input, "translationY", 100, 0);
         objectAnimator3.setDuration(500);
         objectAnimator4.setDuration(500);
 
-        objectAnimator5 = ObjectAnimator.ofFloat(login_ui,"rotationY",0,90);
-        objectAnimator6 = ObjectAnimator.ofFloat(login_ui,"rotationY",90,0);
+        objectAnimator5 = ObjectAnimator.ofFloat(login_ui, "rotationY", 0, 90);
+        objectAnimator6 = ObjectAnimator.ofFloat(login_ui, "rotationY", 90, 0);
         objectAnimator5.setDuration(500);
         objectAnimator6.setDuration(500);
 
-        objectAnimator7 = ObjectAnimator.ofFloat(register_ui,"rotationY",-90,0);
-        objectAnimator8 = ObjectAnimator.ofFloat(register_ui,"rotationY",0,-90);
+        objectAnimator7 = ObjectAnimator.ofFloat(register_ui, "rotationY", -90, 0);
+        objectAnimator8 = ObjectAnimator.ofFloat(register_ui, "rotationY", 0, -90);
         objectAnimator7.setDuration(500);
         objectAnimator8.setDuration(500);
 
-        objectAnimator9 = ObjectAnimator.ofFloat(view2_rotation,"rotation",0,-15);
-        objectAnimator10 = ObjectAnimator.ofFloat(view2_rotation,"rotation",-15,0);
+        objectAnimator9 = ObjectAnimator.ofFloat(view2_rotation, "rotation", 0, -15);
+        objectAnimator10 = ObjectAnimator.ofFloat(view2_rotation, "rotation", -15, 0);
         objectAnimator9.setDuration(500);
         objectAnimator10.setDuration(500);
 
@@ -242,52 +253,74 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void saveCountInfo(){
-        sharedPreferences = getSharedPreferences(PREFERENCE_NAME,MODE);
-        editor = sharedPreferences.edit();
-        Set<String> idSet;
-        idSet = sharedPreferences.getStringSet("userID",null);
-        if(idSet!=null){
-            idSet.add(login_userID.getText().toString());
-            editor.remove("userID");
-            editor.commit();
-            editor.putStringSet("userID",idSet);
-            editor.commit();
-        }else{
-            idSet = new HashSet<String>();
-            idSet.add(login_userID.getText().toString());
-            editor.remove("userID");
-            editor.commit();
-            editor.putStringSet("userID",idSet);
-            editor.commit();
-        }
+    private void saveCountInfo() {
+
+        User userInfo = new User();
+        DataSupport.deleteAll("user");
+        userInfo.setUserId(login_userID.getText().toString());
+        userInfo.setUserPassword(login_password.getText().toString());
+        userInfoDao.insertUserInfo(userInfo);
+
+//        sharedPreferences = getSharedPreferences(PREFERENCE_NAME,MODE);
+//        editor = sharedPreferences.edit();
+//        Set<String> idSet;
+//        idSet = sharedPreferences.getStringSet("userID",null);
+//        if(idSet!=null){
+//            idSet.add(login_userID.getText().toString());
+//            editor.remove("userID");
+//            editor.commit();
+//            editor.putStringSet("userID",idSet);
+//            editor.commit();
+//        }else{
+//            idSet = new HashSet<String>();
+//            idSet.add(login_userID.getText().toString());
+//            editor.remove("userID");
+//            editor.commit();
+//            editor.putStringSet("userID",idSet);
+//            editor.commit();
+//        }
     }
 
-    private void getCountInfo(){
-        sharedPreferences = getSharedPreferences(PREFERENCE_NAME,MODE);
-        editor = sharedPreferences.edit();
-        Set<String> idSet;
-        idSet = sharedPreferences.getStringSet("userID",null);
-        if(idSet != null){
-            List<Map<String,Object>> data = new ArrayList<Map<String,Object>>();
-            Map<String,Object> item;
-            userList = new ArrayList<>(idSet);
-            for(int i = 0;i<userList.size();i++){
-                item = new HashMap<String, Object>();
-                item.put("userID",userList.get(i));
-                item.put("userIcon",null);
-                data.add(item);
+    private void getCountInfo() {
+        User[] userInfos = userInfoDao.getAllUserInfo();
+        userInfoList = new ArrayList<>();
+        if (userInfos != null) {
+            for (int i = 0; i < userInfos.length; i++) {
+                userInfoList.add(userInfos[i]);
             }
-            ArrayAdapter arrayAdapter = new ArrayAdapter(LoginActivity.this,android.R.layout.simple_list_item_1,userList);
-            SimpleAdapter simpleAdapter = new SimpleAdapter(LoginActivity.this,data,R.layout.layout_userid,new String[]{"userIcon","userID"},new int[]{R.id.userIconList,R.id.userIDList});
-            list_userID.setAdapter(simpleAdapter);
         }
+//        sharedPreferences = getSharedPreferences(PREFERENCE_NAME,MODE);
+//        editor = sharedPreferences.edit();
+//        Set<String> idSet;
+//        idSet = sharedPreferences.getStringSet("userID",null);
+//        if(idSet != null){
+//            List<Map<String,Object>> data = new ArrayList<Map<String,Object>>();
+//            Map<String,Object> item;
+//            userList = new ArrayList<>(idSet);
+//            for(int i = 0;i<userList.size();i++){
+//                item = new HashMap<String, Object>();
+//                item.put("userID",userList.get(i));
+//                item.put("userIcon",null);
+//                data.add(item);
+//            }
+        MyLoginListView myLoginListView = new MyLoginListView(LoginActivity.this, userInfoList);
+        //   SimpleAdapter simpleAdapter = new SimpleAdapter(LoginActivity.this,data,R.layout.layout_userid,new String[]{"userIcon","userID"},new int[]{R.id.userIconList,R.id.userIDList});
+        list_userID.setAdapter(myLoginListView);
     }
 
     AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            login_userID.setText(userList.get(position));
+            userInfoDao = UserInfoDao.getInstance();
+            User userInfo =  userInfoDao.getUserInfo(userInfoList.get(position).getUserId());
+            login_userID.setText(userInfo.getUserId());
+            login_password.setText(userInfo.getUserPassword());
+            Glide.with(LoginActivity.this)
+                    .load(userInfo.getUserHeadImage())
+                    .transform(new BitmapSetting(LoginActivity.this))
+                    .priority(Priority.HIGH)
+                    .into(login_userIcon);
+            login_userIcon.setScaleType(ImageView.ScaleType.CENTER_CROP);
             downPush.setSelected(false);
             objectAnimator.start();
             objectAnimator3.start();

@@ -82,26 +82,32 @@ public class MyCommunityListAdapter extends BaseAdapter {
         viewholder.count_browse.setText(mapList.get(position).get("count_browse").toString());
         viewholder.count_evaluate.setText(mapList.get(position).get("count_evaluate").toString());
         viewholder.count_share.setText(mapList.get(position).get("count_share").toString());
-
-
+        ViewGroup.LayoutParams para = viewholder.gridView.getLayoutParams();
+        DisplayMetrics dm = context.getResources().getDisplayMetrics();
+        para.height = 0;
         if(!mapList.get(position).get("picture").toString().equals("")) {
-            if(viewholder.gridView.getTag().equals(mapList.get(position).get("picture").toString().equals(""))){
-                if (getImageCount(mapList.get(position).get("picture").toString()) == 1) {
-                    viewholder.gridView.setNumColumns(1);
-                }
-                if (getImageCount(mapList.get(position).get("picture").toString()) == 2) {
-                    viewholder.gridView.setNumColumns(2);
-                }
-                if (getImageCount(mapList.get(position).get("picture").toString()) >= 3) {
-                    ViewGroup.LayoutParams para = viewholder.gridView.getLayoutParams();
-                    DisplayMetrics dm = context.getResources().getDisplayMetrics();
-                    para.height = (int) (Math.ceil(getImageCount(mapList.get(position).get("picture").toString()) / 3f)) * ((dm.widthPixels - 4) / 3);
-                    viewholder.gridView.setLayoutParams(para);
-                }
-                viewholder.gridView.setAdapter(new MyGridViewAdapter(context, R.layout.layout_gridview, getAllImageUri(mapList.get(position).get("picture").toString())));
-                viewholder.gridView.setTag(mapList.get(position).get("picture").toString());
+            Log.e("info","content"+mapList.get(position).get("comContext").toString());
+//            viewholder.gridView.setTag(mapList.get(position).get("picture").toString());
+//            if(mapList.get(position).get("picture").toString().equals(viewholder.gridView.getTag())){
+            int imageCount = getImageCount(mapList.get(position).get("picture").toString());
+            if (imageCount == 1) {
+                para.height =  dm.widthPixels - 4;
+                viewholder.gridView.setNumColumns(1);
             }
+            if (imageCount == 2) {
+                para.height =  (dm.widthPixels - 4)/2;
+                viewholder.gridView.setNumColumns(2);
+            }
+            if (imageCount >= 3) {
+                viewholder.gridView.setNumColumns(3);
+                para.height = (int) (Math.ceil(imageCount / 3f)) * ((dm.widthPixels - 4) / 3);
+            }
+
+            viewholder.gridView.setAdapter(new MyGridViewAdapter(context, R.layout.layout_gridview, getAllImageUri(mapList.get(position).get("picture").toString())));
+            //   viewholder.gridView.setTag(mapList.get(position).get("picture").toString());
+            // }
         }
+        viewholder.gridView.setLayoutParams(para);
 
         viewholder.count_support.setOnClickListener(onClickListener);
         viewholder.count_browse.setOnClickListener(onClickListener);

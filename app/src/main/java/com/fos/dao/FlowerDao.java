@@ -30,9 +30,7 @@ public class FlowerDao {
     private FlowerDao(){
     }
 
-    /**
-     * 查询植物的信息
-     */
+
     public void insertFlower(Flower[]  flower){
 
 
@@ -45,18 +43,12 @@ public class FlowerDao {
                     Log.e("info",""+flowerName+"已存在");
                     continue;
             }
-            flower[i].setId(flower[i].getId());
-            flower[i].setFlowerName(flower[i].getFlowerName());
-            flower[i].setFlowerTemp(flower[i].getFlowerTemp());
-            flower[i].setFlowerLux(flower[i].getFlowerLux());
-            flower[i].setFlowerInfo(flower[i].getFlowerInfo());
-            flower[i].setFlowerSoilHum(flower[i].getFlowerSoilHum());
-            flower[i].setFlowerOtherName(flower[i].getFlowerOtherName());
-            flower[i].setFlowerImage(flower[i].getFlowerImage());
-
             flower[i].save();
         }
     }
+    /**
+     * 查询植物的信息
+     */
     public Flower getPlantInfo(String plantName){
         Cursor cursor = DataSupport.findBySQL("select * from flower where flowername = ?",plantName);
         Flower flower = new Flower();

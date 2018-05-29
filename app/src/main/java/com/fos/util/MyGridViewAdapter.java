@@ -72,7 +72,7 @@ public class MyGridViewAdapter extends BaseAdapter {
 
         // LoadImageUtil.onLoadListImage(viewHolder.imageView,arr[position]);
         Glide.with(context)
-                .load("http://"+arr[position])
+                .load(arr[position])
                 .priority(Priority.HIGH)
                 .into(viewHolder.imageView);
         viewHolder.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
