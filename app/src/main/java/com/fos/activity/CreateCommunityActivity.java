@@ -526,7 +526,7 @@ public class CreateCommunityActivity extends AppCompatActivity {
         Community community = new Community();
         community.setPicture(res);
         community.setClassName("Community");
-        community.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis())));
+        community.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(System.currentTimeMillis())));
         community.setContent(edit_community.getText().toString());
         community.setUserInfo(userInfo);
         Client.getClient(InfomationAnalysis.BeanToCommunity(community));

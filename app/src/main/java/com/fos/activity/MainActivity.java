@@ -22,12 +22,16 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.SimpleAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -42,6 +46,11 @@ import com.fos.util.ActivityCollector;
 import com.fos.util.GuideView;
 import com.fos.util.MyFragmentPagerAdapter;
 import com.fos.util.MyViewPager;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -58,12 +67,11 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences  sharedPreferences;
     private MyViewPager myViewPager;
     private ImageView left_menu,text_control,text_data,text_flower;
-    private Switch loginControl;
     private TextView main_userName;
+    private ListView listView_sideSlip;
     private DrawerLayout dl;
     private RelativeLayout main_relativeLayout;
     private MyFragmentPagerAdapter myFragmentPagerAdapter;
-    private Button btn_selectFlower,btn_community;
     private Intent intent;
     private MainService infomationService;
     private ServiceConnection serviceConnection;
@@ -71,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
     private Thread queryThread;
     public static UserInfo userInfo;
     private Intent i;
+    String[] listContent = {"社区","选择植物"};
+    int [] listImage ={R.mipmap.ic_community,R.mipmap.ic_plant};
     /**
      * 用户是否已经选择了植物
      */
@@ -87,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
 
         initUser();
         init();
+        initListView();
         setupViewPager();//初始化viewpager
 
 
@@ -140,10 +151,8 @@ public class MainActivity extends AppCompatActivity {
         text_data =  (ImageView)findViewById(R.id.text_data);
         text_flower =  (ImageView)findViewById(R.id.text_flower);
         myViewPager = (MyViewPager)findViewById(R.id.vp);
-        btn_selectFlower  = (Button)findViewById(R.id.btn_selectFlower);
-        btn_community  = (Button)findViewById(R.id.btn_community);
-        loginControl = (Switch)findViewById(R.id.loginControl);
         main_userName = (TextView) findViewById(R.id.main_userName);
+        listView_sideSlip = (ListView)findViewById(R.id.listView_sideSlip) ;
         queryThread = new Thread() {
             @Override
             public void run() {
@@ -164,7 +173,6 @@ public class MainActivity extends AppCompatActivity {
 
         main_userName.setText(i.getExtras().getString("userName"));
         menu_tab.setOnClickListener(onClickListener);
-        loginControl.setOnCheckedChangeListener(checkedChangeListener);
         text_control.setSelected(true);
         serviceConnection = new ServiceConnection() {
             @Override
@@ -181,8 +189,6 @@ public class MainActivity extends AppCompatActivity {
         text_control.setOnClickListener(onClickListener);
         text_data.setOnClickListener(onClickListener);
         text_flower.setOnClickListener(onClickListener);
-        btn_selectFlower.setOnClickListener(onClickListener);
-        btn_community.setOnClickListener(onClickListener);
         dl.setDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
@@ -210,47 +216,41 @@ public class MainActivity extends AppCompatActivity {
         bindService(intent,serviceConnection, Context.BIND_AUTO_CREATE);//绑定服务
 
     }
-
-    /**
-     *  获得当前的所需要的温湿度信息（每隔60s）
-     */
-    /**
-     *  获得当前的所需要的温湿度信息（每隔60s）
-     */
-    CompoundButton.OnCheckedChangeListener  checkedChangeListener =  new CompoundButton.OnCheckedChangeListener() {
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            if(isChecked) {
-                if(Client.isExist()) {
-                    queryThread = new Thread() {
-                        @Override
-                        public void run() {
-                            super.run();
-                            try {
-                                while (true) {
-                                    sleep(10000);
-                                    Log.e("info", "开始查询");
-                                    Client.getClient("i");
-                                    sleep(50000);
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    };
-                    queryThread.start();
+    private void initListView(){
+        List<Map<String,Object>> mapList =new  ArrayList<Map<String,Object>>();
+        Map<String,Object> item ;
+        for(int i = 0;i<listContent.length;i++){
+            item = new HashMap<>();
+            item.put("img",listImage[i]);
+            item.put("content",listContent[i]);
+            mapList.add(item);
+        }
+        SimpleAdapter simpleAdapter = new SimpleAdapter(MainActivity.this,mapList,R.layout.layout_sideslip,new String[]{"img","content"},new int[]{R.id.sideSlip_img,R.id.sideSlip_content});
+        listView_sideSlip.setAdapter(simpleAdapter);
+        simpleAdapter.notifyDataSetChanged();
+        listView_sideSlip.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch (position){
+                    case 0:
+                        Intent intent  = new Intent(MainActivity.this,CommunityActivity.class);
+                        startActivity(intent);
+                        break;
+                    case  1:
+                        Intent intent1  = new Intent(MainActivity.this,SelectFlower.class);
+                        startActivity(intent1);
+                        break;
                 }
             }
-            else {
-                if(Client.isExist())
-                    if(queryThread!=null) {
-                        queryThread.interrupt();
-                        queryThread = null;
-                    }
-            }
-        }
+        });
+    }
 
-    };
+    /**
+     *  获得当前的所需要的温湿度信息（每隔60s）
+     */
+    /**
+     *  获得当前的所需要的温湿度信息（每隔60s）
+     */
     View.OnClickListener onClickListener  = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -276,14 +276,6 @@ public class MainActivity extends AppCompatActivity {
                     if(!dl.isDrawerOpen(left_linearLayout)){
                         dl.openDrawer(left_linearLayout);
                     }
-                    break;
-                case R.id.btn_selectFlower:
-                    Intent intent  = new Intent(MainActivity.this,SelectFlower.class);
-                    startActivity(intent);
-                    break;
-                case R.id.btn_community:
-                    Intent intent1  = new Intent(MainActivity.this,CommunityActivity.class);
-                    startActivity(intent1);
                     break;
                 default:
                         break;
@@ -384,32 +376,6 @@ public class MainActivity extends AppCompatActivity {
         RelativeLayout.LayoutParams params1=new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
         selectFlowerBtn_img.setLayoutParams(params1);
 
-        /**
-         * 引导显示文字
-         */
-//        final TextView tv=new TextView(this);
-//        tv.setText("点击这里选择植物哦");
-//        tv.setTextColor(getResources().getColor(R.color.white));
-//        tv.setTextSize(30);
-//        tv.setGravity(Gravity.CENTER);
-
-        guideView_selectFlowerBtn=GuideView.Builder
-                .newInstance(this)
-                .setTargetView(btn_selectFlower)
-                .setCustomGuideView(selectFlowerBtn_img)
-                .setDirction(GuideView.Direction.RIGHT_BOTTOM)
-                .setShape(GuideView.MyShape.RECTANGULAR)
-                .setRadius(80)
-                .setBgColor(getResources().getColor(R.color.shadow))
-                .setOnclickListener(new GuideView.OnClickCallback() {
-                    @Override
-                    public void onClickedGuideView() {
-                        guideView_selectFlowerBtn.hide();
-                    }
-                })
-                .build();
-
-        guideView_leftBtn.show();
     }
 
     protected void onDestroy() {

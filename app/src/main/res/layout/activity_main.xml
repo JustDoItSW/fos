@@ -102,7 +102,7 @@
 
             <ImageView
                 android:id="@+id/user_icon"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="15dp"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_centerVertical="true"
@@ -111,7 +111,7 @@
             <TextView
                 android:id="@+id/main_userName"
                 android:text="Apersonalive"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="15dp"
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="15dp"
                 android:textSize="18dp"
@@ -119,68 +119,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </RelativeLayout>
-        <LinearLayout
-            android:id="@+id/loginLine"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_alignParentBottom="true"
-            >
-            <Switch
-                android:visibility="invisible"
-                android:id="@+id/loginControl"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textOn="开"
-                android:textOff="关"
-                android:thumb="@drawable/thumb"
-                android:track="@drawable/track"
-                android:showText="false"
-                android:checked="false"
-                />
-            <EditText
-                android:visibility="gone"
-                android:id="@+id/ip"
-                android:textSize="10dp"
-                android:textColor="@android:color/black"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                />
-            <EditText
-                android:visibility="gone"
-                android:id="@+id/port"
-                android:textSize="10dp"
-                android:textColor="@android:color/black"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                />
 
-        </LinearLayout>
-        <!--<TextView-->
-            <!--android:text="社区"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:drawableLeft="@drawable/support"/>-->
-        <!--<TextView-->
-            <!--android:text="选择植物"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:drawableLeft="@drawable/support"/>-->
-        <Button
-            android:id="@+id/btn_selectFlower"
-            android:text="选择植物"
+        <ListView
+            android:id="@+id/listView_sideSlip"
+            android:layout_margin="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#ffffff"/>
-
-        <Button
-            android:id="@+id/btn_community"
-            android:text="社区"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#ffffff"/>
+            android:scrollbars="none"
+            android:divider="@color/transparent"
+            ></ListView>
 
     </LinearLayout>
 
