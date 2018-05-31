@@ -150,7 +150,7 @@ public class LoginActivity extends AppCompatActivity {
                     /**
                      * 登录成功
                      */
-
+                    user.setUserName(InfomationAnalysis.jsonToUserInfo(str).getUserName());
                     saveCountInfo();
                     Bundle b = new Bundle();
                     b.putString("userName", user.getUserName());
@@ -254,7 +254,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void saveCountInfo() {
 
-       // DataSupport.deleteAll("user");
+        DataSupport.deleteAll("user");
         user.setUserId(login_userID.getText().toString());
         user.setUserPassword(login_password.getText().toString());
         userInfoDao.insertUserInfo(user);
@@ -352,17 +352,22 @@ public class LoginActivity extends AppCompatActivity {
                     if(login_userID.getText().toString().equals("")||login_password.getText().toString().equals("")){
                         Toast.makeText(LoginActivity.this,"账号或密码不能为空！",Toast.LENGTH_SHORT).show();
                     }else {
-                        login_userID.setEnabled(false);
-                        login_password.setEnabled(false);
-                        btn_login.setEnabled(false);
-                        btn_login.setText("正在登录");
-                        final UserInfo userInfo = new UserInfo();
-                        userInfo.setClassName("UserInfo");
-                        userInfo.setUserId(login_userID.getText().toString());
-                        userInfo.setUserPassword(login_password.getText().toString());
+                            if(login_password.getText().toString().length()>16){
+                                Toast.makeText(LoginActivity.this,"密码不能超过16位！",Toast.LENGTH_SHORT).show();
+                            }else {
+                                login_userID.setEnabled(false);
+                                login_password.setEnabled(false);
+                                btn_login.setEnabled(false);
+                                btn_login.setText("正在登录");
+                                final UserInfo userInfo = new UserInfo();
+                                userInfo.setClassName("UserInfo");
+                                userInfo.setUserId(login_userID.getText().toString());
+                                userInfo.setUserPassword(login_password.getText().toString());
 
-                        Client.getClient(InfomationAnalysis.BeantoUserInfo(userInfo));
-                        Log.e("info",InfomationAnalysis.BeantoUserInfo(userInfo));
+                                Client.getClient(InfomationAnalysis.BeantoUserInfo(userInfo));
+                                Log.e("info", InfomationAnalysis.BeantoUserInfo(userInfo));
+
+                        }
                     }
                     break;
                 case R.id.login_register:
@@ -381,19 +386,27 @@ public class LoginActivity extends AppCompatActivity {
                     }else if(!register_password.getText().toString().equals(register_certainPW.getText().toString())){
                         Toast.makeText(LoginActivity.this,"两次密码输入不一致！",Toast.LENGTH_SHORT).show();
                     }else{
-                        final UserInfo userInfo = new UserInfo();
-                        userInfo.setClassName("UserInfo");
-                        userInfo.setUserName(register_userName.getText().toString());
-                        userInfo.setUserPassword(register_password.getText().toString());
+                        if(register_userName.getText().toString().length()>8){
+                            Toast.makeText(LoginActivity.this,"用户名不能超过8位！",Toast.LENGTH_SHORT).show();
+                        }else {
+                            if (register_password.getText().toString().length() > 16) {
+                                Toast.makeText(LoginActivity.this, "密码不能超过16位！", Toast.LENGTH_SHORT).show();
+                            } else {
+                                final UserInfo userInfo = new UserInfo();
+                                userInfo.setClassName("UserInfo");
+                                userInfo.setUserName(register_userName.getText().toString());
+                                userInfo.setUserPassword(register_password.getText().toString());
 
-                        Client.getClient(InfomationAnalysis.BeantoUserInfo(userInfo));
+                                Client.getClient(InfomationAnalysis.BeantoUserInfo(userInfo));
 
-                        btn_register.setEnabled(false);
-                        btn_register.setText("正在注册");
-                        register_userName.setEnabled(false);
-                        register_password.setEnabled(false);
-                        register_certainPW.setEnabled(false);
-                        backLogin.setEnabled(false);
+                                btn_register.setEnabled(false);
+                                btn_register.setText("正在注册");
+                                register_userName.setEnabled(false);
+                                register_password.setEnabled(false);
+                                register_certainPW.setEnabled(false);
+                                backLogin.setEnabled(false);
+                            }
+                        }
                     }
                     break;
                     default:

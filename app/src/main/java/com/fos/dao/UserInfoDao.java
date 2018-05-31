@@ -50,7 +50,7 @@ public class UserInfoDao {
     }
 
     public User getUserInfo(String userId){
-        Cursor cursor = DataSupport.findBySQL("select * from User where userId = ?",userId);
+        Cursor cursor = DataSupport.findBySQL("select * from User where userid = ?",userId);
         User user = new User();
         if(cursor.moveToFirst()){
             do {
@@ -72,15 +72,13 @@ public class UserInfoDao {
      */
     public void insertUserInfo(User  user){
 
-        Cursor cursor = DataSupport.findBySQL(" select * from User where userId = ? ",user.getUserId());
+        Cursor cursor = DataSupport.findBySQL(" select * from User where userid = ? ",user.getUserId());
         if(cursor.moveToFirst()){
-            String userId = cursor.getString(cursor.getColumnIndex("userId"));
-            Log.e("info","插入的用户名为："+userId+"");
-            if(userId.equals(user.getUserId())) {
-                Log.e("info", "" + userId + "已存在");
-                DataSupport.deleteAll(User.class,"userId=?",userId);
-            }
-        }
-        user.save();
+            String userId = cursor.getString(cursor.getColumnIndex("userid"));
+            User user1 = new User();
+            user1.setUserHeadImage(user.getUserHeadImage());
+            user1.updateAll("userid=?",userId);
+        }else
+            user.save();
     }
 }
