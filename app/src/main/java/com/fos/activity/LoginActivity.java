@@ -69,6 +69,7 @@ public class LoginActivity extends AppCompatActivity {
     private ObjectAnimator objectAnimator, objectAnimator2, objectAnimator3, objectAnimator4, objectAnimator5, objectAnimator6, objectAnimator7, objectAnimator8, objectAnimator9, objectAnimator10;
     private View view_rotation, view2_rotation;
     private ListView list_userID;
+    private User user;
   //  private List<String> userList;
     private UserInfoDao userInfoDao;
     private List<User> userInfoList;
@@ -153,13 +154,10 @@ public class LoginActivity extends AppCompatActivity {
                     Bundle b = new Bundle();
                     b.putString("userName", InfomationAnalysis.jsonToUserInfo(str).getUserName());
                     b.putString("userID", login_userID.getText().toString());
+                    b.putString("userIcon",user.getUserHeadImage());
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtras(b);
                     startActivity(intent);
-//                    login_userID.setEnabled(true);
-//                    login_password.setEnabled(true);
-//                    btn_login.setEnabled(true);
-//                    btn_login.setText("登录");
                     finish();
 
                 } else if (msg.what == 0x003) {
@@ -312,11 +310,11 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             userInfoDao = UserInfoDao.getInstance();
-            User userInfo =  userInfoDao.getUserInfo(userInfoList.get(position).getUserId());
-            login_userID.setText(userInfo.getUserId());
-            login_password.setText(userInfo.getUserPassword());
+            user =  userInfoDao.getUserInfo(userInfoList.get(position).getUserId());
+            login_userID.setText(user.getUserId());
+            login_password.setText(user.getUserPassword());
             Glide.with(LoginActivity.this)
-                    .load(userInfo.getUserHeadImage())
+                    .load(user.getUserHeadImage())
                     .transform(new BitmapSetting(LoginActivity.this))
                     .priority(Priority.HIGH)
                     .into(login_userIcon);

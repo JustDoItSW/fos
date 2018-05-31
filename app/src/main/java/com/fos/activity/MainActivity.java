@@ -35,6 +35,8 @@ import android.widget.SimpleAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.fos.R;
 import com.fos.entity.Flower;
 import com.fos.entity.UserInfo;
@@ -43,6 +45,7 @@ import com.fos.service.MainService;
 import com.fos.service.netty.Client;
 import com.fos.service.netty.SimpleClient;
 import com.fos.util.ActivityCollector;
+import com.fos.util.BitmapSetting;
 import com.fos.util.GuideView;
 import com.fos.util.MyFragmentPagerAdapter;
 import com.fos.util.MyViewPager;
@@ -67,7 +70,9 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences  sharedPreferences;
     private MyViewPager myViewPager;
     private ImageView left_menu,text_control,text_data,text_flower;
+    public static ImageView user_icon;
     private TextView main_userName;
+    private Button btn_userInfo;
     private ListView listView_sideSlip;
     private DrawerLayout dl;
     private RelativeLayout main_relativeLayout;
@@ -119,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
         userInfo = new UserInfo();
         userInfo.setUserName(i.getExtras().getString("userName"));
         userInfo.setUserId(i.getExtras().getString("userID"));
+        userInfo.setUserHeadImage(i.getExtras().getString("userIcon"));
         sharedPreferences = getSharedPreferences(PREFERENCE_NAME,MODE);
         editor = sharedPreferences.edit();
         if((sharedPreferences.getString("flowerName","")).equals(""))
@@ -153,6 +159,14 @@ public class MainActivity extends AppCompatActivity {
         myViewPager = (MyViewPager)findViewById(R.id.vp);
         main_userName = (TextView) findViewById(R.id.main_userName);
         listView_sideSlip = (ListView)findViewById(R.id.listView_sideSlip) ;
+        user_icon = (ImageView)findViewById(R.id.user_icon);
+        btn_userInfo = (Button)findViewById(R.id.btn_userInfo);
+        Glide.with(MainActivity.this)
+                .load(userInfo.getUserHeadImage())
+                .transform(new BitmapSetting(MainActivity.this))
+                .priority(Priority.HIGH)
+                .into(user_icon);
+        user_icon.setScaleType(ImageView.ScaleType.CENTER_CROP);
         queryThread = new Thread() {
             @Override
             public void run() {
@@ -189,6 +203,7 @@ public class MainActivity extends AppCompatActivity {
         text_control.setOnClickListener(onClickListener);
         text_data.setOnClickListener(onClickListener);
         text_flower.setOnClickListener(onClickListener);
+        btn_userInfo.setOnClickListener(onClickListener);
         dl.setDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
@@ -240,6 +255,8 @@ public class MainActivity extends AppCompatActivity {
                         Intent intent1  = new Intent(MainActivity.this,SelectFlower.class);
                         startActivity(intent1);
                         break;
+                        default:
+                            break;
                 }
             }
         });
@@ -276,6 +293,15 @@ public class MainActivity extends AppCompatActivity {
                     if(!dl.isDrawerOpen(left_linearLayout)){
                         dl.openDrawer(left_linearLayout);
                     }
+                    break;
+                case R.id.btn_userInfo:
+                    Bundle b = new Bundle();
+                    b.putString("userName", userInfo.getUserName());
+                    b.putString("userID", userInfo.getUserId());
+                    b.putString("userIcon",userInfo.getUserHeadImage());
+                    Intent intent1  = new Intent(MainActivity.this,UserInfoActivity.class);
+                    intent1.putExtras(b);
+                    startActivity(intent1);
                     break;
                 default:
                         break;
