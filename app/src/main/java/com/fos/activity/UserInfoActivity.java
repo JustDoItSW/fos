@@ -17,7 +17,10 @@ import com.bumptech.glide.Priority;
 import com.fos.R;
 import com.fos.dao.UserInfoDao;
 import com.fos.entity.User;
+import com.fos.entity.UserInfo;
+import com.fos.service.netty.Client;
 import com.fos.util.BitmapSetting;
+import com.fos.util.InfomationAnalysis;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -94,7 +97,15 @@ public class UserInfoActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * 获得 uri后调用次方法
+     * @param uri
+     */
+
     private void resetIcon(String uri){
+        /**
+         * 更新 ui
+         */
         Glide.with(UserInfoActivity.this)
                 .load(uri)
                 .priority(Priority.HIGH)
@@ -105,11 +116,24 @@ public class UserInfoActivity extends AppCompatActivity {
                 .priority(Priority.HIGH)
                 .into(MainActivity.user_icon);
         MainActivity.userInfo.setUserHeadImage(uri);
-        User user = new User();
+
+        /**
+         * 发送数据至服务器
+         */
+        UserInfo user = new UserInfo();
         user.setUserId(MainActivity.userInfo.getUserId());
         user.setUserName(MainActivity.userInfo.getUserName());
         user.setUserHeadImage(uri);
-        UserInfoDao.getInstance().insertUserInfo(user);
+        Client.getClient(InfomationAnalysis.BeantoUserInfo(user));
+
+        /**
+         * 更新 数据库
+         */
+        User user2 = new User();
+        user2.setUserId(MainActivity.userInfo.getUserId());
+        user2.setUserName(MainActivity.userInfo.getUserName());
+        user2.setUserHeadImage(uri);
+        UserInfoDao.getInstance().insertUserInfo(user2);
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
