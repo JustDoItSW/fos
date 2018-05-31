@@ -13,6 +13,8 @@ import com.fos.fragment.DataFragment;
 import com.fos.fragment.FlowerFragment;
 import com.fos.util.InfomationAnalysis;
 import com.fos.util.LogUtil;
+import io.netty.channel.ChannelHandler.Sharable;
+import java.util.Date;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -25,11 +27,33 @@ import io.netty.channel.SimpleChannelInboundHandler;
  * @date 2018/5/12 20:16
  */
 
+@Sharable
 public class SimpleClientHandler extends SimpleChannelInboundHandler<String> {
+
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
-        LogUtil.i("Netty",msg);
-        recvHandler(msg);
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        // TODO Auto-generated method stub
+//		super.channelActive(ctx);
+        LogUtil.i("激活时间是："+new Date());
+        LogUtil.i("HeartBeatClientHandler channelActive");
+        ctx.fireChannelActive();
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        // TODO Auto-generated method stub
+//		super.channelInactive(ctx);
+        LogUtil.i("停止时间是："+new Date());
+        LogUtil.i("HeartBeatClientHandler channelInactive");
+    }
+    @Override
+    public void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
+        LogUtil.i(msg);
+        if(msg.equals("Heartbeat")){
+            ctx.writeAndFlush("has read message from server");
+        }else {
+            recvHandler(msg);
+        }
     }
 
     /**

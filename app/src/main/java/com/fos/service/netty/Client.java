@@ -5,12 +5,14 @@ import android.util.Log;
 import com.fos.activity.LoginActivity;
 import com.fos.util.InfomationAnalysis;
 
+
 /**
  * Created by Apersonalive on 2018/5/16.
  */
 
 public class Client {
     private static SimpleClient  simpleClient;
+
     public static boolean isExist(){
         if(simpleClient!=null)
             return true;
@@ -23,7 +25,11 @@ public class Client {
                     public void run() {
                        // simpleClient = new SimpleClient("192.168.23.1", 8000);
 
-                        simpleClient = new SimpleClient("47.106.161.42", 8000);
+                        try {
+                            simpleClient = new SimpleClient("47.106.161.42", 8000);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                         Log.e("info","成功连接服务器！");
 
                         if(!str.equals("")||simpleClient != null){
