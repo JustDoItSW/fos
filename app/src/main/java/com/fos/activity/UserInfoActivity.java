@@ -15,6 +15,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.fos.R;
+import com.fos.dao.UserInfoDao;
+import com.fos.entity.User;
+import com.fos.util.BitmapSetting;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -89,6 +92,24 @@ public class UserInfoActivity extends AppCompatActivity {
         photograph.setOnClickListener(onClickListener);//拍照
         album.setOnClickListener(onClickListener);//相册
 
+    }
+
+    private void resetIcon(String uri){
+        Glide.with(UserInfoActivity.this)
+                .load(uri)
+                .priority(Priority.HIGH)
+                .into(userInfo_icon);
+        Glide.with(UserInfoActivity.this)
+                .load(uri)
+                .transform(new BitmapSetting(UserInfoActivity.this))
+                .priority(Priority.HIGH)
+                .into(MainActivity.user_icon);
+        MainActivity.userInfo.setUserHeadImage(uri);
+        User user = new User();
+        user.setUserId(MainActivity.userInfo.getUserId());
+        user.setUserName(MainActivity.userInfo.getUserName());
+        user.setUserHeadImage(uri);
+        UserInfoDao.getInstance().insertUserInfo(user);
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {

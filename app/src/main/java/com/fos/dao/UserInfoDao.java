@@ -66,6 +66,10 @@ public class UserInfoDao {
         return user;
     }
 
+    /**
+     * 更新头像后调用此方法
+     * @param user
+     */
     public void insertUserInfo(User  user){
 
         Cursor cursor = DataSupport.findBySQL(" select * from User where userId = ? ",user.getUserId());

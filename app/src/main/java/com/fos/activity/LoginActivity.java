@@ -69,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
     private ObjectAnimator objectAnimator, objectAnimator2, objectAnimator3, objectAnimator4, objectAnimator5, objectAnimator6, objectAnimator7, objectAnimator8, objectAnimator9, objectAnimator10;
     private View view_rotation, view2_rotation;
     private ListView list_userID;
-    private User user;
+    private User user = new User();
   //  private List<String> userList;
     private UserInfoDao userInfoDao;
     private List<User> userInfoList;
@@ -134,6 +134,7 @@ public class LoginActivity extends AppCompatActivity {
                      */
                     UserInfo userInfo = InfomationAnalysis.jsonToUserInfo(str);
                     objectAnimator8.start();
+
                     login_userID.setText(userInfo.getUserId().toString());
                     login_password.setText(register_password.getText().toString());
                     btn_register.setEnabled(true);
@@ -152,8 +153,8 @@ public class LoginActivity extends AppCompatActivity {
 
                     saveCountInfo();
                     Bundle b = new Bundle();
-                    b.putString("userName", InfomationAnalysis.jsonToUserInfo(str).getUserName());
-                    b.putString("userID", login_userID.getText().toString());
+                    b.putString("userName", user.getUserName());
+                    b.putString("userID", user.getUserId());
                     b.putString("userIcon",user.getUserHeadImage());
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtras(b);
@@ -253,11 +254,10 @@ public class LoginActivity extends AppCompatActivity {
 
     private void saveCountInfo() {
 
-        User userInfo = new User();
-        DataSupport.deleteAll("user");
-        userInfo.setUserId(login_userID.getText().toString());
-        userInfo.setUserPassword(login_password.getText().toString());
-        userInfoDao.insertUserInfo(userInfo);
+       // DataSupport.deleteAll("user");
+        user.setUserId(login_userID.getText().toString());
+        user.setUserPassword(login_password.getText().toString());
+        userInfoDao.insertUserInfo(user);
 
 //        sharedPreferences = getSharedPreferences(PREFERENCE_NAME,MODE);
 //        editor = sharedPreferences.edit();
