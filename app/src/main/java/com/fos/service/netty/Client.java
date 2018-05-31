@@ -27,19 +27,19 @@ public class Client {
 
                         try {
                             simpleClient = new SimpleClient("47.106.161.42", 8000);
+                            Log.e("info","成功连接服务器！");
+
+                            if(!str.equals("")||simpleClient != null){
+                                simpleClient.clientSendMessage(str);
+                                Log.e("info","成功发送"+str);
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
-                        }
-                        Log.e("info","成功连接服务器！");
-
-                        if(!str.equals("")||simpleClient != null){
-                            simpleClient.clientSendMessage(str);
-                            Log.e("info","成功发送"+str);
                         }
                     }
                 }).start();
             }else{
-                if(!str.equals("")){
+                if(!str.equals("")&&simpleClient!=null){
                     simpleClient.clientSendMessage(str);
                     Log.e("info","成功发送"+str);
                 }

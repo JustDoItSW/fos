@@ -234,10 +234,6 @@ public class CreateCommunityActivity extends AppCompatActivity {
                     if(!file.exists()) {
                         Log.e("onResponse","相册中图片不存在");
                        // imageView.setImageBitmap(bm);
-                        datas.add(bm);
-                        datas2.add(path);
-                        myGridViewAdapter2.notifyDataSetChanged();
-
                         mThreadPool.execute(new Runnable() {
                             @Override
                             public void run() {
@@ -247,6 +243,9 @@ public class CreateCommunityActivity extends AppCompatActivity {
                     }
                     if (path != null && path.length() != 0) {
                      //   upLoadPicture(path);
+                        datas.add(bm);
+                        datas2.add(path);
+                        myGridViewAdapter2.notifyDataSetChanged();
                     }
                 }
             }
