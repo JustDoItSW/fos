@@ -254,7 +254,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void saveCountInfo() {
 
-        DataSupport.deleteAll("user");
+      //  DataSupport.deleteAll("user");
         user.setUserId(login_userID.getText().toString());
         user.setUserPassword(login_password.getText().toString());
         userInfoDao.insertUserInfo(user);
@@ -366,7 +366,6 @@ public class LoginActivity extends AppCompatActivity {
 
                                 Client.getClient(InfomationAnalysis.BeantoUserInfo(userInfo));
                                 Log.e("info", InfomationAnalysis.BeantoUserInfo(userInfo));
-
                         }
                     }
                     break;
