@@ -124,7 +124,7 @@ public class UserInfoActivity extends AppCompatActivity {
     }
 
     /**
-     * 获得 uri后调用次方法
+     * 获得 url后调用次方法
      * @param uri
      */
 
@@ -239,7 +239,7 @@ public class UserInfoActivity extends AppCompatActivity {
                 return;
             }
             Uri uri=data.getData();
-            resetIcon(uri.toString());
+          //  resetIcon(uri.toString());
             String path=CreateCommunityActivity.getPath.UriToPath(uri,UserInfoActivity.this);
             if(path==null){
                 path=CreateCommunityActivity.getPath.getPath(UserInfoActivity.this, uri);
@@ -352,6 +352,7 @@ public class UserInfoActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 final String res=response.body().string();
                 Log.e("onResponse",res);
+                resetIcon(res);
             }
         });
     }
