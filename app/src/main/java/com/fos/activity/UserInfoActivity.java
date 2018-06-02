@@ -1,10 +1,15 @@
 package com.fos.activity;
 
 import android.content.Intent;
-import android.media.Image;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -22,10 +27,25 @@ import com.fos.service.netty.Client;
 import com.fos.util.BitmapSetting;
 import com.fos.util.InfomationAnalysis;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class UserInfoActivity extends AppCompatActivity {
 
@@ -39,6 +59,11 @@ public class UserInfoActivity extends AppCompatActivity {
     private Map<String,Object> item;
     private SimpleAdapter simpleAdapter;
     private AlertDialog dialog;
+    File cameraFile;
+    private static int CAMERA_REQUEST_CODE=1;
+    private static int GALLY_REQUEST_CODE=2;
+    private static int CROP_REQUEST_CODE=3;
+    private String userID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,7 +94,8 @@ public class UserInfoActivity extends AppCompatActivity {
 
     private void initListView(){
         String content[] = {"账号","昵称"};
-        userInfo = new  String[]{MainActivity.userInfo.getUserId(),MainActivity.userInfo.getUserName()};
+        userID=MainActivity.userInfo.getUserId();
+        userInfo = new  String[]{userID,MainActivity.userInfo.getUserName()};
         mapList =new   ArrayList<>();
         for(int i =0;i<content.length;i++){
             item = new HashMap<>();
@@ -147,9 +173,20 @@ public class UserInfoActivity extends AppCompatActivity {
                     dialog.show();
                     break;
                 case R.id.photograph:
+                    /**
+                     * 解决缩略图
+                     */
+                    Intent intent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    String filename=userID+".jpg";
+                    cameraFile=new File(Environment.getExternalStorageDirectory()+File.separator+Environment.DIRECTORY_DCIM+File.separator+"Camera"+File.separator+filename);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(cameraFile));
+                    startActivityForResult(intent,CAMERA_REQUEST_CODE);
                     dialog.dismiss();
                     break;
                 case R.id.album:
+                    Intent intent1=new Intent(Intent.ACTION_GET_CONTENT);
+                    intent1.setType("image/*");
+                    startActivityForResult(intent1,GALLY_REQUEST_CODE);
                     dialog.dismiss();
                     break;
                 default:
@@ -157,4 +194,165 @@ public class UserInfoActivity extends AppCompatActivity {
             }
         }
     };
+
+
+    /**
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data 用户选择的图片
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if(requestCode==CAMERA_REQUEST_CODE) {
+            if (!cameraFile.exists()) {
+                Log.i("onResponse", "摄像头剪裁");
+                Bitmap bitmap = null;
+                try {
+                    FileInputStream fis = new FileInputStream(cameraFile);
+                    bitmap = BitmapFactory.decodeStream(fis);
+                    fis.close();
+                    Uri uri = saveBitmap(bitmap);
+                    startImageZoom(uri);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        else if(requestCode==GALLY_REQUEST_CODE)
+        {
+            if(data==null){
+                return;
+            }
+            /**
+             * 获取图片的同意资源标识符
+             */
+            Uri uri=data.getData();
+            Uri fileUri=convertUri(uri);
+            startImageZoom(fileUri);
+        }
+        else if (requestCode==CROP_REQUEST_CODE){
+            if(data==null){
+                return;
+            }
+            Uri uri=data.getData();
+            resetIcon(uri.toString());
+            String path=CreateCommunityActivity.getPath.UriToPath(uri,UserInfoActivity.this);
+            if(path==null){
+                path=CreateCommunityActivity.getPath.getPath(UserInfoActivity.this, uri);
+            }
+            if(path!=null){
+                final String finalPath = path;
+                Log.e("onResponse", "onActivityResult: "+path );
+                CreateCommunityActivity.mThreadPool.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        File file=new File(finalPath);
+                        doPost(file);
+                    }
+                });
+            }
+        }
+    }
+
+    /**
+     * 把bitmap存储到SD卡并转换成File型Uri
+     * @param bm
+     * @return
+     */
+    private Uri saveBitmap(Bitmap bm){
+        /**
+         * 用时间戳方式命名拍照文件
+         */
+        String fileName;
+        SimpleDateFormat format=new SimpleDateFormat("yyyyMMddHHmmss");
+        Date date =new Date(System.currentTimeMillis());
+        fileName=format.format(date)+".jpg";
+
+        String photoPath=Environment.getExternalStorageDirectory()+File.separator+Environment.DIRECTORY_DCIM+File.separator+"Camera"+File.separator;
+        File img=new File(photoPath,fileName);
+        Log.e("onResponse",img.toString());
+        String url=MediaStore.Images.Media.insertImage(getContentResolver(),bm,null,null);
+        Log.e("onResponse", "saveBitmap: url="+url );
+        Intent intent=new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        UserInfoActivity.this.sendBroadcast(intent);
+        Log.e("onResponse", "插入到相册" );
+        return Uri.parse(url);
+    }
+    /**
+     * 调用系统自带的剪裁功能
+     * @param uri
+     */
+    private void startImageZoom(Uri uri){
+        Intent intent=new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(uri,"image/*");
+        intent.putExtra("crop","true");
+        intent.putExtra("aspectX",1);
+        intent.putExtra("aspectY",1);
+        intent.putExtra("outputX",150);
+        intent.putExtra("outputY",150);
+        intent.putExtra("return-data",true);
+        startActivityForResult(intent,CROP_REQUEST_CODE);
+    }
+
+    /**
+     * 把Content Uri 转换为File型的Uri
+     * @param uri
+     * @return
+     */
+    private Uri convertUri(Uri uri){
+        InputStream is=null;
+        try {
+            /**
+             * 从Uri中获取InputStream
+             */
+            is=getContentResolver().openInputStream(uri);
+            Bitmap bitmap= BitmapFactory.decodeStream(is);
+            is.close();
+            return saveBitmap(bitmap);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    private void doPost(File img) {
+        Log.e("onResponse","开始上传");
+        MultipartBody.Builder bodyBuilder=new MultipartBody.Builder();
+        RequestBody requestBody=bodyBuilder
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("userName",userID)
+                .addFormDataPart("mPhoto",userID+".jpg",RequestBody.create(MediaType.parse("application/octet-stream"),img))
+                .build();
+        Request.Builder builder=new Request.Builder();
+        Request request=builder
+                .url(CreateCommunityActivity.mBaseUrl+"uploadInfo")
+                .post(requestBody)
+                .build();
+        executeRequest(request);
+    }
+
+    private void executeRequest(final Request request) {
+        Call call=CreateCommunityActivity.okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e("onResponse===",e.getMessage());
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                final String res=response.body().string();
+                Log.e("onResponse",res);
+            }
+        });
+    }
 }

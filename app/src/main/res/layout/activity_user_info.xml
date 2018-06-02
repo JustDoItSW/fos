@@ -9,13 +9,14 @@
     tools:context="com.fos.activity.UserInfoActivity">
 
 
-
     <ImageView
         android:id="@+id/userInfo_icon"
         android:layout_width="400dp"
         android:layout_height="250dp"
-        android:scaleType="centerCrop"
-        android:background="@color/ThemeColor"/>
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/ThemeColor"
+        android:scaleType="centerCrop" />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
