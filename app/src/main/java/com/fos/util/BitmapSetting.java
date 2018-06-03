@@ -126,7 +126,7 @@ public class BitmapSetting extends BitmapTransformation{
 
     @Override
     protected Bitmap transform(BitmapPool pool, Bitmap toTransform, int outWidth, int outHeight) {
-        return getOvalBitmap(toTransform);
+        return circleCrop(pool, toTransform);
     }
 
     @Override

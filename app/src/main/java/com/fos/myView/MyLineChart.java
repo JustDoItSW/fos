@@ -43,14 +43,7 @@ public class MyLineChart {
         this.sign =  sign;
         lineChartView = lCV;
         lineChartData = new LineChartData();
-        pointValueList = new ArrayList<>();
-        lineList = new ArrayList<>();
-        axisXValueList = new ArrayList<>();
-        axisYValueList = new ArrayList<>();
-        initAxisX();
-        initAxisY();
-      //  initLine();
-        initDatas(lineList);
+        init();
         lineChartView.setLineChartData(lineChartData);
         lineChartView.setBackgroundColor(Color.WHITE);
         lineChartView.setMaximumViewport(initViewPort(TOP,BOTTOM,LEFT,RIGHT));
@@ -62,6 +55,17 @@ public class MyLineChart {
         lineChartView.setZoomEnabled(false);
         lineChartView.setContainerScrollEnabled(true, ContainerScrollType.HORIZONTAL);
         lineChartView.startDataAnimation();
+    }
+
+    private void init(){
+        pointValueList = new ArrayList<>();
+        lineList = new ArrayList<>();
+        axisXValueList = new ArrayList<>();
+        axisYValueList = new ArrayList<>();
+        initAxisX();
+        initAxisY();
+        //  initLine();
+        initDatas(lineList);
     }
     /**
      * 初始化横坐标
@@ -158,7 +162,16 @@ public class MyLineChart {
      * @param color
      */
     public void repaintView(int info,String date,int color){
-        if(count<300) {
+        if(count>300) {
+            count = 2;
+            pointValueList.clear();
+            axisXValueList.clear();
+            lineList.clear();
+            initAxisX();
+            initAxisY();
+            lineChartData = initDatas(null);
+            lineChartView.setLineChartData(lineChartData);
+        }
             PointValue newPointValue = new PointValue(count+2, info);
             newPointValue.setLabel(info+sign);
             pointValueList.add(newPointValue);
@@ -187,16 +200,6 @@ public class MyLineChart {
 
             moveViewPort(count,info);
             count+=5;
-        }else {
-            //重新绘制折线图
-            count = 2;
-            pointValueList.clear();
-            axisXValueList.clear();
-            lineList.clear();
-            lineChartData = initDatas(null);
-            lineChartView.setLineChartData(lineChartData);
-        }
-
     }
     /**
      * 移动镜头

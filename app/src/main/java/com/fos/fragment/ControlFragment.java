@@ -48,6 +48,7 @@ import com.fos.service.netty.Client;
 import com.fos.util.InfomationAnalysis;
 import com.fos.util.LogUtil;
 import com.fos.util.RemoteTunnel;
+import com.github.onlynight.waveview.WaveView;
 import com.mingle.widget.LoadingView;
 import com.romainpiel.shimmer.Shimmer;
 import com.romainpiel.shimmer.ShimmerTextView;
@@ -72,6 +73,7 @@ public class ControlFragment extends Fragment {
    // private FloatingActionButton fab_light,fab_heating,fab_nut,fab_watering,fab_ctrl;
     private TextView nowState;
     private ImageView fab_light,fab_heating,fab_nut,fab_watering,fab_ctrl;
+    private WaveView progress_light,progress_heating,progress_hum,progress_nutrition;
     private NumberProgressBar progress_water,progress_nut;
     private KeyguardManager mKeyguardManager = null;
     private KeyguardManager.KeyguardLock mKeyguardLock = null;
@@ -181,9 +183,16 @@ public class ControlFragment extends Fragment {
         fab_nut =  (ImageView)view.findViewById(R.id.fab_nut) ;
         fab_ctrl =  (ImageView)view.findViewById(R.id.fab_ctrl) ;
         nowState = (TextView)view.findViewById(R.id.nowState);
+        progress_light = (WaveView)view.findViewById(R.id.progress_light) ;
+        progress_heating = (WaveView)view.findViewById(R.id.progress_heating) ;
+        progress_hum = (WaveView)view.findViewById(R.id.progress_hum) ;
+        progress_nutrition = (WaveView)view.findViewById(R.id.progress_nutrition) ;
+        progress_light.start();
+        progress_heating.start();
+        progress_hum.start();
+        progress_nutrition.start();
         progress_water = (NumberProgressBar)view.findViewById(R.id.progress_water);
         progress_nut = (NumberProgressBar)view.findViewById(R.id.progress_nut);
-        progress_water.setProgress(10);
 
         fab_light.setOnClickListener(onClickListener);
         fab_heating.setOnClickListener(onClickListener);

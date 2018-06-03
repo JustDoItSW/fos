@@ -61,6 +61,7 @@ public class MyLoginListView extends BaseAdapter {
         viewHolder.userId.setText(mList.get(position).getUserId());
         Glide.with(context)
                 .load(mList.get(position).getUserHeadImage())
+                .transform(new BitmapSetting(context))
                 .priority(Priority.HIGH)
                 .centerCrop()
                 .into(viewHolder.imageView);
