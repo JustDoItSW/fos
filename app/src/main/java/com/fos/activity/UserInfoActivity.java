@@ -206,7 +206,7 @@ public class UserInfoActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if(requestCode==CAMERA_REQUEST_CODE) {
-            if (!cameraFile.exists()) {
+            if (cameraFile.exists()) {
                 Log.i("onResponse", "摄像头剪裁");
                 Bitmap bitmap = null;
                 try {
@@ -238,8 +238,18 @@ public class UserInfoActivity extends AppCompatActivity {
             if(data==null){
                 return;
             }
-            Uri uri=data.getData();
-            resetIcon(uri.toString());
+            Bundle bundle=data.getExtras();
+            Bitmap bitmap=(Bitmap)bundle.get("data");
+            Uri uri;
+            Log.e("onResponse","开始裁剪");
+            if(data.getData()!=null){
+                Log.e("onResponse","开始裁剪data.getData() ViVo 可用");
+                uri=data.getData();
+            }else{
+                Log.e("onResponse","开始裁剪data.getData() not ViVo 可用");
+                uri=Uri.parse(MediaStore.Images.Media.insertImage(getContentResolver(),bitmap,null,null));
+            }
+            //resetIcon(uri.toString());
             String path=CreateCommunityActivity.getPath.UriToPath(uri,UserInfoActivity.this);
             if(path==null){
                 path=CreateCommunityActivity.getPath.getPath(UserInfoActivity.this, uri);
@@ -287,6 +297,7 @@ public class UserInfoActivity extends AppCompatActivity {
      * @param uri
      */
     private void startImageZoom(Uri uri){
+        Log.e("onResponse", "插入到相册===" );
         Intent intent=new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(uri,"image/*");
         intent.putExtra("crop","true");
