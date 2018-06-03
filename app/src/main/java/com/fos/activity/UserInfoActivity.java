@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import id.zelory.compressor.Compressor;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -260,8 +261,20 @@ public class UserInfoActivity extends AppCompatActivity {
                 CreateCommunityActivity.mThreadPool.execute(new Runnable() {
                     @Override
                     public void run() {
-                        File file=new File(finalPath);
-                        doPost(file);
+                       // File file=new File(finalPath);
+                        try {
+                            File file = new Compressor(UserInfoActivity.this)
+                                    .setMaxWidth(640)
+                                    .setMaxHeight(480)
+                                    .setQuality(75)
+                                    .setCompressFormat(Bitmap.CompressFormat.WEBP)
+                                    .setDestinationDirectoryPath(Environment.getExternalStoragePublicDirectory(
+                                            Environment.DIRECTORY_PICTURES).getAbsolutePath())
+                                    .compressToFile(new File(finalPath));
+                            doPost(file);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
                     }
                 });
             }
@@ -363,6 +376,7 @@ public class UserInfoActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 final String res=response.body().string();
                 Log.e("onResponse",res);
+                resetIcon(res);
             }
         });
     }

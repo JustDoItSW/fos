@@ -61,11 +61,11 @@ public class MyGridViewAdapter extends BaseAdapter {
         ViewGroup.LayoutParams para = viewHolder.imageView.getLayoutParams();
         DisplayMetrics dm = context.getResources().getDisplayMetrics();
         if(arr.length ==  1)
-            para.width = dm.widthPixels-2;
+            para.width = (dm.widthPixels-20)/3*2;
         else if(arr.length ==  2)
-            para.width = (dm.widthPixels-3)/2;
+            para.width = (dm.widthPixels-22)/2;
         else {
-            para.width = (dm.widthPixels - 4) / 3;
+            para.width = (dm.widthPixels - 24) / 3;
         }
         para.height = para.width;
         viewHolder.imageView.setLayoutParams(para);

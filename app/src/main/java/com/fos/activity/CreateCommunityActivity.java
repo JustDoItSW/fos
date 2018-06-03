@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
@@ -41,6 +42,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import id.zelory.compressor.Compressor;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -288,8 +290,21 @@ public class CreateCommunityActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Log.e("onResponse", Build.VERSION.SDK_INT+"     " +path);
-                File file=new File(path);
-                doPostFile(file);
+             //   File file=new File(path);
+                try {
+                    File file = new Compressor(CreateCommunityActivity.this)
+                            .setMaxWidth(640)
+                            .setMaxHeight(480)
+                            .setQuality(75)
+                            .setCompressFormat(Bitmap.CompressFormat.WEBP)
+                            .setDestinationDirectoryPath(Environment.getExternalStoragePublicDirectory(
+                                    Environment.DIRECTORY_PICTURES).getAbsolutePath())
+                            .compressToFile(new File(path));
+                    doPostFile(file);
+                }catch (Exception  e){
+                    e.printStackTrace();
+                }
+
             }
         });
     }

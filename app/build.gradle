@@ -63,5 +63,6 @@ dependencies {
     compile 'com.github.zzz40500:android-shapeLoadingView:1.0.3.2'
     compile 'com.daimajia.numberprogressbar:library:1.4@aar'
     compile 'com.github.john990:WaveView:v0.9'
+    compile 'id.zelory:compressor:2.1.0'
 
 }

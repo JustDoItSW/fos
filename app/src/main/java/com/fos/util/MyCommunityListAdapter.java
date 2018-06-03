@@ -91,16 +91,16 @@ public class MyCommunityListAdapter extends BaseAdapter {
 //            if(mapList.get(position).get("picture").toString().equals(viewholder.gridView.getTag())){
             int imageCount = getImageCount(mapList.get(position).get("picture").toString());
             if (imageCount == 1) {
-                para.height =  dm.widthPixels - 4;
+                para.height =  (dm.widthPixels - 20)/3*2;
                 viewholder.gridView.setNumColumns(1);
             }
             if (imageCount == 2) {
-                para.height =  (dm.widthPixels - 4)/2;
+                para.height =  (dm.widthPixels - 22)/2;
                 viewholder.gridView.setNumColumns(2);
             }
             if (imageCount >= 3) {
                 viewholder.gridView.setNumColumns(3);
-                para.height = (int) (Math.ceil(imageCount / 3f)) * ((dm.widthPixels - 4) / 3);
+                para.height = (int) (Math.ceil(imageCount / 3f)) * ((dm.widthPixels - 24) / 3);
             }
 
             viewholder.gridView.setAdapter(new MyGridViewAdapter(context, R.layout.layout_gridview, getAllImageUri(mapList.get(position).get("picture").toString())));
