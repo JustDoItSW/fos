@@ -78,70 +78,72 @@
 
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/left_relativeLayout"
-        android:layout_width="295dp"
-        android:layout_gravity="start"
-        android:layout_height="match_parent"
-        android:background="@android:color/white"
-        android:orientation="vertical"
-        android:weightSum="1">
+    <!--<LinearLayout-->
+        <!--android:id="@+id/left_relativeLayout"-->
+        <!--android:layout_width="295dp"-->
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.35"
+        <!--android:layout_gravity="start"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="@android:color/white"-->
+        <!--android:orientation="vertical"-->
+        <!--android:weightSum="1">-->
 
-            >
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:background="@color/ThemeColor"/>
-                <!--android:src="@mipmap/ic_leftbackground"-->
+        <!--<RelativeLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:layout_weight="0.35"-->
 
-            <ImageView
-                android:id="@+id/user_icon"
-                android:layout_marginLeft="15dp"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_centerVertical="true"
-                android:background="@drawable/round_view"/>
+            <!--&gt;-->
+            <!--<ImageView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:scaleType="centerCrop"-->
+                <!--android:background="@color/ThemeColor"/>-->
+                <!--&lt;!&ndash;android:src="@mipmap/ic_leftbackground"&ndash;&gt;-->
 
-            <TextView
-                android:id="@+id/main_userName"
-                android:text="Apersonalive"
-                android:layout_marginLeft="15dp"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="15dp"
-                android:textSize="18dp"
-                android:textColor="@android:color/white"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+            <!--<ImageView-->
+                <!--android:id="@+id/user_icon"-->
+                <!--android:layout_marginLeft="15dp"-->
+                <!--android:layout_width="70dp"-->
+                <!--android:layout_height="70dp"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:background="@drawable/round_view"/>-->
 
-            <Button
-                android:id="@+id/btn_userInfo"
-                android:text="编辑"
-                android:textSize="13dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="15dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
-                android:textColor="#ffffff"
-                android:layout_width="50dp"
-                android:layout_height="20dp"
-                android:background="@drawable/btn_edit"/>
-        </RelativeLayout>
+            <!--<TextView-->
+                <!--android:id="@+id/main_userName"-->
+                <!--android:text="Apersonalive"-->
+                <!--android:layout_marginLeft="15dp"-->
+                <!--android:layout_alignParentBottom="true"-->
+                <!--android:layout_marginBottom="15dp"-->
+                <!--android:textSize="18dp"-->
+                <!--android:textColor="@android:color/white"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content" />-->
 
-        <ListView
-            android:id="@+id/listView_sideSlip"
-            android:layout_margin="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="none"
+            <!--<Button-->
+                <!--android:id="@+id/btn_userInfo"-->
+                <!--android:text="编辑"-->
+                <!--android:textSize="13dp"-->
+                <!--android:layout_marginRight="10dp"-->
+                <!--android:layout_marginBottom="15dp"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:layout_alignParentBottom="true"-->
+                <!--android:textColor="#ffffff"-->
+                <!--android:layout_width="50dp"-->
+                <!--android:layout_height="20dp"-->
+                <!--android:background="@drawable/btn_edit"/>-->
+        <!--</RelativeLayout>-->
 
-            ></ListView>
+        <!--<ListView-->
+            <!--android:id="@+id/listView_sideSlip"-->
+            <!--android:layout_margin="10dp"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:scrollbars="none"-->
 
-    </LinearLayout>
+            <!--&gt;</ListView>-->
+
+    <!--</LinearLayout>-->
+    <include layout="@layout/left_relativelayout"/>
 
 </android.support.v4.widget.DrawerLayout>

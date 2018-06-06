@@ -1,10 +1,12 @@
 package com.fos.entity;
 
+import java.io.Serializable;
+
 /**
  * Created by Apersonalive on 2018/5/19.
  */
 
-public class Community {
+public class Community implements Serializable{
     /**
      * 用户对象
      */

@@ -142,6 +142,18 @@
                     android:background="@drawable/round_view"
                     android:src="@drawable/nutrition"/>
             </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.20"
+                android:gravity="center">
+            <ImageView
+                android:id="@+id/fab_wind"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/round_view"
+                android:src="@drawable/wind"/>
+            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="0dp"

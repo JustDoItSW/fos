@@ -63,7 +63,7 @@
             android:textSize="13dp"
             android:layout_marginBottom="5dp"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="150dp"
             android:background="@drawable/search_edit"/>
 
         <TextView
@@ -86,20 +86,14 @@
         <GridView
             android:id="@+id/create_gridView"
             android:layout_below="@+id/count_context"
+            android:scrollbars="none"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_height="wrap_content"
             android:numColumns="3"
-            android:horizontalSpacing="15dp"
-            android:verticalSpacing="15dp">
+            android:horizontalSpacing="5dp"
+            android:verticalSpacing="5dp">
         </GridView>
-
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:id="@+id/imageView"
-            android:layout_alignTop="@+id/addImage"
-            android:layout_toRightOf="@+id/addImage"
-            android:scaleType="centerCrop"/>
 
 
     </RelativeLayout>

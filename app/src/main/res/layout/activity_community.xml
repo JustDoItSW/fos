@@ -59,8 +59,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scrollbars="none"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"/>
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginRight="3dp"/>
             </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
 

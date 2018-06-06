@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.fos.activity.CommunityInfoActivity"
+    android:background="#ffffff">
+    <RelativeLayout
+        android:id="@+id/communityInfoLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal"
+        android:background="@color/ThemeColor"
+        android:weightSum="1">
+
+        <RelativeLayout
+            android:id="@+id/exit_communityInfo"
+            android:layout_marginLeft="15dp"
+            style="@style/tab_menu_text">
+            <ImageView
+                android:src="@mipmap/ic_back_w"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </RelativeLayout>
+        <TextView
+            android:id="@+id/table_flowerInfo"
+            android:text="帖子详情"
+            android:textSize="15dp"
+            android:textColor="@android:color/white"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/communityInfoLabel"
+        android:id="@+id/currentInfo"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/image_comInfoIcon"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/flowerimage"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/communityInfo_userName"
+                    android:text="Apersonalive"
+                    android:textSize="13dp"
+                    android:textColor="@android:color/black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <LinearLayout
+                    android:paddingTop="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/communityInfo_date"
+                        android:text="2018-05-20 13:14"
+                        android:textSize="12dp"
+                        android:textColor="@android:color/darker_gray"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:text="内容"
+            android:id="@+id/comInfoContext"
+            android:textSize="13dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="15dp"
+            android:textColor="@android:color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <GridView
+            android:gravity="center_horizontal"
+            android:id="@+id/gridViewInfo"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:numColumns="3"
+            android:layout_margin="3dp"
+            android:scrollbars="none"
+            android:horizontalSpacing="3dp"
+            android:verticalSpacing="3dp"
+            ></GridView>
+
+        <LinearLayout
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/countInfo_support"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:paddingLeft="25dp"
+                android:textSize="11dp"
+                android:gravity="center|left"
+                android:text="270"
+                android:drawablePadding="5dp"
+                android:drawableLeft="@drawable/support"
+                />
+
+            <View
+                android:layout_width="0.1dp"
+                android:layout_height="match_parent"
+                android:background="#66bfbfbf"/>
+
+            <TextView
+                android:id="@+id/countInfo_browse"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:paddingLeft="25dp"
+                android:textSize="11dp"
+                android:gravity="center|left"
+                android:text="270"
+                android:drawablePadding="5dp"
+                android:drawableLeft="@mipmap/ic_browse"/>
+
+            <View
+                android:layout_width="0.1dp"
+                android:layout_height="match_parent"
+                android:background="#66bfbfbf"/>
+
+            <TextView
+                android:id="@+id/countInfo_evaluate"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:paddingLeft="25dp"
+                android:textSize="11dp"
+                android:gravity="center|left"
+                android:text="270"
+                android:drawablePadding="5dp"
+                android:drawableLeft="@mipmap/ic_evaluate"/>
+
+            <View
+                android:layout_width="0.1dp"
+                android:layout_height="match_parent"
+                android:background="#66bfbfbf"/>
+
+            <TextView
+                android:id="@+id/countInfo_share"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:paddingLeft="25dp"
+                android:textSize="11dp"
+                android:gravity="center|left"
+                android:text="270"
+                android:drawablePadding="5dp"
+                android:drawableLeft="@mipmap/ic_share"/>
+
+
+        </LinearLayout>
+        <View
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="0.1dp"
+            android:background="#66bfbfbf"/>
+
+
+        <ListView
+            android:id="@+id/list_allEvaluate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"></ListView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:background="#ffffff"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        >
+        <EditText
+            android:id="@+id/evaluateContent"
+            android:layout_width="0dp"
+            android:layout_weight="0.8"
+            android:padding="5dp"
+            android:background="#11000000"
+            android:textSize="13dp"
+            android:hint="评论内容"
+            android:maxLines="1"
+            android:layout_marginRight="15dp"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/sendEvaluate"
+            android:text="发送"
+            android:textSize="15dp"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="0.2"
+            android:textColor="@android:color/white"
+            android:background="@drawable/btn_login"/>
+    </LinearLayout>
+
+</RelativeLayout>

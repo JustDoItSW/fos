@@ -93,7 +93,6 @@ public class CreateCommunityActivity extends AppCompatActivity {
         edit_community =  (EditText)findViewById(R.id.edit_community);
         count_context =(TextView)findViewById(R.id.count_context);
         addImage = (ImageView)findViewById(R.id.addImage);
-        imageView = findViewById(R.id.imageView);
         create_gridView = (GridView)findViewById(R.id.create_gridView);
 
         exit_create.setOnClickListener(onClickListener);
@@ -170,6 +169,7 @@ public class CreateCommunityActivity extends AppCompatActivity {
                         edit_community.setEnabled(false);
                         create_gridView.setEnabled(false);
                         new_community.setEnabled(false);
+                        create_gridView.setEnabled(false);
                         if(datas2.size() == 0){
                         sendCommunityToService(null);
                         }else {
@@ -347,6 +347,8 @@ public class CreateCommunityActivity extends AppCompatActivity {
     private void sendCommunityToService(String res){
         UserInfo userInfo   = new UserInfo();
         userInfo.setUserName(MainActivity.userInfo.getUserName());
+        userInfo.setUserHeadImage(MainActivity.userInfo.getUserHeadImage());
+      //  Log.e("info",MainActivity.userInfo.getUserHeadImage());
         userInfo.setClassName( "UserInfo");
         userInfo.setUserId(MainActivity.userInfo.getUserId());
         Community community = new Community();

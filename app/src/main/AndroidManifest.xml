@@ -26,11 +26,11 @@
         <activity
             android:name=".activity.StartActivity"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
-        <activity android:name=".activity.SelectFlower"></activity>
+        <activity android:name=".activity.SelectFlower" />
         <activity android:name=".activity.FlowerInfo" />
         <activity
             android:name=".activity.MainActivity"
-            android:windowSoftInputMode="adjustPan|stateHidden"></activity>
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity android:name=".activity.GuideLauncherActivity" />
         <activity
             android:name=".activity.LoginActivity"
@@ -42,11 +42,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.RegisterActivity" />
-        <activity android:name=".activity.CommunityActivity"></activity>
+        <activity android:name=".activity.CommunityActivity" />
         <activity
             android:name=".activity.CreateCommunityActivity"
-            android:windowSoftInputMode="adjustPan|stateHidden"></activity>
-        <activity android:name=".activity.UserInfoActivity"></activity>
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity android:name=".activity.UserInfoActivity" />
+        <activity android:name=".activity.CommunityInfoActivity"></activity>
     </application>
 
 </manifest>

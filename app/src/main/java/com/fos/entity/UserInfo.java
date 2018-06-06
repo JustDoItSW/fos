@@ -2,11 +2,13 @@ package com.fos.entity;
 
 import org.litepal.crud.DataSupport;
 
+import java.io.Serializable;
+
 /**
  * Created by Apersonalive on 2018/5/15.
  */
 
-public class UserInfo {
+public class UserInfo implements Serializable {
 
     /**
 

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/left_relativeLayout"
+        android:layout_width="295dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.35"
+
+            >
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:background="@color/ThemeColor"/>
+            <!--android:src="@mipmap/ic_leftbackground"-->
+
+            <ImageView
+                android:id="@+id/user_icon"
+                android:layout_marginLeft="15dp"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_centerVertical="true"
+                android:background="@drawable/round_view"/>
+
+            <TextView
+                android:id="@+id/main_userName"
+                android:text="Apersonalive"
+                android:layout_marginLeft="15dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="15dp"
+                android:textSize="18dp"
+                android:textColor="@android:color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/btn_userInfo"
+                android:text="编辑"
+                android:textSize="13dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="15dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:textColor="#ffffff"
+                android:layout_width="50dp"
+                android:layout_height="20dp"
+                android:background="@drawable/btn_edit"/>
+        </RelativeLayout>
+
+        <ListView
+            android:id="@+id/listView_sideSlip"
+            android:layout_margin="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.75"
+            android:scrollbars="none"
+            android:divider="@color/transparent"
+            ></ListView>
+
+    </LinearLayout>

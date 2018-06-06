@@ -46,7 +46,7 @@ public class CommunityActivity extends AppCompatActivity {
     private GridLayout grid_image;
     private RelativeLayout exit_community;
     private ListView listView;
-    private List<Map<String ,Object>> maps = new ArrayList<>();;
+    private List<Community> maps = new ArrayList<>();;
     private Map<String ,Object>  item;
     private MyCommunityListAdapter myCommunityListAdapter;
     public static  Handler handler;
@@ -106,16 +106,17 @@ public class CommunityActivity extends AppCompatActivity {
         if(data!=null){
             Community[] communities = InfomationAnalysis.jsonToCommunity(data);
             for(int  i = 0;i<communities.length;i++){
-                item = new HashMap<String, Object>();
-                item.put("userName",communities[i].getUserInfo().getUserName());
-                item.put("date",communities[i].getTime());
-                item.put("comContext",communities[i].getContent());
-                item.put("picture",communities[i].getPicture());
-                item.put("count_support",communities[i].getSupport());
-                item.put("count_browse",communities[i].getBrowse());
-                item.put("count_share","999+");
-                item.put("count_evaluate",communities[i].getEvaluate());
-                maps.add(item);
+//                item = new HashMap<String, Object>();
+//                item.put("userName",communities[i].getUserInfo().getUserName());
+//                item.put("userIcon",communities[i].getUserInfo().getUserHeadImage());
+//                item.put("date",communities[i].getTime());
+//                item.put("comContext",communities[i].getContent());
+//                item.put("picture",communities[i].getPicture());
+//                item.put("count_support",communities[i].getSupport());
+//                item.put("count_browse",communities[i].getBrowse());
+//                item.put("count_share","999+");
+//                item.put("count_evaluate",communities[i].getEvaluate());
+                maps.add(communities[i]);
             }
         }
         if(myCommunityListAdapter!=null)

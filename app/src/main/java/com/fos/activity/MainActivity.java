@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 
+import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -82,10 +83,10 @@ public class MainActivity extends AppCompatActivity {
     private ServiceConnection serviceConnection;
     public static Handler  handler;
     private Thread queryThread;
-    public static UserInfo userInfo;
+    public static UserInfo userInfo = new UserInfo();
     private Intent i;
-    String[] listContent = {"社区","选择植物"};
-    int [] listImage ={R.mipmap.ic_community,R.mipmap.ic_plant};
+    String[] listContent = {"我的消息","社区动态","选择植物","看图识花","我的好友","附近的人"};
+    int [] listImage ={R.mipmap.ic_message,R.mipmap.ic_friend,R.mipmap.ic_plant,R.mipmap.ic_scan,R.mipmap.ic_community,R.mipmap.ic_location};
     /**
      * 用户是否已经选择了植物
      */
@@ -121,14 +122,16 @@ public class MainActivity extends AppCompatActivity {
     }
     private void initUser(){
         i = getIntent();
-        userInfo = new UserInfo();
+
         userInfo.setUserName(i.getExtras().getString("userName"));
         userInfo.setUserId(i.getExtras().getString("userID"));
         userInfo.setUserHeadImage(i.getExtras().getString("userIcon"));
+        Log.e("原来的头像：",i.getExtras().getString("userIcon")+" ");
         sharedPreferences = getSharedPreferences(PREFERENCE_NAME,MODE);
         editor = sharedPreferences.edit();
         if((sharedPreferences.getString("flowerName","")).equals(""))
             setGuideView();
+
         flower = new Flower();
         flower.setFlowerName(sharedPreferences.getString("flowerName","未选择"));
         flower.setFlowerLux(sharedPreferences.getString("light","500"));
@@ -227,6 +230,22 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        handler =  new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if(msg.what ==  0x005){
+                    Bundle bundle = msg.getData();
+                    Glide.with(MainActivity.this)
+                            .load(bundle.getString("url"))
+                            .transform(new BitmapSetting(MainActivity.this))
+                            .priority(Priority.HIGH)
+                            .into(user_icon);
+                    user_icon.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                }
+            }
+        };
         startService(intent);//开启服务
         bindService(intent,serviceConnection, Context.BIND_AUTO_CREATE);//绑定服务
 
@@ -247,12 +266,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position){
-                    case 0:
+                    case 1:
                         Intent intent  = new Intent(MainActivity.this,CommunityActivity.class);
+                        intent.putExtra("userInfo",userInfo);
                         startActivity(intent);
                         break;
-                    case  1:
+                    case  2:
                         Intent intent1  = new Intent(MainActivity.this,SelectFlower.class);
+                        intent1.putExtra("userInfo",userInfo);
                         startActivity(intent1);
                         break;
                         default:
@@ -295,12 +316,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                     break;
                 case R.id.btn_userInfo:
-                    Bundle b = new Bundle();
-                    b.putString("userName", userInfo.getUserName());
-                    b.putString("userID", userInfo.getUserId());
-                    b.putString("userIcon",userInfo.getUserHeadImage());
                     Intent intent1  = new Intent(MainActivity.this,UserInfoActivity.class);
-                    intent1.putExtras(b);
+                    intent1.putExtra("userInfo",userInfo);
                     startActivity(intent1);
                     break;
                 default:
@@ -327,6 +344,11 @@ public class MainActivity extends AppCompatActivity {
                     setAllSelected();
                     text_flower.setSelected(true);
                     MainActivity.menu_tab.setVisibility(View.VISIBLE);
+                    break;
+                case  3:
+                    /**
+                     * 看图识花响应事件
+                     */
                     break;
                     default:
                         break;

@@ -1,6 +1,7 @@
 package com.fos.util;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -13,7 +14,11 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.fos.R;
+import com.fos.activity.CommunityInfoActivity;
+import com.fos.entity.Community;
 import com.fos.entity.Flower;
 
 import java.util.List;
@@ -27,12 +32,11 @@ public class MyCommunityListAdapter extends BaseAdapter {
 
 
 
-    private String allImageUri;
     private Context context;
     private int resource;
-    private List<Map<String,Object>> mapList;
+    private List<Community> mapList;
     private LayoutInflater mLayoutInflater;
-    public MyCommunityListAdapter(Context context , int resource, List<Map<String,Object>> mapList){
+    public MyCommunityListAdapter(Context context , int resource, List<Community> mapList){
         this.context = context;
         this.resource  = resource;
         this.mapList =  mapList;
@@ -54,11 +58,10 @@ public class MyCommunityListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder viewholder = null;
         if(convertView==null){
             viewholder=new ViewHolder();
-            //将item的layout文件转化为view，必须是item文件在之后的view中还要找到对应的控件
             convertView=mLayoutInflater.inflate(resource,null);
             viewholder.userIcon=(ImageView)convertView.findViewById(R.id.image_comIcon);
             viewholder.userID= (TextView)convertView.findViewById(R.id.community_userName);
@@ -75,40 +78,95 @@ public class MyCommunityListAdapter extends BaseAdapter {
             viewholder=(ViewHolder)convertView.getTag();
         }
         //调用方法传递所需信息
-        viewholder.userID.setText(mapList.get(position).get("userName").toString());
-        viewholder.date.setText(mapList.get(position).get("date").toString());
-        viewholder.comContext.setText(mapList.get(position).get("comContext").toString());
-        viewholder.count_support.setText(mapList.get(position).get("count_support").toString());
-        viewholder.count_browse.setText(mapList.get(position).get("count_browse").toString());
-        viewholder.count_evaluate.setText(mapList.get(position).get("count_evaluate").toString());
-        viewholder.count_share.setText(mapList.get(position).get("count_share").toString());
+        Glide.with(context)
+                .load(mapList.get(position).getUserInfo().getUserHeadImage().toString())
+                .transform(new BitmapSetting(context))
+                .priority(Priority.HIGH)
+                .into(viewholder.userIcon);
+        viewholder.userID.setText(mapList.get(position).getUserInfo().getUserName().toString());
+        viewholder.date.setText(mapList.get(position).getTime().toString());
+        viewholder.comContext.setText(mapList.get(position).getContent().toString());
+        viewholder.count_support.setText(mapList.get(position).getSupport()+"");
+        viewholder.count_browse.setText(mapList.get(position).getBrowse()+"");
+        viewholder.count_evaluate.setText(mapList.get(position).getEvaluate().toString());
+        viewholder.count_share.setText("999+");
         ViewGroup.LayoutParams para = viewholder.gridView.getLayoutParams();
         DisplayMetrics dm = context.getResources().getDisplayMetrics();
         para.height = 0;
-        if(!mapList.get(position).get("picture").toString().equals("")) {
-            Log.e("info","content"+mapList.get(position).get("comContext").toString());
-//            viewholder.gridView.setTag(mapList.get(position).get("picture").toString());
-//            if(mapList.get(position).get("picture").toString().equals(viewholder.gridView.getTag())){
-            int imageCount = getImageCount(mapList.get(position).get("picture").toString());
+        if(!mapList.get(position).getPicture().toString().equals("")) {
+            int imageCount = getImageCount(mapList.get(position).getPicture().toString());
             if (imageCount == 1) {
-                para.height =  (dm.widthPixels - 20)/3*2;
+                para.height =  (dm.widthPixels - 9)/2;
                 viewholder.gridView.setNumColumns(1);
             }
             if (imageCount == 2) {
-                para.height =  (dm.widthPixels - 22)/2;
+                para.height =  (dm.widthPixels - 9)/2;
                 viewholder.gridView.setNumColumns(2);
             }
             if (imageCount >= 3) {
                 viewholder.gridView.setNumColumns(3);
-                para.height = (int) (Math.ceil(imageCount / 3f)) * ((dm.widthPixels - 24) / 3);
+                para.height = (int) (Math.ceil(imageCount / 3f)) * ((dm.widthPixels - 12) / 3);
             }
 
-            viewholder.gridView.setAdapter(new MyGridViewAdapter(context, R.layout.layout_gridview, getAllImageUri(mapList.get(position).get("picture").toString())));
-            //   viewholder.gridView.setTag(mapList.get(position).get("picture").toString());
-            // }
+            viewholder.gridView.setAdapter(new MyGridViewAdapter(context, R.layout.layout_gridview, getAllImageUri(mapList.get(position).getPicture().toString().toString())));
         }
         viewholder.gridView.setLayoutParams(para);
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()){
+                    case R.id.count_support:
+                        TextView textView1 = (TextView) v;
+                        if(v.isSelected()) {
+                            v.setSelected(false);
+                            textView1.setText((Integer.parseInt(textView1.getText().toString()) - 1) + "");
+                        }else{
+                            v.setSelected(true);
 
+                            textView1.setText((Integer.parseInt(textView1.getText().toString()) + 1) + "");
+                        }
+                        break;
+                    case R.id.count_browse:
+                        TextView textView2 = (TextView) v;
+//                    if(v.isSelected()) {
+//                        v.setSelected(false);
+//                        textView2.setText((Integer.parseInt(textView2.getText().toString()) - 1) + "");
+//                    }else{
+//                        v.setSelected(true);
+//
+//                        textView2.setText((Integer.parseInt(textView2.getText().toString()) + 1) + "");
+//                    }
+                        break;
+                    case R.id.count_evaluate:
+                        TextView textView3 = (TextView) v;
+//                    if(v.isSelected()) {
+//                        v.setSelected(false);
+//                        textView3.setText((Integer.parseInt(textView3.getText().toString()) - 1) + "");
+//                    }else{
+//                        v.setSelected(true);
+//
+//                        textView3.setText((Integer.parseInt(textView3.getText().toString()) + 1) + "");
+//                    }
+                        Intent intent = new Intent(context, CommunityInfoActivity.class);
+                             intent.putExtra("info",mapList.get(position));
+                        context.startActivity(intent);
+                        break;
+                    case R.id.count_share:
+                        TextView textView4 = (TextView) v;
+//                    if(v.isSelected()) {
+//                        v.setSelected(false);
+//                        textView4.setText((Integer.parseInt(textView4.getText().toString()) - 1) + "");
+//                    }else{
+//                        v.setSelected(true);
+//
+//                        textView4.setText((Integer.parseInt(textView4.getText().toString()) + 1) + "");
+//                    }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
         viewholder.count_support.setOnClickListener(onClickListener);
         viewholder.count_browse.setOnClickListener(onClickListener);
         viewholder.count_evaluate.setOnClickListener(onClickListener);
@@ -143,57 +201,5 @@ public class MyCommunityListAdapter extends BaseAdapter {
         return arr;
     }
 
-    View.OnClickListener onClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()){
-                case R.id.count_support:
-                    TextView textView1 = (TextView) v;
-                    if(v.isSelected()) {
-                        v.setSelected(false);
-                        textView1.setText((Integer.parseInt(textView1.getText().toString()) - 1) + "");
-                    }else{
-                        v.setSelected(true);
 
-                        textView1.setText((Integer.parseInt(textView1.getText().toString()) + 1) + "");
-                    }
-                    break;
-                case R.id.count_browse:
-                    TextView textView2 = (TextView) v;
-                    if(v.isSelected()) {
-                        v.setSelected(false);
-                        textView2.setText((Integer.parseInt(textView2.getText().toString()) - 1) + "");
-                    }else{
-                        v.setSelected(true);
-
-                        textView2.setText((Integer.parseInt(textView2.getText().toString()) + 1) + "");
-                    }
-                    break;
-                case R.id.count_evaluate:
-                    TextView textView3 = (TextView) v;
-                    if(v.isSelected()) {
-                        v.setSelected(false);
-                        textView3.setText((Integer.parseInt(textView3.getText().toString()) - 1) + "");
-                    }else{
-                        v.setSelected(true);
-
-                        textView3.setText((Integer.parseInt(textView3.getText().toString()) + 1) + "");
-                    }
-                    break;
-                case R.id.count_share:
-                    TextView textView4 = (TextView) v;
-                    if(v.isSelected()) {
-                        v.setSelected(false);
-                        textView4.setText((Integer.parseInt(textView4.getText().toString()) - 1) + "");
-                    }else{
-                        v.setSelected(true);
-
-                        textView4.setText((Integer.parseInt(textView4.getText().toString()) + 1) + "");
-                    }
-                    break;
-                    default:
-                        break;
-            }
-        }
-    };
 }

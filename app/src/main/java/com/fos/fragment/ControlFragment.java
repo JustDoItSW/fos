@@ -72,7 +72,7 @@ public class ControlFragment extends Fragment {
     private View view;
    // private FloatingActionButton fab_light,fab_heating,fab_nut,fab_watering,fab_ctrl;
     private TextView nowState;
-    private ImageView fab_light,fab_heating,fab_nut,fab_watering,fab_ctrl;
+    private ImageView fab_light,fab_heating,fab_nut,fab_watering,fab_ctrl,fab_wind;
     private WaveView progress_light,progress_heating,progress_hum,progress_nutrition;
     private NumberProgressBar progress_water,progress_nut;
     private KeyguardManager mKeyguardManager = null;
@@ -182,15 +182,16 @@ public class ControlFragment extends Fragment {
         fab_watering =  (ImageView)view.findViewById(R.id.fab_watering) ;
         fab_nut =  (ImageView)view.findViewById(R.id.fab_nut) ;
         fab_ctrl =  (ImageView)view.findViewById(R.id.fab_ctrl) ;
+        fab_wind =  (ImageView)view.findViewById(R.id.fab_wind) ;
         nowState = (TextView)view.findViewById(R.id.nowState);
         progress_light = (WaveView)view.findViewById(R.id.progress_light) ;
         progress_heating = (WaveView)view.findViewById(R.id.progress_heating) ;
         progress_hum = (WaveView)view.findViewById(R.id.progress_hum) ;
         progress_nutrition = (WaveView)view.findViewById(R.id.progress_nutrition) ;
-        progress_light.start();
-        progress_heating.start();
-        progress_hum.start();
-        progress_nutrition.start();
+//        progress_light.start();
+//        progress_heating.start();
+//        progress_hum.start();
+//        progress_nutrition.start();
         progress_water = (NumberProgressBar)view.findViewById(R.id.progress_water);
         progress_nut = (NumberProgressBar)view.findViewById(R.id.progress_nut);
 
@@ -198,6 +199,7 @@ public class ControlFragment extends Fragment {
         fab_heating.setOnClickListener(onClickListener);
         fab_watering.setOnClickListener(onClickListener);
         fab_nut.setOnClickListener(onClickListener);
+        fab_wind.setOnClickListener(onClickListener);
         fab_ctrl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -304,7 +306,7 @@ public class ControlFragment extends Fragment {
                             break;
                         case R.id.fab_watering:
                             if (fab_watering.isSelected()) {
-                                Client.getClient("5");
+                                Client.getClient("1");
                                 nowState.setText("当前浇水状态：关闭");
                                 fab_watering.setSelected(false);
                             } else {
@@ -333,6 +335,17 @@ public class ControlFragment extends Fragment {
                                 Client.getClient("v");
                                 nowState.setText("当前施肥状态：开启");
                                 fab_nut.setSelected(true);
+                            }
+                            break;
+                        case R.id.fab_wind:
+                            if (fab_wind.isSelected()) {
+                                Client.getClient("8");
+                                nowState.setText("当前通风状态：关闭");
+                                fab_wind.setSelected(false);
+                            } else {
+                                Client.getClient("5");
+                                nowState.setText("当前通风状态：开启");
+                                fab_wind.setSelected(true);
                             }
                             break;
                         default:

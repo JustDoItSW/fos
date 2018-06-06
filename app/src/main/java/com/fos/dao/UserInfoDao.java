@@ -75,9 +75,10 @@ public class UserInfoDao {
         Cursor cursor = DataSupport.findBySQL(" select * from User where userid = ? ",user.getUserId());
         if(cursor.moveToFirst()){
             String userId = cursor.getString(cursor.getColumnIndex("userid"));
-            User user1 = new User();
-            user1.setUserHeadImage(user.getUserHeadImage());
-            user1.updateAll("userid=?",userId);
+            String userIcon = cursor.getString(cursor.getColumnIndex("userheadimage"));
+            if("".equals(userIcon)) {
+                user.updateAll("userid=?", userId);
+            }
         }else
             user.save();
     }

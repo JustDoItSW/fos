@@ -142,7 +142,7 @@ public class MyGridViewAdapter2 extends BaseAdapter {
             button = (Button) root.findViewById(R.id.bt_del);
             ViewGroup.LayoutParams para =ivimage.getLayoutParams();
             DisplayMetrics dm = context.getResources().getDisplayMetrics();
-            para.width = (dm.widthPixels-50)/3;
+            para.width = (dm.widthPixels-20)/3;
             para.height = para.width;
             ivimage.setLayoutParams(para);
             ivimage.setScaleType(ImageView.ScaleType.CENTER_CROP);

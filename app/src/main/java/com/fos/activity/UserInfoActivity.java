@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
+import com.bumptech.glide.signature.StringSignature;
 import com.fos.R;
 import com.fos.dao.UserInfoDao;
 import com.fos.entity.User;
@@ -26,6 +28,7 @@ import com.fos.entity.UserInfo;
 import com.fos.service.netty.Client;
 import com.fos.util.BitmapSetting;
 import com.fos.util.InfomationAnalysis;
+import com.fos.util.LoadImageUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -60,6 +63,7 @@ public class UserInfoActivity extends AppCompatActivity {
     private Map<String,Object> item;
     private SimpleAdapter simpleAdapter;
     private AlertDialog dialog;
+    private UserInfo user;
     File cameraFile;
     private static int CAMERA_REQUEST_CODE=1;
     private static int GALLY_REQUEST_CODE=2;
@@ -76,15 +80,16 @@ public class UserInfoActivity extends AppCompatActivity {
 
     private void init(){
         intent = getIntent();
+        user = (UserInfo)intent.getSerializableExtra("userInfo");
         exit_userInfo =  (RelativeLayout)findViewById(R.id.exit_userInfo);
         listView_userInfo = (ListView)findViewById(R.id.listView_userInfo);
         changeIcon= (TextView)findViewById(R.id.changeIcon);
         userInfo_userName = (TextView)findViewById(R.id.userInfo_userName);
         userInfo_icon = (ImageView)findViewById(R.id.userInfo_icon);
 
-        userInfo_userName.setText(intent.getExtras().getString("userName"));
+        userInfo_userName.setText(user.getUserName());
         Glide.with(UserInfoActivity.this)
-                .load(MainActivity.userInfo.getUserHeadImage())
+                .load(user.getUserHeadImage())
                 .priority(Priority.HIGH)
                 .into(userInfo_icon);
         userInfo_icon.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -94,9 +99,9 @@ public class UserInfoActivity extends AppCompatActivity {
     }
 
     private void initListView(){
-        String content[] = {"账号","昵称"};
-        userID=MainActivity.userInfo.getUserId();
-        userInfo = new  String[]{userID,MainActivity.userInfo.getUserName()};
+        String content[] = {"账号","昵称","社区","Arduino设备号","摄像头设备号"};
+        userID= user.getUserId();
+        userInfo = new  String[]{userID,user.getUserName(),user.getUserName()+"的社区",user.getUserArduinoDeviceId(),user.getUserCameraDeviceId()};
         mapList =new   ArrayList<>();
         for(int i =0;i<content.length;i++){
             item = new HashMap<>();
@@ -129,38 +134,50 @@ public class UserInfoActivity extends AppCompatActivity {
      * @param uri
      */
 
-    private void resetIcon(String uri){
+    private void resetIcon(final String uri){
+        final String str =  "http://47.106.161.42:8080/upload/19285351543.jpg";
         /**
          * 更新 ui
          */
-        Glide.with(UserInfoActivity.this)
-                .load(uri)
-                .priority(Priority.HIGH)
-                .into(userInfo_icon);
-        Glide.with(UserInfoActivity.this)
-                .load(uri)
-                .transform(new BitmapSetting(UserInfoActivity.this))
-                .priority(Priority.HIGH)
-                .into(MainActivity.user_icon);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                userInfo_icon.setImageBitmap(null);
+                Glide.with(UserInfoActivity.this)
+                        .load(uri)
+                        .priority(Priority.HIGH)
+                        .into(userInfo_icon);
+                Bundle bundle = new Bundle();
+                bundle.putString("url",uri);
+                Message message  = new Message();
+                message.setData(bundle);
+                message.what = 0x005;
+                MainActivity.handler.sendMessage(message);
+            }
+        });
+
         MainActivity.userInfo.setUserHeadImage(uri);
+        /**
+         * 更新 数据库
+         */
+        User user2 = new User();
+        user2.setUserId(user.getUserId());
+        user2.setUserHeadImage(uri);
+        UserInfoDao.getInstance().insertUserInfo(user2);
+        Log.e("更新后的头像：",UserInfoDao.getInstance().getUserInfo(user.getUserId()).getUserHeadImage());
+
 
         /**
          * 发送数据至服务器
          */
         UserInfo user = new UserInfo();
-        user.setUserId(MainActivity.userInfo.getUserId());
-        user.setUserName(MainActivity.userInfo.getUserName());
+        user.setUserId(user.getUserId());
+        user.setUserName(user.getUserName());
         user.setUserHeadImage(uri);
-        Client.getClient(InfomationAnalysis.BeantoUserInfo(user));
+      //  Client.getClient(InfomationAnalysis.BeantoUserInfo(user));
 
-        /**
-         * 更新 数据库
-         */
-        User user2 = new User();
-        user2.setUserId(MainActivity.userInfo.getUserId());
-        user2.setUserName(MainActivity.userInfo.getUserName());
-        user2.setUserHeadImage(uri);
-        UserInfoDao.getInstance().insertUserInfo(user2);
+
+
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
