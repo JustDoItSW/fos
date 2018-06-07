@@ -135,6 +135,9 @@ public class CommunityInfoActivity extends AppCompatActivity {
                 noneEvaluate.setVisibility(View.VISIBLE);
                 list_allEvaluate.setVisibility(View.INVISIBLE);
             }else{
+                Evaluate evaluate = new Evaluate();
+                evaluate.setCommunityID(community.getID());
+                evaluate.setType(1);
                 Client.getClient("getEvaluate"+community.getID());
             }
     }
@@ -169,10 +172,10 @@ public class CommunityInfoActivity extends AppCompatActivity {
                     sendEvaluate.setEnabled(false);
                     Evaluate evaluate  = new Evaluate();
                     evaluate.setUserInfo(userInfo);
-                    evaluate.setClassName("Evaluate");
                     evaluate.setContent(evaluateContent.getText().toString());
                     evaluate.setDate(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(System.currentTimeMillis())));
                     evaluate.setCommunityID(community.getID());
+                    evaluate.setType(0);
                     Client.getClient(InfomationAnalysis.BeanToEvaluate(evaluate));
                     break;
                     default:

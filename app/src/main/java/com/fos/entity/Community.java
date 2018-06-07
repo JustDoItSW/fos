@@ -40,7 +40,17 @@ public class Community implements Serializable{
     /**
      * 类名
      */
-    private String className;
+    private String className =  "Community";
+
+    private int type;
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
 
 
     public String getID() {
@@ -102,7 +112,7 @@ public class Community implements Serializable{
     }
     public String toString(){
         return "Community [userInfo=" + userInfo.toString() + ", time=" + time + ", content=" + content + ", picture=" + picture + ", browse=" + browse +
-                ", support=" + support + ",evaluate=" + evaluate+", className=" + className + " ]";
+                ", support=" + support + ",evaluate=" + evaluate+", className=" + className + ",type="+type+" ]";
     }
 }
 

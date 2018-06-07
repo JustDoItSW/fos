@@ -66,6 +66,8 @@ public class CreateCommunityActivity extends AppCompatActivity {
     private String allUri = "";
     private MyGridViewAdapter2 myGridViewAdapter2;
     public static Handler handler;
+    private UserInfo userInfo;
+    private Intent intent;
     /**
      * 返回码
      */
@@ -87,6 +89,8 @@ public class CreateCommunityActivity extends AppCompatActivity {
     }
 
     private void init(){
+        intent = getIntent();
+        userInfo = (UserInfo)intent.getSerializableExtra("UserInfo");
         dm = CreateCommunityActivity.this.getResources().getDisplayMetrics();
         exit_create = (RelativeLayout)findViewById(R.id.exit_create);
         new_community  =  (Button)findViewById(R.id.new_community);
@@ -108,11 +112,13 @@ public class CreateCommunityActivity extends AppCompatActivity {
                 super.handleMessage(msg);
                 Bundle bundle  =  msg.getData();
                 String str = bundle.getString("info");
-                if(str.equals("submitCommunitySuccessful")) {
+                if(msg.what  == 0x000) {
                     Toast.makeText(CreateCommunityActivity.this, "发布成功！", Toast.LENGTH_LONG).show();
-                    Client.getClient("getCommunity");
+                    Community community  = new Community();
+                    community.setType(2);
+                    Client.getClient(InfomationAnalysis.BeanToCommunity(community));
                     finish();
-                }else if(str.equals("submitCommunityFailure")){
+                }else if(msg.what  == 0x001){
                     Toast.makeText(CreateCommunityActivity.this, "发布失败！", Toast.LENGTH_LONG).show();
                     edit_community.setEnabled(true);
                     create_gridView.setEnabled(true);
@@ -345,15 +351,10 @@ public class CreateCommunityActivity extends AppCompatActivity {
         });
     }
     private void sendCommunityToService(String res){
-        UserInfo userInfo   = new UserInfo();
-        userInfo.setUserName(MainActivity.userInfo.getUserName());
-        userInfo.setUserHeadImage(MainActivity.userInfo.getUserHeadImage());
       //  Log.e("info",MainActivity.userInfo.getUserHeadImage());
-        userInfo.setClassName( "UserInfo");
-        userInfo.setUserId(MainActivity.userInfo.getUserId());
+        userInfo.setType(0);
         Community community = new Community();
         community.setPicture(res);
-        community.setClassName("Community");
         community.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(System.currentTimeMillis())));
         community.setContent(edit_community.getText().toString());
         community.setUserInfo(userInfo);

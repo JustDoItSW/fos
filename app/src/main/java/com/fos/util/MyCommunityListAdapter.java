@@ -127,27 +127,8 @@ public class MyCommunityListAdapter extends BaseAdapter {
                             textView1.setText((Integer.parseInt(textView1.getText().toString()) + 1) + "");
                         }
                         break;
-                    case R.id.count_browse:
-                        TextView textView2 = (TextView) v;
-//                    if(v.isSelected()) {
-//                        v.setSelected(false);
-//                        textView2.setText((Integer.parseInt(textView2.getText().toString()) - 1) + "");
-//                    }else{
-//                        v.setSelected(true);
-//
-//                        textView2.setText((Integer.parseInt(textView2.getText().toString()) + 1) + "");
-//                    }
-                        break;
                     case R.id.count_evaluate:
                         TextView textView3 = (TextView) v;
-//                    if(v.isSelected()) {
-//                        v.setSelected(false);
-//                        textView3.setText((Integer.parseInt(textView3.getText().toString()) - 1) + "");
-//                    }else{
-//                        v.setSelected(true);
-//
-//                        textView3.setText((Integer.parseInt(textView3.getText().toString()) + 1) + "");
-//                    }
                         Intent intent = new Intent(context, CommunityInfoActivity.class);
                              intent.putExtra("Community",mapList.get(position));
                         intent.putExtra("UserInfo", CommunityActivity.userInfo);
@@ -170,7 +151,6 @@ public class MyCommunityListAdapter extends BaseAdapter {
             }
         };
         viewholder.count_support.setOnClickListener(onClickListener);
-        viewholder.count_browse.setOnClickListener(onClickListener);
         viewholder.count_evaluate.setOnClickListener(onClickListener);
         viewholder.count_share.setOnClickListener(onClickListener);
 

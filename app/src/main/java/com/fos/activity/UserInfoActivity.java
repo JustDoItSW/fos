@@ -174,6 +174,7 @@ public class UserInfoActivity extends AppCompatActivity {
         UserInfo user = new UserInfo();
         user.setUserId(user.getUserId());
         user.setUserHeadImage(uri);
+        user.setType(5);
         Client.getClient(InfomationAnalysis.BeantoUserInfo(user));
 
 

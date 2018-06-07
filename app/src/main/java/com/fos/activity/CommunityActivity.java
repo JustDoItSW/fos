@@ -11,6 +11,7 @@ import android.support.v7.widget.GridLayout;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 
@@ -20,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fos.R;
 import com.fos.entity.Community;
@@ -59,7 +61,9 @@ public class CommunityActivity extends AppCompatActivity {
         init();
         initData(null);
         initListView();
-        Client.getClient("getCommunity");
+        Community community  = new Community();
+        community.setType(2);
+        Client.getClient(InfomationAnalysis.BeanToCommunity(community));
 
     }
 
@@ -86,7 +90,9 @@ public class CommunityActivity extends AppCompatActivity {
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                Client.getClient("getCommunity");
+                Community community  = new Community();
+                community.setType(2);
+                Client.getClient(InfomationAnalysis.BeanToCommunity(community));
                 refreshlayout.finishRefresh(1000);
                 myCommunityListAdapter.notifyDataSetChanged();
 
@@ -99,7 +105,6 @@ public class CommunityActivity extends AppCompatActivity {
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 Bundle bundle =msg.getData();
-                Log.e("info",bundle.getString("info"));
                 initData(bundle.getString("info"));
             }
         };
@@ -119,7 +124,6 @@ public class CommunityActivity extends AppCompatActivity {
 
     private void initListView(){
         myCommunityListAdapter = new MyCommunityListAdapter(CommunityActivity.this,R.layout.layout_communitylist,maps);
-     //   listView.setItemsCanFocus(true);
         listView.setAdapter(myCommunityListAdapter);
         listView.setOnItemClickListener(onItemClickListener);
     }
@@ -138,8 +142,8 @@ public class CommunityActivity extends AppCompatActivity {
                     break;
                 case R.id.createCom:
                     Intent intent = new Intent(CommunityActivity.this,CreateCommunityActivity.class);
+                    intent.putExtra("UserInfo",userInfo);
                     startActivity(intent);
-
                     default:
                         break;
             }

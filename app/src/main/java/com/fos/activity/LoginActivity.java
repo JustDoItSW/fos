@@ -360,10 +360,9 @@ public class LoginActivity extends AppCompatActivity {
                                 btn_login.setEnabled(false);
                                 btn_login.setText("正在登录");
                                 final UserInfo userInfo = new UserInfo();
-                                userInfo.setClassName("UserInfo");
                                 userInfo.setUserId(login_userID.getText().toString());
                                 userInfo.setUserPassword(login_password.getText().toString());
-
+                                userInfo.setType(1);
                                 Client.getClient(InfomationAnalysis.BeantoUserInfo(userInfo));
                                 Log.e("info", InfomationAnalysis.BeantoUserInfo(userInfo));
                         }
@@ -392,9 +391,9 @@ public class LoginActivity extends AppCompatActivity {
                                 Toast.makeText(LoginActivity.this, "密码不能超过16位！", Toast.LENGTH_SHORT).show();
                             } else {
                                 final UserInfo userInfo = new UserInfo();
-                                userInfo.setClassName("UserInfo");
                                 userInfo.setUserName(register_userName.getText().toString());
                                 userInfo.setUserPassword(register_password.getText().toString());
+                                userInfo.setType(0);
 
                                 Client.getClient(InfomationAnalysis.BeantoUserInfo(userInfo));
 

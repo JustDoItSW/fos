@@ -27,22 +27,17 @@ import android.widget.TextView;
 
 import com.fos.R;
 import com.fos.activity.FlowerInfo;
-import com.fos.activity.LoginActivity;
-import com.fos.activity.MainActivity;
-import com.fos.activity.SelectFlower;
 import com.fos.dao.FlowerDao;
 import com.fos.entity.Flower;
+import com.fos.entity.ServiceFlower;
 import com.fos.service.netty.Client;
 import com.fos.util.InfomationAnalysis;
 import com.fos.util.LoadImageUtil;
 import com.fos.util.MyListViewAdapter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Created by Apersonalive（丁起柠） on 2018/3/28 23 43.
@@ -95,13 +90,10 @@ public class FlowerFragment extends Fragment {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 String flowerName = edit_search.getText().toString();
                 if (!flowerName.equals("")) {
-//                    if (LoginActivity.Client_phone != null) {
-//                        if (actionId==EditorInfo.IME_ACTION_SEARCH) {
-//                            LoginActivity.Client_phone.clientSendMessage("search" + flowerName);
-//                        }
-//                    }
                     if (actionId== EditorInfo.IME_ACTION_SEARCH) {
-                        Client.getClient("search" + flowerName);
+                        ServiceFlower serviceFlower  =  new ServiceFlower();
+                        serviceFlower.setFlowerName(flowerName);
+                        Client.getClient(InfomationAnalysis.BeanToFlower(serviceFlower));
                     }
                 }
                 return false;
@@ -127,13 +119,11 @@ public class FlowerFragment extends Fragment {
                 }
                 else{
                     delSearch.setVisibility(View.VISIBLE);
-//                    if (LoginActivity.Client_phone != null) {
-//                        LoginActivity.Client_phone.clientSendMessage("search" + edit_search.getText());
-//                    }else{
-//                        searchFlower(edit_search.getText().toString());
-//                    }
+
                     if(Client.isExist()){
-                        Client.getClient("search" + edit_search.getText().toString());
+                        ServiceFlower serviceFlower  =  new ServiceFlower();
+                        serviceFlower.setFlowerName(edit_search.getText().toString());
+                        Client.getClient(InfomationAnalysis.BeanToFlower(serviceFlower));
                     }else{
                         searchFlower(edit_search.getText().toString());
                     }

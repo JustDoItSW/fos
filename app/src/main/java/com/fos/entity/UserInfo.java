@@ -38,9 +38,19 @@ public class UserInfo implements Serializable {
     /**
      * 类名
      */
-    private String className;
+    private String className = "UserInfo";
 
 
+
+    private int type;
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
     public String getClassName() {
         return className;
     }
@@ -99,7 +109,7 @@ public class UserInfo implements Serializable {
 
     public String toString(){
         return "UserInfo [userId="+ userId + ", userName=" + userName +", userPassword=" + userPassword +", userHeadImage=" + userHeadImage +
-                ", userArduinoDeviceId=" + userArduinoDeviceId +", userCameraDeviceId=" + userCameraDeviceId + ", className=" + className + "]";
+                ", userArduinoDeviceId=" + userArduinoDeviceId +", userCameraDeviceId=" + userCameraDeviceId + ", className=" + className + ",type="+type+"]";
     }
 
 }

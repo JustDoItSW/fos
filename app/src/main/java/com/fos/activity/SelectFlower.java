@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.fos.R;
 import com.fos.dao.FlowerDao;
 import com.fos.entity.Flower;
+import com.fos.entity.ServiceFlower;
 import com.fos.service.netty.Client;
 import com.fos.util.InfomationAnalysis;
 import com.fos.util.MyListViewAdapter;
@@ -74,13 +75,10 @@ public class SelectFlower extends AppCompatActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 String flowerName = edit_search_select.getText().toString();
                 if (!flowerName.equals("")) {
-//                    if (LoginActivity.Client_phone != null) {
-//                        if (actionId== EditorInfo.IME_ACTION_SEARCH) {
-//                            LoginActivity.Client_phone.clientSendMessage("search" + flowerName);
-//                        }
-//                    }
                     if (actionId== EditorInfo.IME_ACTION_SEARCH) {
-                        Client.getClient("search" + flowerName);
+                        ServiceFlower serviceFlower  =  new ServiceFlower();
+                        serviceFlower.setFlowerName(flowerName);
+                        Client.getClient(InfomationAnalysis.BeanToFlower(serviceFlower));
                     }
                 }
                 return false;
@@ -106,13 +104,10 @@ public class SelectFlower extends AppCompatActivity {
                 }
                 else{
                     delSearch_select.setVisibility(View.VISIBLE);
-//                    if (LoginActivity.Client_phone != null) {
-//                        LoginActivity.Client_phone.clientSendMessage("search" + edit_search_select.getText());
-//                    }else{
-//                        searchFlower(edit_search_select.getText().toString());
-//                    }
                     if(Client.isExist()){
-                        Client.getClient("search" + edit_search_select.getText());
+                        ServiceFlower serviceFlower  =  new ServiceFlower();
+                        serviceFlower.setFlowerName(edit_search_select.getText().toString());
+                        Client.getClient(InfomationAnalysis.BeanToFlower(serviceFlower));
                     }else{
                         searchFlower(edit_search_select.getText().toString());
                     }

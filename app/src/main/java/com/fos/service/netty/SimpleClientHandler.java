@@ -93,18 +93,31 @@ public class SimpleClientHandler extends SimpleChannelInboundHandler<String> {
                     ControlFragment.handler.sendMessage(msg);
                     DataFragment.handler.sendMessage(msg2);
                 } else if(className.equals("Community")) {
-                    CommunityActivity.handler.sendMessage(msg);
+                    int type = InfomationAnalysis.jsonToCommunity(str)[0].getType();
+                    if(type == 0) {
+                        msg.what =0x000;
+                        CreateCommunityActivity.handler.sendMessage(msg);//发布成功
+                    }else  if(type == 1){
+                        msg.what =0x001;
+                        CreateCommunityActivity.handler.sendMessage(msg);//发布失败
+                    }else if(type == 2){
+                        CommunityActivity.handler.sendMessage(msg);//获得动态
+                    }
                 }else if(className.equals("Evaluate")) {
                     CommunityInfoActivity.handler.sendMessage(msg);
                 }else if (className.equals("Flower")) {
                     FlowerFragment.handler.sendMessage(msg);
                     SelectFlower.handler.sendMessage(msg2);
                 } else if (className.equals("UserInfo")) {
-                    if(!InfomationAnalysis.jsonToUserInfo(str).getUserId().toString().equals("")){
+                    int type = InfomationAnalysis.jsonToUserInfo(str).getType();
+                    if(type==0){
                         LoginActivity.handler.sendMessage(msg);//注册成功
-                    }else if(!InfomationAnalysis.jsonToUserInfo(str).getUserName().toString().equals("")){
+                    }else if(type==1){
                         msg.what=0x002;
                         LoginActivity.handler.sendMessage(msg);//登录成功
+                    }else if(type == 2){
+                        msg.what=0x003;
+                        LoginActivity.handler.sendMessage(msg);//登录失败
                     }
                 }
             } catch (Exception e) {

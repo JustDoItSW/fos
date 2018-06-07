@@ -9,10 +9,19 @@ public class Evaluate {
     private UserInfo userInfo;//用户信息
     private String content;//评论内容
     private String date ;//评论时间p
-    private String className;
+    private String className = "Evaluate";
 
 
     private String communityID;//s所属动态id
+    private int type;
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
 
     public UserInfo getUserInfo() {
         return userInfo;
@@ -54,6 +63,6 @@ public class Evaluate {
     }
 
     public String toString() {
-        return "Evaluate [ userInfo"+userInfo.toString()+",content="+content+",date="+date+",className="+className+",communityID="+communityID+" ]";
+        return "Evaluate [ userInfo"+userInfo.toString()+",content="+content+",date="+date+",className="+className+",communityID="+communityID+",type="+type+" ]";
     }
 }
