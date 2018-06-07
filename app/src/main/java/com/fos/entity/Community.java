@@ -7,9 +7,11 @@ import java.io.Serializable;
  */
 
 public class Community implements Serializable{
+    private String ID;
     /**
      * 用户对象
      */
+
     private UserInfo userInfo;
     /**
      * 用户发动态时间
@@ -34,13 +36,20 @@ public class Community implements Serializable{
     /**
      * 好友评论==》  用户名userId&评论
      */
-    private String evaluate;
+    private int evaluate;
     /**
      * 类名
      */
     private String className;
 
 
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
+    }
 
     public UserInfo getUserInfo() {
         return userInfo;
@@ -78,10 +87,10 @@ public class Community implements Serializable{
     public void setSupport(int support) {
         this.support = support;
     }
-    public String getEvaluate() {
+    public int getEvaluate() {
         return evaluate;
     }
-    public void setEvaluate(String evaluate) {
+    public void setEvaluate(int evaluate) {
         this.evaluate = evaluate;
     }
 
@@ -93,7 +102,7 @@ public class Community implements Serializable{
     }
     public String toString(){
         return "Community [userInfo=" + userInfo.toString() + ", time=" + time + ", content=" + content + ", picture=" + picture + ", browse=" + browse +
-                ", support=" + support + ",evaluate=" + ", className=" + className + " ]";
+                ", support=" + support + ",evaluate=" + evaluate+", className=" + className + " ]";
     }
 }
 

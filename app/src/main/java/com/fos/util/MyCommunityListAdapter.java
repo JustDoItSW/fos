@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.fos.R;
+import com.fos.activity.CommunityActivity;
 import com.fos.activity.CommunityInfoActivity;
 import com.fos.entity.Community;
 import com.fos.entity.Flower;
@@ -88,7 +89,7 @@ public class MyCommunityListAdapter extends BaseAdapter {
         viewholder.comContext.setText(mapList.get(position).getContent().toString());
         viewholder.count_support.setText(mapList.get(position).getSupport()+"");
         viewholder.count_browse.setText(mapList.get(position).getBrowse()+"");
-        viewholder.count_evaluate.setText(mapList.get(position).getEvaluate().toString());
+        viewholder.count_evaluate.setText(mapList.get(position).getEvaluate()+"");
         viewholder.count_share.setText("999+");
         ViewGroup.LayoutParams para = viewholder.gridView.getLayoutParams();
         DisplayMetrics dm = context.getResources().getDisplayMetrics();
@@ -148,7 +149,8 @@ public class MyCommunityListAdapter extends BaseAdapter {
 //                        textView3.setText((Integer.parseInt(textView3.getText().toString()) + 1) + "");
 //                    }
                         Intent intent = new Intent(context, CommunityInfoActivity.class);
-                             intent.putExtra("info",mapList.get(position));
+                             intent.putExtra("Community",mapList.get(position));
+                        intent.putExtra("UserInfo", CommunityActivity.userInfo);
                         context.startActivity(intent);
                         break;
                     case R.id.count_share:

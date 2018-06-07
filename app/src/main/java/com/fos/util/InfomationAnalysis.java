@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fos.entity.Community;
+import com.fos.entity.Evaluate;
 import com.fos.entity.Flower;
 import com.fos.entity.FlowerInfo;
 import com.fos.entity.Infomation;
@@ -127,5 +128,28 @@ public class InfomationAnalysis {
 
     public static String BeanToCommunity(Community community){
         return JSON.toJSONString(community);
+    }
+
+    public static Evaluate[] JsonToEvaluate(String info){
+        try {
+            if(info!= null) {
+                Log.e("info", "开始解析评论");
+                JSONArray myJsonArray = JSONArray.parseArray(info);
+                Evaluate[] evaluates = new Evaluate[myJsonArray.size()];
+                for (int i = 0; i < myJsonArray.size(); i++) {
+                    evaluates[i] = JSONObject.parseObject(myJsonArray.get(i).toString(), Evaluate.class);
+                }
+                return evaluates;
+            }
+            else{
+                return null;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public  static String BeanToEvaluate(Evaluate evaluate){
+        return JSON.toJSONString(evaluate);
     }
 }

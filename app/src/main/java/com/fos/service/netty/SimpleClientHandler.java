@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Message;
 
 import com.fos.activity.CommunityActivity;
+import com.fos.activity.CommunityInfoActivity;
 import com.fos.activity.CreateCommunityActivity;
 import com.fos.activity.LoginActivity;
 import com.fos.activity.SelectFlower;
@@ -93,7 +94,8 @@ public class SimpleClientHandler extends SimpleChannelInboundHandler<String> {
                     DataFragment.handler.sendMessage(msg2);
                 } else if(className.equals("Community")) {
                     CommunityActivity.handler.sendMessage(msg);
-
+                }else if(className.equals("Evaluate")) {
+                    CommunityInfoActivity.handler.sendMessage(msg);
                 }else if (className.equals("Flower")) {
                     FlowerFragment.handler.sendMessage(msg);
                     SelectFlower.handler.sendMessage(msg2);
@@ -104,7 +106,6 @@ public class SimpleClientHandler extends SimpleChannelInboundHandler<String> {
                         msg.what=0x002;
                         LoginActivity.handler.sendMessage(msg);//登录成功
                     }
-
                 }
             } catch (Exception e) {
                 e.printStackTrace();

@@ -35,6 +35,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -172,9 +173,8 @@ public class UserInfoActivity extends AppCompatActivity {
          */
         UserInfo user = new UserInfo();
         user.setUserId(user.getUserId());
-        user.setUserName(user.getUserName());
         user.setUserHeadImage(uri);
-      //  Client.getClient(InfomationAnalysis.BeantoUserInfo(user));
+        Client.getClient(InfomationAnalysis.BeantoUserInfo(user));
 
 
 
@@ -370,7 +370,7 @@ public class UserInfoActivity extends AppCompatActivity {
         RequestBody requestBody=bodyBuilder
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("userName",userID)
-                .addFormDataPart("mPhoto",userID+".jpg",RequestBody.create(MediaType.parse("application/octet-stream"),img))
+                .addFormDataPart("mPhoto",userID+"-"+ System.currentTimeMillis()+".jpg",RequestBody.create(MediaType.parse("application/octet-stream"),img))
                 .build();
         Request.Builder builder=new Request.Builder();
         Request request=builder

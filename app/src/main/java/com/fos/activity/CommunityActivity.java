@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.fos.R;
 import com.fos.entity.Community;
+import com.fos.entity.UserInfo;
 import com.fos.service.netty.Client;
 import com.fos.util.InfomationAnalysis;
 import com.fos.util.MyCommunityListAdapter;
@@ -47,9 +48,10 @@ public class CommunityActivity extends AppCompatActivity {
     private RelativeLayout exit_community;
     private ListView listView;
     private List<Community> maps = new ArrayList<>();;
-    private Map<String ,Object>  item;
     private MyCommunityListAdapter myCommunityListAdapter;
     public static  Handler handler;
+    private Intent intent;
+    public static UserInfo userInfo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +64,8 @@ public class CommunityActivity extends AppCompatActivity {
     }
 
     private void init(){
+        intent = getIntent();
+        userInfo = (UserInfo)intent.getSerializableExtra("UserInfo");
         createCom = (Button)findViewById(R.id.createCom);
         exit_community = (RelativeLayout)findViewById(R.id.exit_community);
         listView = (ListView)findViewById(R.id.allCommunity);
@@ -106,16 +110,6 @@ public class CommunityActivity extends AppCompatActivity {
         if(data!=null){
             Community[] communities = InfomationAnalysis.jsonToCommunity(data);
             for(int  i = 0;i<communities.length;i++){
-//                item = new HashMap<String, Object>();
-//                item.put("userName",communities[i].getUserInfo().getUserName());
-//                item.put("userIcon",communities[i].getUserInfo().getUserHeadImage());
-//                item.put("date",communities[i].getTime());
-//                item.put("comContext",communities[i].getContent());
-//                item.put("picture",communities[i].getPicture());
-//                item.put("count_support",communities[i].getSupport());
-//                item.put("count_browse",communities[i].getBrowse());
-//                item.put("count_share","999+");
-//                item.put("count_evaluate",communities[i].getEvaluate());
                 maps.add(communities[i]);
             }
         }
@@ -125,7 +119,7 @@ public class CommunityActivity extends AppCompatActivity {
 
     private void initListView(){
         myCommunityListAdapter = new MyCommunityListAdapter(CommunityActivity.this,R.layout.layout_communitylist,maps);
-        listView.setItemsCanFocus(true);
+     //   listView.setItemsCanFocus(true);
         listView.setAdapter(myCommunityListAdapter);
         listView.setOnItemClickListener(onItemClickListener);
     }
@@ -155,7 +149,10 @@ public class CommunityActivity extends AppCompatActivity {
     AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+            Intent intent = new Intent(CommunityActivity.this, CommunityInfoActivity.class);
+            intent.putExtra("Community",maps.get(position));
+            intent.putExtra("UserInfo",userInfo);
+            startActivity(intent);
         }
     };
 }

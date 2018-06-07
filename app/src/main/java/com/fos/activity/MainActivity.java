@@ -268,12 +268,12 @@ public class MainActivity extends AppCompatActivity {
                 switch (position){
                     case 1:
                         Intent intent  = new Intent(MainActivity.this,CommunityActivity.class);
-                        intent.putExtra("userInfo",userInfo);
+                        intent.putExtra("UserInfo",userInfo);
                         startActivity(intent);
                         break;
                     case  2:
                         Intent intent1  = new Intent(MainActivity.this,SelectFlower.class);
-                        intent1.putExtra("userInfo",userInfo);
+                        intent1.putExtra("UserInfo",userInfo);
                         startActivity(intent1);
                         break;
                         default:
