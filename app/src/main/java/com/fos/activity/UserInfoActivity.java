@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
@@ -17,6 +18,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
@@ -70,6 +72,8 @@ public class UserInfoActivity extends AppCompatActivity {
     private static int GALLY_REQUEST_CODE=2;
     private static int CROP_REQUEST_CODE=3;
     private String userID;
+    public static Handler handler;
+    private String iconUrl;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +101,47 @@ public class UserInfoActivity extends AppCompatActivity {
 
         exit_userInfo.setOnClickListener(onClickListener);
         changeIcon.setOnClickListener(onClickListener);
+
+        handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if(msg.what == 0x001){
+                    /**
+                     * 更新 ui
+                     */
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            userInfo_icon.setImageBitmap(null);
+                            Glide.with(UserInfoActivity.this)
+                                    .load(iconUrl)
+                                    .priority(Priority.HIGH)
+                                    .into(userInfo_icon);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("iconUrl",iconUrl);
+                            Message message  = new Message();
+                            message.setData(bundle);
+                            message.what = 0x005;
+                            MainActivity.handler.sendMessage(message);
+                        }
+                    });
+
+                    MainActivity.userInfo.setUserHeadImage(iconUrl);
+                    /**
+                     * 更新 数据库
+                     */
+                    User user2 = new User();
+                    user2.setUserId(user.getUserId());
+                    user2.setUserHeadImage(iconUrl);
+                    UserInfoDao.getInstance().insertUserInfo(user2);
+
+                }else if(msg.what == 0x002){
+                    Toast.makeText(UserInfoActivity.this,"头像上传失败！",Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        };
     }
 
     private void initListView(){
@@ -136,38 +181,6 @@ public class UserInfoActivity extends AppCompatActivity {
      */
 
     private void resetIcon(final String uri){
-        final String str =  "http://47.106.161.42:8080/upload/19285351543.jpg";
-        /**
-         * 更新 ui
-         */
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                userInfo_icon.setImageBitmap(null);
-                Glide.with(UserInfoActivity.this)
-                        .load(uri)
-                        .priority(Priority.HIGH)
-                        .into(userInfo_icon);
-                Bundle bundle = new Bundle();
-                bundle.putString("url",uri);
-                Message message  = new Message();
-                message.setData(bundle);
-                message.what = 0x005;
-                MainActivity.handler.sendMessage(message);
-            }
-        });
-
-        MainActivity.userInfo.setUserHeadImage(uri);
-        /**
-         * 更新 数据库
-         */
-        User user2 = new User();
-        user2.setUserId(user.getUserId());
-        user2.setUserHeadImage(uri);
-        UserInfoDao.getInstance().insertUserInfo(user2);
-        Log.e("更新后的头像：",UserInfoDao.getInstance().getUserInfo(user.getUserId()).getUserHeadImage());
-
-
         /**
          * 发送数据至服务器
          */
@@ -176,6 +189,7 @@ public class UserInfoActivity extends AppCompatActivity {
         user.setUserHeadImage(uri);
         user.setType(5);
         Client.getClient(InfomationAnalysis.BeantoUserInfo(user));
+        iconUrl  =  uri;
 
 
 

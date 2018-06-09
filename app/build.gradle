@@ -64,5 +64,7 @@ dependencies {
     compile 'com.daimajia.numberprogressbar:library:1.4@aar'
     compile 'com.github.john990:WaveView:v0.9'
     compile 'id.zelory:compressor:2.1.0'
+    compile 'org.tensorflow:tensorflow-android:1.2.0-preview'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 
 }

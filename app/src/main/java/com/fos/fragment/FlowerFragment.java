@@ -93,7 +93,7 @@ public class FlowerFragment extends Fragment {
                     if (actionId== EditorInfo.IME_ACTION_SEARCH) {
                         ServiceFlower serviceFlower  =  new ServiceFlower();
                         serviceFlower.setFlowerName(flowerName);
-                        Client.getClient(InfomationAnalysis.BeanToFlower(serviceFlower));
+                        Client.getClient("search"+flowerName);
                     }
                 }
                 return false;
@@ -123,7 +123,7 @@ public class FlowerFragment extends Fragment {
                     if(Client.isExist()){
                         ServiceFlower serviceFlower  =  new ServiceFlower();
                         serviceFlower.setFlowerName(edit_search.getText().toString());
-                        Client.getClient(InfomationAnalysis.BeanToFlower(serviceFlower));
+                        Client.getClient("search"+edit_search.getText().toString());
                     }else{
                         searchFlower(edit_search.getText().toString());
                     }

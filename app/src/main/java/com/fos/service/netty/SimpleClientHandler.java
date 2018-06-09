@@ -3,12 +3,15 @@ package com.fos.service.netty;
 import android.os.Bundle;
 import android.os.Message;
 
+import com.fos.R;
 import com.fos.activity.CommunityActivity;
 import com.fos.activity.CommunityInfoActivity;
 import com.fos.activity.CreateCommunityActivity;
 import com.fos.activity.LoginActivity;
 import com.fos.activity.SelectFlower;
+import com.fos.activity.UserInfoActivity;
 import com.fos.entity.Community;
+import com.fos.entity.UserInfo;
 import com.fos.fragment.ControlFragment;
 import com.fos.fragment.DataFragment;
 import com.fos.fragment.FlowerFragment;
@@ -86,8 +89,10 @@ public class SimpleClientHandler extends SimpleChannelInboundHandler<String> {
                 String className = InfomationAnalysis.judgeInfo(str);
                 if (className.equals("error")) {
                     msg.what = 0x003;
+                    if(FlowerFragment.handler!=null)
                     FlowerFragment.handler.sendMessage(msg);
                     msg2.what = 0x003;
+                    if(SelectFlower.handler!=null)
                     SelectFlower.handler.sendMessage(msg2);
                 } else if (className.equals("Data")) {
                     ControlFragment.handler.sendMessage(msg);
@@ -98,7 +103,7 @@ public class SimpleClientHandler extends SimpleChannelInboundHandler<String> {
                         msg.what =0x000;
                         CreateCommunityActivity.handler.sendMessage(msg);//发布成功
                     }else  if(type == 1){
-                        msg.what =0x001;
+                         msg.what =0x001;
                         CreateCommunityActivity.handler.sendMessage(msg);//发布失败
                     }else if(type == 2){
                         CommunityActivity.handler.sendMessage(msg);//获得动态
@@ -106,7 +111,9 @@ public class SimpleClientHandler extends SimpleChannelInboundHandler<String> {
                 }else if(className.equals("Evaluate")) {
                     CommunityInfoActivity.handler.sendMessage(msg);
                 }else if (className.equals("Flower")) {
+                    if(FlowerFragment.handler!=null)
                     FlowerFragment.handler.sendMessage(msg);
+                    if(SelectFlower.handler!=null)
                     SelectFlower.handler.sendMessage(msg2);
                 } else if (className.equals("UserInfo")) {
                     int type = InfomationAnalysis.jsonToUserInfo(str).getType();
@@ -118,6 +125,11 @@ public class SimpleClientHandler extends SimpleChannelInboundHandler<String> {
                     }else if(type == 2){
                         msg.what=0x003;
                         LoginActivity.handler.sendMessage(msg);//登录失败
+                    }else if(type == 3){
+                        UserInfoActivity.handler.sendMessage(msg);//头像上传成功
+                    }else if(type == 4){
+                        msg.what =  0x002;
+                        UserInfoActivity.handler.sendMessage(msg);//失败
                     }
                 }
             } catch (Exception e) {

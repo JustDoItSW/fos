@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:background="#ffffff"
     tools:context="com.fos.activity.SelectFlower"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/l1">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -36,6 +37,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </RelativeLayout>
+
+
 
     <LinearLayout
 
@@ -83,8 +86,6 @@
             android:visibility="gone"
             />
     </LinearLayout>
-
-
     <View
         android:layout_width="match_parent"
         android:layout_height="0.125dp"
@@ -94,7 +95,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="400dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp">
         <ListView
@@ -132,4 +133,12 @@
 
 
     </RelativeLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="按住说话"
+        android:textColor="@android:color/white"
+        android:id="@+id/btn_record"
+        android:background="@color/colorPrimary" />
 </LinearLayout>

@@ -265,16 +265,22 @@ public class MainActivity extends AppCompatActivity {
         listView_sideSlip.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent;
                 switch (position){
                     case 1:
-                        Intent intent  = new Intent(MainActivity.this,CommunityActivity.class);
+                        intent  = new Intent(MainActivity.this,CommunityActivity.class);
                         intent.putExtra("UserInfo",userInfo);
                         startActivity(intent);
                         break;
                     case  2:
-                        Intent intent1  = new Intent(MainActivity.this,SelectFlower.class);
-                        intent1.putExtra("UserInfo",userInfo);
-                        startActivity(intent1);
+                        intent  = new Intent(MainActivity.this,SelectFlower.class);
+                        intent.putExtra("UserInfo",userInfo);
+                        startActivity(intent);
+                        break;
+                    case 3 :
+                        intent  = new Intent(MainActivity.this,CameraRollActivity.class);
+                        intent.putExtra("UserInfo",userInfo);
+                        startActivity(intent);
                         break;
                         default:
                             break;

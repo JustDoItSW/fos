@@ -1,17 +1,25 @@
 package com.fos.activity;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,14 +27,18 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fos.R;
 import com.fos.dao.FlowerDao;
 import com.fos.entity.Flower;
 import com.fos.entity.ServiceFlower;
+import com.fos.myView.PopupWindowFactory;
 import com.fos.service.netty.Client;
+import com.fos.util.AudioRecoderUtils;
 import com.fos.util.InfomationAnalysis;
 import com.fos.util.MyListViewAdapter;
+import com.fos.util.TimeUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,38 +50,52 @@ public class SelectFlower extends AppCompatActivity {
     private RelativeLayout exit_selectFlower;
     private ListView listView;
     private LinearLayout layout_notFind_select;
-    private TextView text_notFind_select;
+    private TextView text_notFind_select,mTextView;
     private EditText edit_search_select;
     private FlowerDao flowerDao;
-    private ImageView delSearch_select;
+    private ImageView delSearch_select,mImageView;
     private List<Flower> data;//数据源
     private Map<String,Object> item;//数据项;
     private MyListViewAdapter myListViewAdapter;
     public static Handler handler;
+    private Button btn_record;
+    private AudioRecoderUtils audioRecoderUtils;
+    private PopupWindowFactory  popupWindowFactory;
+    private LinearLayout l1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_flower);
         init();
+      //  requestPermissions();
         initData();
         initListView();
     }
 
     public void init(){
+        flowerDao  = FlowerDao.getInstance();
+        l1 = (LinearLayout)findViewById(R.id.l1) ;
         exit_selectFlower = (RelativeLayout)findViewById(R.id.exit_selectFlower);
-        exit_selectFlower.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
         data = new ArrayList<Flower>();//存放数据
         listView = (ListView)findViewById(R.id.list_flowerSelect);
         layout_notFind_select  =(LinearLayout)findViewById(R.id.layout_notFind_select);
         text_notFind_select = (TextView)findViewById(R.id.text_notFind_select);
         delSearch_select =(ImageView)findViewById(R.id.delSearch_select);
         edit_search_select = (EditText)findViewById(R.id.edit_search_select);
+        btn_record  =(Button)findViewById(R.id.btn_record);
+        audioRecoderUtils = new AudioRecoderUtils();
+        View view = View.inflate(SelectFlower.this, R.layout.layout_microphone, null);
+        popupWindowFactory = new PopupWindowFactory(this,view);
+        mImageView = (ImageView) view.findViewById(R.id.iv_recording_icon);
+        mTextView = (TextView) view.findViewById(R.id.tv_recording_time);
+
+
+        exit_selectFlower.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         edit_search_select.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -78,7 +104,7 @@ public class SelectFlower extends AppCompatActivity {
                     if (actionId== EditorInfo.IME_ACTION_SEARCH) {
                         ServiceFlower serviceFlower  =  new ServiceFlower();
                         serviceFlower.setFlowerName(flowerName);
-                        Client.getClient(InfomationAnalysis.BeanToFlower(serviceFlower));
+                        Client.getClient("search"+flowerName);
                     }
                 }
                 return false;
@@ -107,7 +133,7 @@ public class SelectFlower extends AppCompatActivity {
                     if(Client.isExist()){
                         ServiceFlower serviceFlower  =  new ServiceFlower();
                         serviceFlower.setFlowerName(edit_search_select.getText().toString());
-                        Client.getClient(InfomationAnalysis.BeanToFlower(serviceFlower));
+                        Client.getClient("search"+edit_search_select.getText().toString());
                     }else{
                         searchFlower(edit_search_select.getText().toString());
                     }
@@ -122,7 +148,9 @@ public class SelectFlower extends AppCompatActivity {
                 myListViewAdapter.notifyDataSetChanged();
             }
         });
-        flowerDao  = FlowerDao.getInstance();
+        btn_record.setOnTouchListener(onTouchListener);
+
+        audioRecoderUtils.setOnAudioStatusUpdateListener(onAudioStatusUpdateListener);
 
         handler = new Handler(){
             @Override
@@ -141,6 +169,8 @@ public class SelectFlower extends AppCompatActivity {
                 }
             }
         };
+
+
     }
 
     private void  initData(){
@@ -191,6 +221,37 @@ public class SelectFlower extends AppCompatActivity {
         }
         myListViewAdapter.notifyDataSetChanged();
     }
+
+    private void requestPermissions() {
+        //判断是否开启摄像头权限
+        if ((ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) &&
+                (ContextCompat.checkSelfPermission(this,
+                        Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)
+                ) {
+            btn_record.setOnTouchListener(onTouchListener);
+
+            //判断是否开启语音权限
+        } else {
+            //请求获取摄像头权限
+            ActivityCompat.requestPermissions((Activity) this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO}, 66);
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == 66) {
+            if ((grantResults[0] == PackageManager.PERMISSION_GRANTED) && (grantResults[1] == PackageManager.PERMISSION_GRANTED) ) {
+                btn_record.setOnTouchListener(onTouchListener);
+            } else {
+                Toast.makeText(this, "已拒绝权限！", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
     AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -206,6 +267,43 @@ public class SelectFlower extends AppCompatActivity {
             Intent intent = new Intent(SelectFlower.this,FlowerInfo.class);
             intent.putExtras(bundle);
             startActivity(intent);
+        }
+    };
+
+    View.OnTouchListener  onTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            switch (event.getAction()){
+
+                case MotionEvent.ACTION_DOWN:
+
+                    popupWindowFactory.showAtLocation(l1, Gravity.CENTER, 0, 0);
+                    btn_record.setText("松开结束");
+                    audioRecoderUtils.startRecord();
+                    break;
+
+                case MotionEvent.ACTION_UP:
+
+                   // audioRecoderUtils.stopRecord();        //结束录音（保存录音文件）
+                    audioRecoderUtils.cancelRecord();    //取消录音（不保存录音文件）
+                    popupWindowFactory.dismiss();
+                    btn_record.setText("按住说话");
+                    break;
+            }
+            return true;
+        }
+    };
+
+    AudioRecoderUtils.OnAudioStatusUpdateListener onAudioStatusUpdateListener = new AudioRecoderUtils.OnAudioStatusUpdateListener() {
+        @Override
+        public void onUpdate(double db, long time) {
+            mImageView.getDrawable().setLevel((int) (3000 + 6000 * db / 100));
+            mTextView.setText(TimeUtils.long2String(time));
+        }
+
+        @Override
+        public void onStop(String filePath) {
+            mTextView.setText(TimeUtils.long2String(0));
         }
     };
 

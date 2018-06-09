@@ -76,7 +76,7 @@ public class UserInfoDao {
         if(cursor.moveToFirst()){
             String userId = cursor.getString(cursor.getColumnIndex("userid"));
             String userIcon = cursor.getString(cursor.getColumnIndex("userheadimage"));
-            if("".equals(userIcon)) {
+            if(!"".equals(userIcon)) {
                 user.updateAll("userid=?", userId);
             }
         }else

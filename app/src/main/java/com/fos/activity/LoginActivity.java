@@ -151,6 +151,7 @@ public class LoginActivity extends AppCompatActivity {
                      * 登录成功
                      */
                     user.setUserName(InfomationAnalysis.jsonToUserInfo(str).getUserName());
+                    user.setUserHeadImage(InfomationAnalysis.jsonToUserInfo(str).getUserHeadImage());
                     saveCountInfo();
                     Bundle b = new Bundle();
                     b.putString("userName", user.getUserName());
