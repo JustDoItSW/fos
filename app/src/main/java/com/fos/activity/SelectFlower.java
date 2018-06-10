@@ -438,4 +438,13 @@ public class SelectFlower extends AppCompatActivity {
         }
     };
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if( null != mIat ){
+            // 退出时释放连接
+            mIat.cancel();
+            mIat.destroy();
+        }
+    }
 }
