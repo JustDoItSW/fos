@@ -113,7 +113,7 @@ public class UserInfoActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            userInfo_icon.setImageBitmap(null);
+                           // userInfo_icon.setImageBitmap(null);
                             Glide.with(UserInfoActivity.this)
                                     .load(iconUrl)
                                     .priority(Priority.HIGH)
@@ -127,7 +127,7 @@ public class UserInfoActivity extends AppCompatActivity {
                         }
                     });
 
-                    MainActivity.userInfo.setUserHeadImage(iconUrl);
+
                     /**
                      * 更新 数据库
                      */
@@ -184,8 +184,6 @@ public class UserInfoActivity extends AppCompatActivity {
         /**
          * 发送数据至服务器
          */
-        UserInfo user = new UserInfo();
-        user.setUserId(user.getUserId());
         user.setUserHeadImage(uri);
         user.setType(5);
         Client.getClient(InfomationAnalysis.BeantoUserInfo(user));

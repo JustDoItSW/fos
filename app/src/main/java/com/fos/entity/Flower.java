@@ -7,11 +7,13 @@ import com.fos.util.LoadImageUtil;
 
 import org.litepal.crud.DataSupport;
 
+import java.io.Serializable;
+
 /**
  * Created by Apersonalive on 2018/4/17.
  */
 
-public class Flower extends DataSupport {
+public class Flower extends DataSupport implements Serializable{
 
     private  Bitmap image;
     /**

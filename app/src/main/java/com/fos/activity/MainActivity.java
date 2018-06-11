@@ -85,8 +85,8 @@ public class MainActivity extends AppCompatActivity {
     private Thread queryThread;
     public static UserInfo userInfo = new UserInfo();
     private Intent i;
-    String[] listContent = {"我的消息","社区动态","选择植物","看图识花","我的好友","附近的人"};
-    int [] listImage ={R.mipmap.ic_message,R.mipmap.ic_friend,R.mipmap.ic_plant,R.mipmap.ic_scan,R.mipmap.ic_community,R.mipmap.ic_location};
+    String[] listContent = {"我的消息","社区动态","选择植物","看图识花","语言控制","我的好友","附近的人"};
+    int [] listImage ={R.mipmap.ic_message,R.mipmap.ic_friend,R.mipmap.ic_plant,R.mipmap.ic_scan,R.mipmap.ic_record,R.mipmap.ic_community,R.mipmap.ic_location};
     /**
      * 用户是否已经选择了植物
      */
@@ -238,11 +238,12 @@ public class MainActivity extends AppCompatActivity {
                 if(msg.what ==  0x005){
                     Bundle bundle = msg.getData();
                     Glide.with(MainActivity.this)
-                            .load(bundle.getString("url"))
+                            .load(bundle.getString("iconUrl"))
                             .transform(new BitmapSetting(MainActivity.this))
                             .priority(Priority.HIGH)
                             .into(user_icon);
                     user_icon.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    userInfo.setUserHeadImage(bundle.getString("iconUrl"));
                 }
             }
         };
@@ -282,6 +283,10 @@ public class MainActivity extends AppCompatActivity {
                         intent.putExtra("UserInfo",userInfo);
                         startActivity(intent);
                         break;
+                    case 4:
+                        intent = new Intent(MainActivity.this,RecordControlActivity.class);
+                        intent.putExtra("Flower",flower);
+                        startActivity(intent);
                         default:
                             break;
                 }
@@ -289,12 +294,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     *  获得当前的所需要的温湿度信息（每隔60s）
-     */
-    /**
-     *  获得当前的所需要的温湿度信息（每隔60s）
-     */
     View.OnClickListener onClickListener  = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -350,11 +349,6 @@ public class MainActivity extends AppCompatActivity {
                     setAllSelected();
                     text_flower.setSelected(true);
                     MainActivity.menu_tab.setVisibility(View.VISIBLE);
-                    break;
-                case  3:
-                    /**
-                     * 看图识花响应事件
-                     */
                     break;
                     default:
                         break;

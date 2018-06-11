@@ -72,8 +72,7 @@ public class SelectFlower extends AppCompatActivity {
     private Map<String,Object> item;//数据项;
     private MyListViewAdapter myListViewAdapter;
     public static Handler handler;
-    private Button btn_record,btn_voice;
-    private AudioRecoderUtils audioRecoderUtils;
+    private Button btn_voice;
     private PopupWindowFactory  popupWindowFactory;
     private LinearLayout l1;
     private SpeechRecognizer mIat;
@@ -99,10 +98,9 @@ public class SelectFlower extends AppCompatActivity {
         text_notFind_select = (TextView)findViewById(R.id.text_notFind_select);
         delSearch_select =(ImageView)findViewById(R.id.delSearch_select);
         edit_search_select = (EditText)findViewById(R.id.edit_search_select);
-        btn_record  =(Button)findViewById(R.id.btn_record);
         btn_voice =findViewById(R.id.btn_voice);
         btn_voice.setOnClickListener(OnClickListener);
-        audioRecoderUtils = new AudioRecoderUtils();
+        l1 = (LinearLayout)findViewById(R.id.l1);
         View view = View.inflate(SelectFlower.this, R.layout.layout_microphone, null);
         popupWindowFactory = new PopupWindowFactory(this,view);
         mImageView = (ImageView) view.findViewById(R.id.iv_recording_icon);
@@ -167,9 +165,7 @@ public class SelectFlower extends AppCompatActivity {
                 myListViewAdapter.notifyDataSetChanged();
             }
         });
-        btn_record.setOnTouchListener(onTouchListener);
 
-        audioRecoderUtils.setOnAudioStatusUpdateListener(onAudioStatusUpdateListener);
 
         handler = new Handler(){
             @Override
@@ -241,37 +237,8 @@ public class SelectFlower extends AppCompatActivity {
         myListViewAdapter.notifyDataSetChanged();
     }
 
-    private void requestPermissions() {
-        //判断是否开启摄像头权限
-        if ((ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) &&
-                (ContextCompat.checkSelfPermission(this,
-                        Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)
-                ) {
-            btn_record.setOnTouchListener(onTouchListener);
 
-            //判断是否开启语音权限
-        } else {
-            //请求获取摄像头权限
-            ActivityCompat.requestPermissions((Activity) this,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO}, 66);
-        }
 
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == 66) {
-            if ((grantResults[0] == PackageManager.PERMISSION_GRANTED) && (grantResults[1] == PackageManager.PERMISSION_GRANTED) ) {
-                btn_record.setOnTouchListener(onTouchListener);
-            } else {
-
-                Toast.makeText(this, "已拒绝权限！", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
     AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -289,30 +256,6 @@ public class SelectFlower extends AppCompatActivity {
             startActivity(intent);
         }
     };
-
-    View.OnTouchListener  onTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            switch (event.getAction()){
-
-                case MotionEvent.ACTION_DOWN:
-
-                    popupWindowFactory.showAtLocation(l1, Gravity.CENTER, 0, 0);
-                    btn_record.setText("松开结束");
-                    audioRecoderUtils.startRecord();
-                    break;
-
-                case MotionEvent.ACTION_UP:
-
-                   // audioRecoderUtils.stopRecord();        //结束录音（保存录音文件）
-                    audioRecoderUtils.cancelRecord();    //取消录音（不保存录音文件）
-                    popupWindowFactory.dismiss();
-                    btn_record.setText("按住说话");
-                    break;
-            }
-            return true;
-        }
-    };
     /**
      * 录音的点击事件
      */
@@ -322,6 +265,7 @@ public class SelectFlower extends AppCompatActivity {
             if(edit_search_select.getText().toString().length()!=0)
                 edit_search_select.setText("");
             setParam();
+            popupWindowFactory.showAtLocation(l1,Gravity.CENTER, 0, 0);
             int ret =mIat.startListening(mRecognizerListener);
             if(ret!= ErrorCode.SUCCESS){
                 Log.e("big11","识别失败，错误码："+ret);
@@ -386,6 +330,8 @@ public class SelectFlower extends AppCompatActivity {
 
         @Override
         public void onVolumeChanged(int volume, byte[] data) {
+            mImageView.getDrawable().setLevel((int) (3000 + 6000 * volume / 100));
+            //mTextView.setText(TimeUtils.long2String(time));
         }
 
         @Override
@@ -425,18 +371,6 @@ public class SelectFlower extends AppCompatActivity {
         return ret.toString();
     }
 
-    AudioRecoderUtils.OnAudioStatusUpdateListener onAudioStatusUpdateListener = new AudioRecoderUtils.OnAudioStatusUpdateListener() {
-        @Override
-        public void onUpdate(double db, long time) {
-            mImageView.getDrawable().setLevel((int) (3000 + 6000 * db / 100));
-            mTextView.setText(TimeUtils.long2String(time));
-        }
-
-        @Override
-        public void onStop(String filePath) {
-            mTextView.setText(TimeUtils.long2String(0));
-        }
-    };
 
     @Override
     protected void onDestroy() {

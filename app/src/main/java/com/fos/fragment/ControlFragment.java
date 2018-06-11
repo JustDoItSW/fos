@@ -72,7 +72,7 @@ public class ControlFragment extends Fragment {
     private View view;
    // private FloatingActionButton fab_light,fab_heating,fab_nut,fab_watering,fab_ctrl;
     private TextView nowState;
-    private ImageView fab_light,fab_heating,fab_nut,fab_watering,fab_ctrl,fab_wind;
+    public static ImageView fab_light,fab_heating,fab_nut,fab_watering,fab_ctrl,fab_wind;
     private WaveView progress_light,progress_heating,progress_hum,progress_nutrition;
     private NumberProgressBar progress_water,progress_nut;
     private KeyguardManager mKeyguardManager = null;
@@ -172,11 +172,6 @@ public class ControlFragment extends Fragment {
         _scanner.scanAll();
     }
     private void init(){
-//        fab_light =  (FloatingActionButton)view.findViewById(R.id.fab_light) ;
-//        fab_heating =  (FloatingActionButton)view.findViewById(R.id.fab_heating) ;
-//        fab_watering =  (FloatingActionButton)view.findViewById(R.id.fab_watering) ;
-//        fab_nut =  (FloatingActionButton)view.findViewById(R.id.fab_nut) ;
-//        fab_ctrl =  (FloatingActionButton)view.findViewById(R.id.fab_ctrl) ;
         fab_light =  (ImageView)view.findViewById(R.id.fab_light) ;
         fab_heating =  (ImageView)view.findViewById(R.id.fab_heating) ;
         fab_watering =  (ImageView)view.findViewById(R.id.fab_watering) ;

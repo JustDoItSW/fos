@@ -8,6 +8,7 @@ import com.fos.activity.CommunityActivity;
 import com.fos.activity.CommunityInfoActivity;
 import com.fos.activity.CreateCommunityActivity;
 import com.fos.activity.LoginActivity;
+import com.fos.activity.RecordControlActivity;
 import com.fos.activity.SelectFlower;
 import com.fos.activity.UserInfoActivity;
 import com.fos.entity.Community;
@@ -67,36 +68,28 @@ public class SimpleClientHandler extends SimpleChannelInboundHandler<String> {
     public void recvHandler(String str){
         LogUtil.i("MING",str);
         Message msg = new Message();
-        Message msg2 =  new Message();
         msg.what = 0x001;
-        msg2.what = 0x001;
         Bundle bundle = new Bundle();
         bundle.putString("info", str);
         msg.setData(bundle);
-        msg2.setData(bundle);
-        if(str.equals("loginError")){
-            /**
-             * 登录失败
-             */
-            msg.what = 0x003;
-            LoginActivity.handler.sendMessage(msg);
-        }
-        else if(str.equals("submitCommunitySuccessful") || str.equals("submitCommunityFailure")){
-
-            CreateCommunityActivity.handler.sendMessage(msg);
-        } else{
             try {
                 String className = InfomationAnalysis.judgeInfo(str);
                 if (className.equals("error")) {
                     msg.what = 0x003;
+                    Message msg2 = msg;
+                    Message msg3 = msg;
                     if(FlowerFragment.handler!=null)
-                    FlowerFragment.handler.sendMessage(msg);
-                    msg2.what = 0x003;
+                        FlowerFragment.handler.sendMessage(msg);
                     if(SelectFlower.handler!=null)
-                    SelectFlower.handler.sendMessage(msg2);
+                        SelectFlower.handler.sendMessage(msg2);
+                    if(RecordControlActivity.handler!=null)
+                        SelectFlower.handler.sendMessage(msg3);
                 } else if (className.equals("Data")) {
-                    ControlFragment.handler.sendMessage(msg);
-                    DataFragment.handler.sendMessage(msg2);
+                    Message msg2 = msg;
+                    if(ControlFragment.handler!=null)
+                        ControlFragment.handler.sendMessage(msg);
+                    if(DataFragment.handler!=null)
+                        DataFragment.handler.sendMessage(msg2);
                 } else if(className.equals("Community")) {
                     int type = InfomationAnalysis.jsonToCommunity(str)[0].getType();
                     if(type == 0) {
@@ -111,10 +104,14 @@ public class SimpleClientHandler extends SimpleChannelInboundHandler<String> {
                 }else if(className.equals("Evaluate")) {
                     CommunityInfoActivity.handler.sendMessage(msg);
                 }else if (className.equals("Flower")) {
+                    Message msg2 = msg;
+                    Message msg3 = msg;
                     if(FlowerFragment.handler!=null)
-                    FlowerFragment.handler.sendMessage(msg);
+                        FlowerFragment.handler.sendMessage(msg);
                     if(SelectFlower.handler!=null)
-                    SelectFlower.handler.sendMessage(msg2);
+                        SelectFlower.handler.sendMessage(msg2);
+                    if(RecordControlActivity.handler!=null)
+                        SelectFlower.handler.sendMessage(msg3);
                 } else if (className.equals("UserInfo")) {
                     int type = InfomationAnalysis.jsonToUserInfo(str).getType();
                     if(type==0){
@@ -136,5 +133,5 @@ public class SimpleClientHandler extends SimpleChannelInboundHandler<String> {
                 e.printStackTrace();
             }
         }
-    }
+
 }

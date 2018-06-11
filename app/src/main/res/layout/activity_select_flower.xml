@@ -137,13 +137,6 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="按住说话"
-        android:textColor="@android:color/white"
-        android:id="@+id/btn_record"
-        android:background="@color/colorPrimary" />
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:text="开始录音"
         android:textColor="@android:color/white"
         android:id="@+id/btn_voice"
