@@ -64,33 +64,26 @@ public class SelectFlower extends AppCompatActivity {
     private RelativeLayout exit_selectFlower;
     private ListView listView;
     private LinearLayout layout_notFind_select;
-    private TextView text_notFind_select,mTextView;
+    private TextView text_notFind_select;
     private EditText edit_search_select;
     private FlowerDao flowerDao;
-    private ImageView delSearch_select,mImageView;
+    private ImageView delSearch_select;
     private List<Flower> data;//数据源
     private Map<String,Object> item;//数据项;
     private MyListViewAdapter myListViewAdapter;
     public static Handler handler;
-    private Button btn_voice;
-    private PopupWindowFactory  popupWindowFactory;
-    private LinearLayout l1;
-    private SpeechRecognizer mIat;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        mIat=SpeechRecognizer.createRecognizer(SelectFlower.this,mInitListener);
         SpeechUtility.createUtility( this, SpeechConstant.APPID+"=5b1cb818"); //+SpeechConstant.FORCE_LOGIN+"=true"
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_flower);
         init();
-      //  requestPermissions();
         initData();
         initListView();
     }
 
     public void init(){
         flowerDao  = FlowerDao.getInstance();
-        l1 = (LinearLayout)findViewById(R.id.l1) ;
         exit_selectFlower = (RelativeLayout)findViewById(R.id.exit_selectFlower);
         data = new ArrayList<Flower>();//存放数据
         listView = (ListView)findViewById(R.id.list_flowerSelect);
@@ -98,14 +91,6 @@ public class SelectFlower extends AppCompatActivity {
         text_notFind_select = (TextView)findViewById(R.id.text_notFind_select);
         delSearch_select =(ImageView)findViewById(R.id.delSearch_select);
         edit_search_select = (EditText)findViewById(R.id.edit_search_select);
-        btn_voice =findViewById(R.id.btn_voice);
-        btn_voice.setOnClickListener(OnClickListener);
-        l1 = (LinearLayout)findViewById(R.id.l1);
-        View view = View.inflate(SelectFlower.this, R.layout.layout_microphone, null);
-        popupWindowFactory = new PopupWindowFactory(this,view);
-        mImageView = (ImageView) view.findViewById(R.id.iv_recording_icon);
-        mTextView = (TextView) view.findViewById(R.id.tv_recording_time);
-
 
         exit_selectFlower.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -259,126 +244,5 @@ public class SelectFlower extends AppCompatActivity {
     /**
      * 录音的点击事件
      */
-    View.OnClickListener OnClickListener=new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if(edit_search_select.getText().toString().length()!=0)
-                edit_search_select.setText("");
-            setParam();
-            popupWindowFactory.showAtLocation(l1,Gravity.CENTER, 0, 0);
-            int ret =mIat.startListening(mRecognizerListener);
-            if(ret!= ErrorCode.SUCCESS){
-                Log.e("big11","识别失败，错误码："+ret);
-            }
-        }
-    };
 
-    /**
-     * 初始化监听器。
-     */
-    private InitListener mInitListener = new InitListener() {
-
-        @Override
-        public void onInit(int code) {
-            Log.d("11", "SpeechRecognizer init() code = " + code);
-        }
-    };
-
-    /**
-     * 参数设置
-     * @return
-     */
-    public void setParam(){
-        if(mIat==null)
-            mIat=SpeechRecognizer.createRecognizer(this,null);
-        mIat.setParameter(SpeechConstant.DOMAIN, "iat");
-        // 设置语言
-        mIat.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
-        // 设置语言区域
-        mIat.setParameter(SpeechConstant.ACCENT, "mandarin");
-    }
-
-    /**
-     * 听写监听器。
-     */
-    private RecognizerListener mRecognizerListener = new RecognizerListener() {
-
-        @Override
-        public void onBeginOfSpeech() {
-        }
-
-        @Override
-        public void onError(SpeechError error) {
-            // Tips：
-            // 错误码：10118(您没有说话)，可能是录音机权限被禁，需要提示用户打开应用的录音权限。
-            if(error.getErrorCode() == 14002) {
-                Log.e("11",error.getPlainDescription(true)+"\n请确认是否已开通翻译功能" );
-            } else {
-                Log.e("11error",error.getPlainDescription(true));
-            }
-        }
-
-        @Override
-        public void onEndOfSpeech() {
-        }
-
-        @Override
-        public void onResult(RecognizerResult results, boolean isLast) {
-            Log.d("result11文字", results.getResultString());
-            printResult(results);
-        }
-
-        @Override
-        public void onVolumeChanged(int volume, byte[] data) {
-            mImageView.getDrawable().setLevel((int) (3000 + 6000 * volume / 100));
-            //mTextView.setText(TimeUtils.long2String(time));
-        }
-
-        @Override
-        public void onEvent(int eventType, int arg1, int arg2, Bundle obj) {
-        }
-    };
-
-    //回调结果：
-    private void printResult(RecognizerResult results) {
-        String text = parseIatResult(results.getResultString());
-        // 自动填写地址
-        Log.e("111",text);
-        edit_search_select.append(text);
-    }
-
-    /**
-     *  解析数据用
-     * @param json
-     * @return 解析好的数据
-     */
-    public static String parseIatResult(String json) {
-        StringBuffer ret = new StringBuffer();
-        try {
-            JSONTokener tokener = new JSONTokener(json);
-            JSONObject joResult = new JSONObject(tokener);
-
-            JSONArray words = joResult.getJSONArray("ws");
-            for (int i = 0; i < words.length(); i++) {
-                // 转写结果词，默认使用第一个结果
-                JSONArray items = words.getJSONObject(i).getJSONArray("cw");
-                JSONObject obj = items.getJSONObject(0);
-                ret.append(obj.getString("w"));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return ret.toString();
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if( null != mIat ){
-            // 退出时释放连接
-            mIat.cancel();
-            mIat.destroy();
-        }
-    }
 }

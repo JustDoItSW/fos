@@ -43,11 +43,7 @@
         <activity
             android:name=".activity.LoginActivity"
             android:windowSoftInputMode="adjustPan|stateHidden">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".activity.RegisterActivity" />
         <activity android:name=".activity.CommunityActivity" />
@@ -57,7 +53,13 @@
         <activity android:name=".activity.UserInfoActivity" />
         <activity android:name=".activity.CommunityInfoActivity" />
         <activity android:name=".activity.CameraRollActivity"></activity>
-        <activity android:name=".activity.RecordControlActivity"></activity>
+        <activity android:name=".activity.RecordControlActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
