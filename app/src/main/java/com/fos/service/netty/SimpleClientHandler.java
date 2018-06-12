@@ -83,7 +83,7 @@ public class SimpleClientHandler extends SimpleChannelInboundHandler<String> {
                     if(SelectFlower.handler!=null)
                         SelectFlower.handler.sendMessage(msg2);
                     if(RecordControlActivity.handler!=null)
-                        SelectFlower.handler.sendMessage(msg3);
+                        RecordControlActivity.handler.sendMessage(msg3);
                 } else if (className.equals("Data")) {
                     Message msg2 = msg;
                     if(ControlFragment.handler!=null)
@@ -111,7 +111,7 @@ public class SimpleClientHandler extends SimpleChannelInboundHandler<String> {
                     if(SelectFlower.handler!=null)
                         SelectFlower.handler.sendMessage(msg2);
                     if(RecordControlActivity.handler!=null)
-                        SelectFlower.handler.sendMessage(msg3);
+                        RecordControlActivity.handler.sendMessage(msg3);
                 } else if (className.equals("UserInfo")) {
                     int type = InfomationAnalysis.jsonToUserInfo(str).getType();
                     if(type==0){

@@ -9,6 +9,11 @@ import java.io.Serializable;
 public class ServiceMessage implements Serializable{
     private String content;
 
+    public ServiceMessage(){};
+    public ServiceMessage(String content){
+        this.content = content;
+    }
+
     public String getContent() {
         return content;
     }

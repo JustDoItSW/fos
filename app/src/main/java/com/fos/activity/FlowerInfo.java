@@ -108,20 +108,15 @@ public class FlowerInfo extends AppCompatActivity {
     }
     private void getIntentData(){
         intent = getIntent();
-        if(intent.getExtras().getBoolean("isSelect")) {
+        flower = (Flower)intent.getSerializableExtra("Flower");
+        if(intent.getBooleanExtra("isSelect",false)) {
             table_flowerInfo.setText("您将要添加的植物是");
             btn_finish.setVisibility(View.VISIBLE);
         }else {
-            table_flowerInfo.setText(intent.getExtras().getString("flowerName"));
+            table_flowerInfo.setText(flower.getFlowerName());
             btn_finish.setVisibility(View.GONE);
         }
-        flower = new Flower();
-        flower.setFlowerInfo(intent.getExtras().getString("flowerInfo"));
-        flower.setFlowerTemp(intent.getExtras().getString("temp"));
-        flower.setFlowerLux(intent.getExtras().getString("light"));
-        flower.setFlowerSoilHum(intent.getExtras().getString("hum"));
-        flower.setFlowerName(intent.getExtras().getString("flowerName"));
-        flower.setFlowerImage(intent.getExtras().getString("flowerImage"));
+
         flowerName_info.setText(flower.getFlowerName().toString());
         Glide.with(FlowerInfo.this)
                 .load(flower.getFlowerImage().toString())
@@ -129,7 +124,6 @@ public class FlowerInfo extends AppCompatActivity {
                 .priority(Priority.HIGH)
                 .into(image_flowerInfo);
         image_flowerInfo.setScaleType(ImageView.ScaleType.CENTER_CROP);
-      //  LoadImageUtil.onLoadImage(image_flowerInfo, flower.getFlowerImage().toString());
         flowerInfo = InfomationAnalysis.jsonToFlowerInfo(flower.getFlowerInfo().toString());
 
     }

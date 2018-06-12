@@ -227,17 +227,10 @@ public class SelectFlower extends AppCompatActivity {
     AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Log.e("info","选中的花名为:"+data.get(position).getFlowerName()+"");
-            Bundle  bundle = new Bundle();
-            bundle.putString("flowerName",data.get(position).getFlowerName());
-            bundle.putString("flowerImage",data.get(position).getFlowerImage());
-            bundle.putString("flowerInfo",data.get(position).getFlowerInfo());
-            bundle.putString("light",data.get(position).getFlowerLux());
-            bundle.putString("hum",data.get(position).getFlowerSoilHum());
-            bundle.putString("temp",data.get(position).getFlowerTemp());
-            bundle.putBoolean("isSelect",true);
+
             Intent intent = new Intent(SelectFlower.this,FlowerInfo.class);
-            intent.putExtras(bundle);
+            intent.putExtra("Flower",data.get(position));
+            intent.putExtra("isSelect",true);
             startActivity(intent);
         }
     };

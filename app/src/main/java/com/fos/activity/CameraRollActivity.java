@@ -1,11 +1,11 @@
 package com.fos.activity;
 
-import android.app.Activity;
-import android.content.Context;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -16,35 +16,26 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.baidu.aip.imageclassify.AipImageClassify;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.fos.R;
 import com.fos.entity.AIPlant;
-import com.fos.tensorflow.Classifier;
-import com.fos.tensorflow.RecognitionScoreView;
-import com.fos.tensorflow.TensorFlowImageClassifier;
+
 import com.fos.util.AIPlantUtil;
 import com.fos.util.GetPath;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-
-import id.zelory.compressor.Compressor;
 
 public class CameraRollActivity extends AppCompatActivity {
 
     private TextView resultView,photograph,album;
-    private Bitmap bitmap;
     private RelativeLayout exit_recognition;
     private Button chooseImage;
     private AlertDialog dialog;
@@ -52,13 +43,14 @@ public class CameraRollActivity extends AppCompatActivity {
     private static String API_KEY=null;
     private static String SECRET_KEY=null;
     private static AipImageClassify aipImageClassify=null;
+    private String resultContent = "";
+    private Handler  handler;
     /**
      * 返回码
      */
     private int CAMERA_REQUEST_CODE=1;
     private int GALLY_REQUEST_CODE=2;
     private ImageView image;
-    private TextView results;
     public GetPath getPath=CreateCommunityActivity.getPath;
     public ArrayList<AIPlant> al=null;
 
@@ -75,7 +67,6 @@ public class CameraRollActivity extends AppCompatActivity {
         resultView = (TextView) findViewById(R.id.results);//显示结果
         exit_recognition = (RelativeLayout)findViewById(R.id.exit_recognition);
         image=findViewById(R.id.image);
-        results=findViewById(R.id.results);
         APP_ID=getResources().getString(R.string.AIPlantAPP_ID);
         API_KEY=getResources().getString(R.string.AIPlantAPI_KEY);
         SECRET_KEY=getResources().getString(R.string.AIPlantSECRET_KEY);
@@ -83,6 +74,17 @@ public class CameraRollActivity extends AppCompatActivity {
 
         exit_recognition.setOnClickListener(onClickListener);
         chooseImage.setOnClickListener(onClickListener);
+
+        handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if(msg.what ==  0x001){
+                    resultView.setText(resultContent);
+                    resultContent = "";
+                }
+            }
+        };
     }
 
     @Override
@@ -244,7 +246,11 @@ public class CameraRollActivity extends AppCompatActivity {
         }finally{
             for(int i=0;i<al.size();i++){
                 Log.e("aiplant",i+" name:"+al.get(i).getName()+" score:"+al.get(i).getScore());
+                resultContent+="为"+al.get(i).getName()+"的概率为:"+al.get(i).getScore()+"\n";
             }
+            resultContent+="该图片为"+al.get(0).getName()+"的概率最高，所以可能为"+al.get(0).getName()+"\n";
+            handler.sendEmptyMessage(0x001);
+
         }
 
     }

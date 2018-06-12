@@ -20,11 +20,14 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.fos.R;
+import com.fos.dao.FlowerDao;
 import com.fos.entity.Flower;
+import com.fos.entity.ServiceMessage;
 import com.fos.entity.UserMessage;
 import com.fos.fragment.ControlFragment;
 import com.fos.myView.WaveView;
 import com.fos.service.netty.Client;
+import com.fos.util.InfomationAnalysis;
 import com.fos.util.MyRecordAdapter;
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
@@ -55,6 +58,8 @@ public class RecordControlActivity extends AppCompatActivity {
     private List<Object> data;
     private MyRecordAdapter myRecordAdapter;
     private SpeechRecognizer mIat;
+
+    private FlowerDao flowerDao;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mIat=SpeechRecognizer.createRecognizer(RecordControlActivity.this,mInitListener);
@@ -79,6 +84,7 @@ public class RecordControlActivity extends AppCompatActivity {
         }
     }
     private void init(){
+        flowerDao= FlowerDao.getInstance();
         intent = getIntent();
         flower = (Flower)intent.getSerializableExtra("Flower");
         mWaveView = (WaveView) findViewById(R.id.wave_view);
@@ -94,9 +100,14 @@ public class RecordControlActivity extends AppCompatActivity {
             @Override
             public void handleMessage(Message msg) {
                 if(msg.what == 0x003){
-                    Toast.makeText(RecordControlActivity.this,"您查询的植物："+recordContent.substring(2)+"不存在",Toast.LENGTH_SHORT).show();
+                    addData(new ServiceMessage("您查询的植物不存在"));
                 }else{
-
+                    addData(new ServiceMessage("已为您找的一下植物："));
+                    Bundle bundle =  msg.getData();
+                    String info = bundle.getString("info");
+                    Flower[] flowers  = InfomationAnalysis.jsonToFlower(info);
+                    flowerDao.insertFlower(flowers);
+                    addData(flowers);
                 }
             }
         };
@@ -108,71 +119,81 @@ public class RecordControlActivity extends AppCompatActivity {
         list_record.setAdapter(myRecordAdapter);
     }
 
+    private void addData(Object o){
+        data.add(o);
+        myRecordAdapter.notifyDataSetChanged();
+    }
     private void recordSendToService(String str){
-        switch (str){
+        switch (str) {
             case "开灯":
                 Client.getClient("b");
-              //  nowState.setText("当前灯光状态：打开");
-                if(ControlFragment.fab_light!=null)
-                 ControlFragment.fab_light.setSelected(false);
+                addData(new ServiceMessage("当前灯光状态:打开。"));
+                if (ControlFragment.fab_light != null)
+                    ControlFragment.fab_light.setSelected(false);
                 break;
             case "关灯":
                 Client.getClient("e");
-            //    nowState.setText("当前灯光状态：关闭");
-                if(ControlFragment.fab_light!=null)
+                addData(new ServiceMessage("当前灯光状态:关闭。"));
+                if (ControlFragment.fab_light != null)
                     ControlFragment.fab_light.setSelected(false);
                 break;
             case "浇水":
                 Client.getClient("m");
-              //  nowState.setText("当前浇水状态：打开");
-                if(ControlFragment.fab_light!=null)
+                addData(new ServiceMessage("当前浇水状态:开始。"));
+                if (ControlFragment.fab_light != null)
                     ControlFragment.fab_light.setSelected(false);
                 break;
             case "停止浇水":
                 Client.getClient("1");
-            //    nowState.setText("当前浇水状态：关闭");
-                if(ControlFragment.fab_light!=null)
+                addData(new ServiceMessage("当前浇水状态:停止。"));
+                if (ControlFragment.fab_light != null)
                     ControlFragment.fab_light.setSelected(false);
                 break;
             case "加热":
                 Client.getClient("p");
-             //   nowState.setText("当前加热状态：开启");
-                if(ControlFragment.fab_light!=null)
+                addData(new ServiceMessage("当前加热状态:开始。"));
+                if (ControlFragment.fab_light != null)
                     ControlFragment.fab_light.setSelected(false);
                 break;
             case "停止加热":
                 Client.getClient("s");
-            //    nowState.setText("当前加热状态：关闭");
-                if(ControlFragment.fab_light!=null)
+                addData(new ServiceMessage("当前加热状态:停止。"));
+                if (ControlFragment.fab_light != null)
                     ControlFragment.fab_light.setSelected(false);
                 break;
             case "施肥":
                 Client.getClient("v");
-             //   nowState.setText("当前施肥状态：开启");
-                if(ControlFragment.fab_light!=null)
+                addData(new ServiceMessage("当前施肥状态:开始。"));
+                if (ControlFragment.fab_light != null)
                     ControlFragment.fab_light.setSelected(false);
                 break;
             case "停止施肥":
                 Client.getClient("y");
-             //   nowState.setText("当前施肥状态：关闭");
-                if(ControlFragment.fab_light!=null)
+                addData(new ServiceMessage("当前施肥状态:停止."));
+                if (ControlFragment.fab_light != null)
                     ControlFragment.fab_light.setSelected(false);
                 break;
             case "开启智能模式":
-                Client.getClient("smart"+flower.getFlowerName());
-             //   nowState.setText("当前智能模式 ：开启");
-                if(ControlFragment.fab_light!=null)
+                Client.getClient("smart" + flower.getFlowerName());
+                addData(new ServiceMessage("当前智能模式:开启。"));
+                if (ControlFragment.fab_light != null)
                     ControlFragment.fab_light.setSelected(false);
                 break;
             case "关闭智能模式":
                 Client.getClient("smart");
-             //   nowState.setText("当前智能模式：关闭");
-                if(ControlFragment.fab_light!=null)
+                addData(new ServiceMessage("当前智能模式:关闭。"));
+                if (ControlFragment.fab_light != null)
                     ControlFragment.fab_light.setSelected(false);
                 break;
-                default:
-                    if(str.length()>=3&&str.substring(0,2).equals("查询"))
-                        Client.getClient("search"+str.substring(2));
+            default:
+                if (str.length() >= 3 && str.substring(0, 2).equals("查询")){
+                    addData(new ServiceMessage("正在为您查询" + str.substring(2) + "。"));
+                    Client.getClient("search" + str.substring(2));
+                }
+                else if("你好".equals(str)){
+                    addData(new ServiceMessage("你好。"));
+                }else
+                    addData(new ServiceMessage("对不起，我不知道你在说什么。"));
         }
     }
     View.OnClickListener onClickListener=new View.OnClickListener() {
@@ -265,11 +286,8 @@ public class RecordControlActivity extends AppCompatActivity {
                 controlRecord();
                 if (!"".equals(recordContent)) {
                     String str = recordContent;
+                    addData(new UserMessage(str));
                     recordSendToService(str);
-                    UserMessage userMessage = new UserMessage();
-                    userMessage.setContent(str);
-                    data.add(userMessage);
-                    myRecordAdapter.notifyDataSetChanged();
                     recordContent = "";
                 }
         }

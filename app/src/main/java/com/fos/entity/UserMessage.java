@@ -8,6 +8,9 @@ import java.io.Serializable;
 
 public class UserMessage implements Serializable {
     private String content;
+    public UserMessage(){}
+    public UserMessage(String content){this.content = content;
+    }
 
     public String getContent() {
         return content;

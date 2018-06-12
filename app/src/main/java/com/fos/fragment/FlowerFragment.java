@@ -210,18 +210,9 @@ public class FlowerFragment extends Fragment {
     AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            String str = data.get(position).getFlowerName();
-            String str2 = data.get(position).getFlowerImage();
-            String str3 = data.get(position).getFlowerInfo();
-
-            Log.e("info","选中的花名为:"+position+" "+str+""+str2);
-            Bundle  bundle = new Bundle();
-            bundle.putString("flowerName",str);
-            bundle.putString("flowerImage",str2);
-            bundle.putString("flowerInfo",str3);
-            bundle.putBoolean("isSelect",false);
             Intent intent = new Intent(getContext(),FlowerInfo.class);
-            intent.putExtras(bundle);
+            intent.putExtra("Flower",data.get(position));
+            intent.putExtra("isSelect",false);
             startActivity(intent);
         }
     };

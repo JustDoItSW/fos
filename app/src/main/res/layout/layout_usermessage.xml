@@ -4,9 +4,8 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        android:text="我是内容"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
         android:textSize="18dp"
         android:textColor="#ffffff"
         android:layout_centerVertical="true"
