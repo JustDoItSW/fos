@@ -76,7 +76,6 @@ public class CameraRollActivity extends AppCompatActivity {
         exit_recognition = (RelativeLayout)findViewById(R.id.exit_recognition);
         image=findViewById(R.id.image);
         results=findViewById(R.id.results);
-        al=new ArrayList<AIPlant>();
         APP_ID=getResources().getString(R.string.AIPlantAPP_ID);
         API_KEY=getResources().getString(R.string.AIPlantAPI_KEY);
         SECRET_KEY=getResources().getString(R.string.AIPlantSECRET_KEY);
@@ -89,9 +88,6 @@ public class CameraRollActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        for(int i=0;i<al.size();i++){
-            Log.e("aiplant",i+" name:"+al.get(i).getName()+" score:"+al.get(i).getScore());
-        }
     }
 
     /**
@@ -102,6 +98,12 @@ public class CameraRollActivity extends AppCompatActivity {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(al!=null&&al.size()!=0)
+        {
+                al.clear();
+                Log.e("aiplant==",""+al.size());
+        }
+            al=new ArrayList<AIPlant>();
         if(requestCode==CAMERA_REQUEST_CODE) {
             if (data == null) {
                 return;
@@ -239,6 +241,10 @@ public class CameraRollActivity extends AppCompatActivity {
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        }finally{
+            for(int i=0;i<al.size();i++){
+                Log.e("aiplant",i+" name:"+al.get(i).getName()+" score:"+al.get(i).getScore());
+            }
         }
 
     }
