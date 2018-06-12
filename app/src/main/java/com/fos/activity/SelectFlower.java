@@ -79,7 +79,7 @@ public class SelectFlower extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mIat=SpeechRecognizer.createRecognizer(SelectFlower.this,mInitListener);
-        SpeechUtility.createUtility( this, SpeechConstant.APPID+"=5b1cb818"); //+SpeechConstant.FORCE_LOGIN+"=true"
+        SpeechUtility.createUtility( this, SpeechConstant.APPID+"="+getResources().getString(R.string.VoiceClouldAPPID)); //+SpeechConstant.FORCE_LOGIN+"=true"
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_flower);
         init();

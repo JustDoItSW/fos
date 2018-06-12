@@ -71,10 +71,10 @@ public class CreateCommunityActivity extends AppCompatActivity {
     /**
      * 返回码
      */
-    private static int CAMERA_REQUEST_CODE=1;
-    private static int GALLY_REQUEST_CODE=2;
+    private int CAMERA_REQUEST_CODE=1;
+    private int GALLY_REQUEST_CODE=2;
 //      192.168.23.1
-    public static String mBaseUrl="http://47.106.161.42:8080/ImgServlet/";
+    public static String mBaseUrl=null;
     public static OkHttpClient okHttpClient=new OkHttpClient();
     public static ExecutorService mThreadPool= Executors.newCachedThreadPool();
     public static GetPath getPath= GetPath.getInstance();
@@ -90,6 +90,7 @@ public class CreateCommunityActivity extends AppCompatActivity {
 
     private void init(){
         intent = getIntent();
+        mBaseUrl=getResources().getString(R.string.UploadPicURL);
         userInfo = (UserInfo)intent.getSerializableExtra("UserInfo");
         dm = CreateCommunityActivity.this.getResources().getDisplayMetrics();
         exit_create = (RelativeLayout)findViewById(R.id.exit_create);
