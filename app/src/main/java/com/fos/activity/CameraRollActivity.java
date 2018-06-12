@@ -244,12 +244,19 @@ public class CameraRollActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }finally{
-            for(int i=0;i<al.size();i++){
-                Log.e("aiplant",i+" name:"+al.get(i).getName()+" score:"+al.get(i).getScore());
-                resultContent+="为"+al.get(i).getName()+"的概率为:"+al.get(i).getScore()+"\n";
+            try {
+                for (int i = 0; i < al.size(); i++) {
+                    Log.e("aiplant", i + " name:" + al.get(i).getName() + " score:" + al.get(i).getScore());
+                    resultContent += "为" + al.get(i).getName() + "的概率为:" + al.get(i).getScore() + "\n";
+                }
+                resultContent += "\n该图片为" + al.get(0).getName() + "的概率最高，所以可能为" + al.get(0).getName();
+            }catch (Exception  e){
+                Log.e("aiplant", "图片异常");
+                resultContent  =  "图片异常";
+                e.printStackTrace();
+            }finally {
+                handler.sendEmptyMessage(0x001);
             }
-            resultContent+="该图片为"+al.get(0).getName()+"的概率最高，所以可能为"+al.get(0).getName()+"\n";
-            handler.sendEmptyMessage(0x001);
 
         }
 

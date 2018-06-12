@@ -102,7 +102,7 @@ public class RecordControlActivity extends AppCompatActivity {
                 if(msg.what == 0x003){
                     addData(new ServiceMessage("您查询的植物不存在"));
                 }else{
-                    addData(new ServiceMessage("已为您找的一下植物："));
+                    addData(new ServiceMessage("已为您找的以下植物："));
                     Bundle bundle =  msg.getData();
                     String info = bundle.getString("info");
                     Flower[] flowers  = InfomationAnalysis.jsonToFlower(info);

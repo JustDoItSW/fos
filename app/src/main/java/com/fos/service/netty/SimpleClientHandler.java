@@ -68,16 +68,22 @@ public class SimpleClientHandler extends SimpleChannelInboundHandler<String> {
     public void recvHandler(String str){
         LogUtil.i("MING",str);
         Message msg = new Message();
+        Message msg2 = new Message();
+        Message msg3 = new Message();
         msg.what = 0x001;
+        msg2.what = 0x001;
+        msg3.what = 0x001;
         Bundle bundle = new Bundle();
         bundle.putString("info", str);
         msg.setData(bundle);
+        msg2.setData(bundle);
+        msg3.setData(bundle);
             try {
                 String className = InfomationAnalysis.judgeInfo(str);
                 if (className.equals("error")) {
                     msg.what = 0x003;
-                    Message msg2 = msg;
-                    Message msg3 = msg;
+                    msg2.what = 0x003;
+                    msg3.what = 0x003;
                     if(FlowerFragment.handler!=null)
                         FlowerFragment.handler.sendMessage(msg);
                     if(SelectFlower.handler!=null)
@@ -85,7 +91,8 @@ public class SimpleClientHandler extends SimpleChannelInboundHandler<String> {
                     if(RecordControlActivity.handler!=null)
                         RecordControlActivity.handler.sendMessage(msg3);
                 } else if (className.equals("Data")) {
-                    Message msg2 = msg;
+                    msg.what = 0x003;
+                    msg2.what = 0x003;
                     if(ControlFragment.handler!=null)
                         ControlFragment.handler.sendMessage(msg);
                     if(DataFragment.handler!=null)
@@ -104,8 +111,6 @@ public class SimpleClientHandler extends SimpleChannelInboundHandler<String> {
                 }else if(className.equals("Evaluate")) {
                     CommunityInfoActivity.handler.sendMessage(msg);
                 }else if (className.equals("Flower")) {
-                    Message msg2 = msg;
-                    Message msg3 = msg;
                     if(FlowerFragment.handler!=null)
                         FlowerFragment.handler.sendMessage(msg);
                     if(SelectFlower.handler!=null)
