@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:clipChildren="false">
+
+
+    <RelativeLayout
+        android:id="@+id/r1_top"
+        android:layout_above="@+id/rl_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextureView
+            android:id="@+id/showCamera"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <View
+            android:id="@+id/ring_camera"
+            android:layout_centerInParent="true"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:background="@drawable/round_view_stroke_white"/>
+
+        <ImageView
+            android:id="@+id/picture_local"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="-300dp"
+        >
+        <include  layout="@layout/layout_resultshow"/>
+        <RelativeLayout
+            android:id="@+id/rl1_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
+            <RelativeLayout
+                android:id="@+id/takePicture"
+                android:background="@drawable/round_view_stroke_theme"
+                android:layout_centerInParent="true"
+                android:layout_width="60dp"
+                android:layout_height="60dp">
+
+                <View
+                    android:background="@drawable/round_view_theme"
+                    android:layout_centerInParent="true"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp" />
+
+            </RelativeLayout>
+            <ImageView
+                android:id="@+id/changeCamera"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="30dp"
+                android:src="@mipmap/ic_photo_b"/>
+
+            <TextView
+                android:id="@+id/fromPhotograph"
+                android:background="@drawable/view_stroke_theme"
+                android:text="相册"
+                android:textSize="15dp"
+                android:textColor="@color/ThemeColor"
+                android:gravity="center"
+                android:layout_marginLeft="30dp"
+                android:layout_centerVertical="true"
+                android:layout_width="40dp"
+                android:layout_height="35dp" />
+        </RelativeLayout>
+
+
+
+
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/exit_Camera"
+        android:layout_marginLeft="15dp"
+        style="@style/tab_menu_text">
+        <ImageView
+            android:src="@mipmap/ic_back_w"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:visibility="invisible"
+        android:layout_alignParentRight="true"
+        android:id="@+id/remake"
+        android:layout_marginRight="15dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="15dp">
+        <ImageView
+            android:src="@mipmap/ic_photo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </RelativeLayout>
+
+</RelativeLayout>

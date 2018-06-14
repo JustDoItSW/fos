@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Message;
 
 import com.fos.R;
+import com.fos.activity.CameraActivity;
 import com.fos.activity.CommunityActivity;
 import com.fos.activity.CommunityInfoActivity;
 import com.fos.activity.CreateCommunityActivity;
@@ -70,26 +71,32 @@ public class SimpleClientHandler extends SimpleChannelInboundHandler<String> {
         Message msg = new Message();
         Message msg2 = new Message();
         Message msg3 = new Message();
+        Message msg4 = new Message();
         msg.what = 0x001;
         msg2.what = 0x001;
         msg3.what = 0x001;
+        msg4.what = 0x001;
         Bundle bundle = new Bundle();
         bundle.putString("info", str);
         msg.setData(bundle);
         msg2.setData(bundle);
         msg3.setData(bundle);
+        msg4.setData(bundle);
             try {
                 String className = InfomationAnalysis.judgeInfo(str);
                 if (className.equals("error")) {
                     msg.what = 0x003;
                     msg2.what = 0x003;
                     msg3.what = 0x003;
+                    msg4.what = 0x003;
                     if(FlowerFragment.handler!=null)
                         FlowerFragment.handler.sendMessage(msg);
                     if(SelectFlower.handler!=null)
                         SelectFlower.handler.sendMessage(msg2);
                     if(RecordControlActivity.handler!=null)
                         RecordControlActivity.handler.sendMessage(msg3);
+                    if(CameraActivity.handler!=null)
+                        CameraActivity.handler.sendMessage(msg4);
                 } else if (className.equals("Data")) {
                     msg.what = 0x003;
                     msg2.what = 0x003;
@@ -117,6 +124,8 @@ public class SimpleClientHandler extends SimpleChannelInboundHandler<String> {
                         SelectFlower.handler.sendMessage(msg2);
                     if(RecordControlActivity.handler!=null)
                         RecordControlActivity.handler.sendMessage(msg3);
+                    if(CameraActivity.handler!=null)
+                        CameraActivity.handler.sendMessage(msg4);
                 } else if (className.equals("UserInfo")) {
                     int type = InfomationAnalysis.jsonToUserInfo(str).getType();
                     if(type==0){

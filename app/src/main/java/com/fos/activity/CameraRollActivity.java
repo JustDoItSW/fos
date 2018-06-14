@@ -35,7 +35,7 @@ import java.util.ArrayList;
 
 public class CameraRollActivity extends AppCompatActivity {
 
-    private TextView resultView,photograph,album;
+    private TextView resultView,photograph,album,result_flower;
     private RelativeLayout exit_recognition;
     private Button chooseImage;
     private AlertDialog dialog;

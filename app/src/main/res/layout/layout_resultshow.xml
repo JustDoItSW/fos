@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="400dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginBottom="-200dp"
+    android:background="#ffffff">
+
+    <com.mingle.widget.LoadingView
+        android:visibility="invisible"
+        android:layout_centerInParent="true"
+        android:id="@+id/isAppraisal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:loadingText="努力识别中..." />
+    <RelativeLayout
+        android:id="@+id/rl2_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_marginBottom="-200dp"
+        android:visibility="invisible"
+        android:background="#ffffff">
+        <TextView
+            android:id="@+id/result_flowerName"
+            android:layout_marginTop="10dp"
+            android:text=""
+            android:textSize="18dp"
+            android:textColor="#000000"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+            <ImageView
+                android:layout_below="@+id/result_flowerName"
+                android:id="@+id/result_flowerImage"
+                android:layout_marginTop="30dp"
+                android:layout_centerHorizontal="true"
+                android:layout_width="220dp"
+                android:layout_height="220dp"
+                android:background="@drawable/flowerimage"/>
+
+        <Button
+            android:id="@+id/btn1"
+            android:layout_marginLeft="70dp"
+            android:layout_marginBottom="30dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/btn_round_theme"
+            android:text="生成美图"
+            android:textColor="#ffffff"
+            android:layout_width="100dp"
+            android:layout_height="30dp" />
+
+        <Button
+            android:id="@+id/btn2"
+            android:layout_marginRight="70dp"
+            android:layout_marginBottom="30dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/btn_round_theme"
+            android:text="分享识花结果"
+            android:textColor="#ffffff"
+            android:layout_width="100dp"
+            android:layout_height="30dp" />
+
+        <Button
+            android:id="@+id/remake2"
+            android:layout_marginRight="70dp"
+            android:layout_marginBottom="30dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/btn_round_theme"
+            android:text="再来一次吧"
+            android:textSize="20dp"
+            android:textColor="#ffffff"
+            android:layout_width="180dp"
+            android:layout_height="54dp" />
+    </RelativeLayout>
+
+
+</RelativeLayout>

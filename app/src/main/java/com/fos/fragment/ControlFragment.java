@@ -70,7 +70,6 @@ public class ControlFragment extends Fragment {
     private static ControlFragment controlFragment;
     private BottomSheetBehavior bottomSheetBehavior;
     private View view;
-   // private FloatingActionButton fab_light,fab_heating,fab_nut,fab_watering,fab_ctrl;
     private TextView nowState;
     public static ImageView fab_light,fab_heating,fab_nut,fab_watering,fab_ctrl,fab_wind;
     private WaveView progress_light,progress_heating,progress_hum,progress_nutrition;
@@ -155,17 +154,6 @@ public class ControlFragment extends Fragment {
                 }
             }
         });
-//        ViewGroup.LayoutParams para = _videoView.getLayoutParams();
-//        DisplayMetrics dm = getContext().getResources().getDisplayMetrics();
-//        para.width  = dm.heightPixels;
-//        para.height = dm.widthPixels;
-//        _videoView.setLayoutParams(para);
-//        _videoView.setFullScreen(true);
-//        ObjectAnimator objectAnimator  = ObjectAnimator.ofFloat(_videoView,"rotation",0,90);
-//        objectAnimator.setDuration(1);
-//        _videoView.setPivotX(dm.heightPixels/2);
-//        _videoView.setPivotY(dm.widthPixels/2);
-//        objectAnimator.start();
         _deviceId = "brexco.2.us.ytong.rakwireless.com";
         _devicePsk = "admin";
         _fps = 20;
@@ -249,6 +237,7 @@ public class ControlFragment extends Fragment {
             public void onClick(View v) {
                 if(v.isSelected()){
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
                     v.setSelected(false);
                 }else {
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -266,6 +255,7 @@ public class ControlFragment extends Fragment {
                 }else{
                     imageView.setSelected(true);
                 }
+
             }
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
