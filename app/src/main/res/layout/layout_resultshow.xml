@@ -30,10 +30,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
+        <TextView
+            android:visibility="invisible"
+            android:layout_marginTop="10dp"
+            android:textSize="10dp"
+            android:text="植物可能生病啦,点击查看详情"
+            android:layout_below="@+id/result_flowerName"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/result_disease"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
             <ImageView
                 android:layout_below="@+id/result_flowerName"
                 android:id="@+id/result_flowerImage"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="40dp"
                 android:layout_centerHorizontal="true"
                 android:layout_width="220dp"
                 android:layout_height="220dp"
@@ -70,7 +81,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:background="@drawable/btn_round_theme"
-            android:text="再来一次吧"
+            android:text="再拍一张吧"
             android:textSize="20dp"
             android:textColor="#ffffff"
             android:layout_width="180dp"

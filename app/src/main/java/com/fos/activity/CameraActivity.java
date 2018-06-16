@@ -59,6 +59,8 @@ import com.fos.R;
 import com.fos.entity.AIPlant;
 import com.fos.entity.Flower;
 import com.fos.service.netty.Client;
+import com.fos.tensorflow.Classifier;
+import com.fos.tensorflow.TensorFlowImageClassifier;
 import com.fos.util.AIPlantUtil;
 import com.fos.util.BitmapSetting;
 import com.fos.util.GetPath;
@@ -82,6 +84,17 @@ import java.util.List;
 
 public class CameraActivity extends AppCompatActivity {
 
+    // Classifier
+    private Bitmap bitmap;
+    private Classifier classifier;
+    private static final int INPUT_SIZE = 224;
+    private static final int IMAGE_MEAN = 128;
+    private static final float IMAGE_STD = 128.0f;
+    private static final String INPUT_NAME = "input";
+    private static final String OUTPUT_NAME = "final_result";
+    private static final String MODEL_FILE = "file:///android_asset/optimized_mobilenet_plant_graph.pb";
+    private static final String LABEL_FILE = "file:///android_asset/plant_labels.txt";
+
     private static String APP_ID=null;
     private static String API_KEY=null;
     private static String SECRET_KEY=null;
@@ -96,7 +109,7 @@ public class CameraActivity extends AppCompatActivity {
 
     private Button  btn1,btn2,remake2;
     private RelativeLayout takePicture,exit_Camera,rl_bottom,rl_top,rl1_bottom,rl2_bottom,remake;
-    private TextView fromPhotograph,result_flowerName;
+    private TextView fromPhotograph,result_flowerName,result_disease;
     private LoadingView isAppraisal;
     private ImageView changeCamera,picture_local,result_flowerImage;
     private ObjectAnimator objectAnimator1,objectAnimator2,objectAnimator4,objectAnimator5;
@@ -144,6 +157,17 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     private void init(){
+        classifier =
+                TensorFlowImageClassifier.create(
+                        getAssets(),
+                        MODEL_FILE,
+                        LABEL_FILE,
+                        INPUT_SIZE,
+                        IMAGE_MEAN,
+                        IMAGE_STD,
+                        INPUT_NAME,
+                        OUTPUT_NAME);
+
         exit_Camera = (RelativeLayout)findViewById(R.id.exit_Camera) ;
         changeCamera = (ImageView)findViewById(R.id.changeCamera);
         picture_local  = (ImageView)findViewById(R.id.picture_local);
@@ -155,6 +179,7 @@ public class CameraActivity extends AppCompatActivity {
         takePicture = (RelativeLayout)findViewById(R.id.takePicture) ;
         result_flowerName = (TextView)findViewById(R.id.result_flowerName);
         result_flowerImage = (ImageView)findViewById(R.id.result_flowerImage);
+        result_disease = (TextView)findViewById(R.id.result_disease);
         isAppraisal = (LoadingView)findViewById(R.id.isAppraisal);
         btn1  = (Button)findViewById(R.id.btn1);
         btn2  = (Button)findViewById(R.id.btn2);
@@ -205,6 +230,8 @@ public class CameraActivity extends AppCompatActivity {
                                     startActivity(intent);
                                 }
                             });
+                            //病识别
+                            classifyImage(bitmap);
                         }else{
                             result_flowerImage.setOnClickListener(null);
                         }
@@ -302,10 +329,13 @@ public class CameraActivity extends AppCompatActivity {
 
     private void  remake(){
         startCamera();
+        bitmap = null;
         picture_local.setImageBitmap(null);
         rl1_bottom.setVisibility(View.VISIBLE);
         rl2_bottom.setVisibility(View.INVISIBLE);
         isAppraisal.setVisibility(View.INVISIBLE);
+        result_disease.setVisibility(View.INVISIBLE);
+        result_disease.setText("植物可能生病啦,点击查看详情");
         remake.setVisibility(View.INVISIBLE);
         ring_camera.setVisibility(View.VISIBLE);
         animationSet2.start();
@@ -636,10 +666,12 @@ public class CameraActivity extends AppCompatActivity {
                 fileOutputStream.flush();
                 fileOutputStream.close();
 
-//                //获得图片
-//                BitmapFactory.Options options = new BitmapFactory.Options();
-//                options.inSampleSize = 2;
-//                Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length, options);
+                //获得图片
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = 2;
+                bitmap = BitmapFactory.decodeByteArray(data, 0, data.length, options);
+
+
 
                 Log.e("onResponse","判断前"+picturePath);
                 afterTakePicture();
@@ -712,6 +744,10 @@ public class CameraActivity extends AppCompatActivity {
                 afterTakePicture();
                 updateUI(path);
                 getResult(path);
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
+                    bitmap = Bitmap.createScaledBitmap(bitmap, 224, 224, false);
+                }catch (Exception  e){e.printStackTrace();}
             }else{
                 Log.e("onResponse", "onActivityResult: path为空" );
             }
@@ -809,6 +845,23 @@ public class CameraActivity extends AppCompatActivity {
             cameraDevice.close();
             cameraDevice=null;
 
+        }
+
+    }
+
+    private void classifyImage(Bitmap bitmap) {
+
+        final List<Classifier.Recognition> results = classifier.recognizeImage(bitmap);
+
+        if(results.size()>0) {
+            final String str = results.get(0).getTitle();
+            result_disease.setVisibility(View.VISIBLE);
+            result_disease.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    result_disease.setText("可能为:"+str);
+                }
+            });
         }
 
     }
