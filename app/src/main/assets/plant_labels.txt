@@ -24,7 +24,7 @@ potato healthy
 raspberry healthy
 soybean healthy
 squash powdery mildew
-strawberry leaf scorch
+草莓叶焦黄
 strawberry healthy
 tomato bacterial spot
 tomato early blight
