@@ -11,18 +11,24 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.fos.R;
 import com.fos.entity.Community;
 import com.fos.entity.Evaluate;
 import com.fos.entity.UserInfo;
 import com.fos.service.netty.Client;
+import com.fos.util.BitmapSetting;
 import com.fos.util.InfomationAnalysis;
 import com.fos.util.MyEvaluateAdapter;
 import com.fos.util.MyGridViewAdapter;
+import com.fos.util.TimeUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,6 +38,7 @@ import java.util.List;
 public class CommunityInfoActivity extends AppCompatActivity {
 
     private Intent intent;
+    private ImageView image_comInfoIcon;
     private Community community;
     private TextView userName,content,date,supportCount,browseCount,evaluateCount,shareCount,noneEvaluate;
     private Button sendEvaluate;
@@ -61,6 +68,7 @@ public class CommunityInfoActivity extends AppCompatActivity {
         userInfo = (UserInfo)intent.getSerializableExtra("UserInfo") ;
 
         exit_communityInfo = (RelativeLayout)findViewById(R.id.exit_communityInfo);
+        image_comInfoIcon = (ImageView)findViewById(R.id.image_comInfoIcon);
         sendEvaluate = (Button)findViewById(R.id.sendEvaluate);
         evaluateContent = (EditText)findViewById(R.id.evaluateContent);
         userName =  (TextView)findViewById(R.id.communityInfo_userName);
@@ -77,13 +85,36 @@ public class CommunityInfoActivity extends AppCompatActivity {
         list_allEvaluate =  (ListView) findViewById(R.id.list_allEvaluate);
 
         userName.setText(community.getUserInfo().getUserName()+"");
-        date.setText(community.getTime()+"");
+        date.setText(TimeUtils.dateBefore(community.getTime()));
         content.setText(community.getContent()+"");
 
         supportCount.setText(community.getSupport()+"");
         browseCount.setText(community.getBrowse()+"");
         evaluateCount.setText(community.getEvaluate()+"");
         shareCount.setText("999+");
+        Glide.with(CommunityInfoActivity.this)
+                .load(community.getUserInfo().getUserHeadImage())
+                .transform(new BitmapSetting(CommunityInfoActivity.this))
+                .priority(Priority.HIGH)
+                .into(image_comInfoIcon);
+        image_comInfoIcon.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+        supportCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(v.isSelected()) {
+                    v.setSelected(false);
+                    community.setType(5);
+                    Client.getClient(InfomationAnalysis.BeanToCommunity(community));
+                    supportCount.setText((Integer.parseInt(supportCount.getText().toString()) - 1) + "");
+                }else{
+                    v.setSelected(true);
+                    community.setType(4);
+                    Client.getClient(InfomationAnalysis.BeanToCommunity(community));
+                    supportCount.setText((Integer.parseInt(supportCount.getText().toString()) + 1) + "");
+                }
+            }
+        });
 
 
         exit_communityInfo.setOnClickListener(onClickListener);
@@ -96,10 +127,15 @@ public class CommunityInfoActivity extends AppCompatActivity {
                 Bundle  bundle = msg.getData();
                 String info  = bundle.getString("info");
                 evaluates  = InfomationAnalysis.JsonToEvaluate(info);
-                content.setText("");
-                content.setEnabled(true);
+                evaluateContent.setText("");
+                evaluateContent.setEnabled(true);
                 sendEvaluate.setEnabled(true);
-                refreshListView(evaluates);
+                if(evaluates[0].getType() ==  1){
+                    Toast.makeText(CommunityInfoActivity.this,"评论失败！",Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(CommunityInfoActivity.this, "评论成功！", Toast.LENGTH_SHORT).show();
+                    refreshListView(evaluates);
+                }
             }
         };
     }
@@ -136,14 +172,18 @@ public class CommunityInfoActivity extends AppCompatActivity {
                 list_allEvaluate.setVisibility(View.INVISIBLE);
             }else{
                 Evaluate evaluate = new Evaluate();
-                evaluate.setCommunityID(community.getID());
+                evaluate.setCommunityID(community.getId());
                 evaluate.setType(1);
-                Client.getClient("getEvaluate"+community.getID());
+                Client.getClient(InfomationAnalysis.BeanToEvaluate(evaluate));
             }
     }
 
     private void refreshListView(Evaluate[] evaluates){
         map.clear();
+        if(evaluates.length>0){
+            noneEvaluate.setVisibility(View.GONE);
+            list_allEvaluate.setVisibility(View.VISIBLE);
+        }
         for(int i=0;i<evaluates.length;i++){
             map.add(evaluates[i]);
         }
@@ -168,15 +208,19 @@ public class CommunityInfoActivity extends AppCompatActivity {
                     finish();
                     break;
                 case R.id.sendEvaluate:
-                    evaluateContent.setEnabled(false);
-                    sendEvaluate.setEnabled(false);
-                    Evaluate evaluate  = new Evaluate();
-                    evaluate.setUserInfo(userInfo);
-                    evaluate.setContent(evaluateContent.getText().toString());
-                    evaluate.setDate(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(System.currentTimeMillis())));
-                    evaluate.setCommunityID(community.getID());
-                    evaluate.setType(0);
-                    Client.getClient(InfomationAnalysis.BeanToEvaluate(evaluate));
+                    if(evaluateContent.getText().toString().equals(""))
+                        Toast.makeText(CommunityInfoActivity.this,"评论内容不能为空！",Toast.LENGTH_SHORT).show();
+                    else {
+                        evaluateContent.setEnabled(false);
+                        sendEvaluate.setEnabled(false);
+                        Evaluate evaluate = new Evaluate();
+                        evaluate.setUserInfo(userInfo);
+                        evaluate.setContent(evaluateContent.getText().toString());
+                        evaluate.setDate(TimeUtils.getCurrentTime());
+                        evaluate.setCommunityID(community.getId());
+                        evaluate.setType(0);
+                        Client.getClient(InfomationAnalysis.BeanToEvaluate(evaluate));
+                    }
                     break;
                     default:
                         break;

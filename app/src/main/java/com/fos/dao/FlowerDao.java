@@ -33,7 +33,7 @@ public class FlowerDao {
 
     public void insertFlower(Flower[]  flower){
 
-
+        Flower flower1;
         for(int i= 0;i<flower.length;i++) {
             Cursor cursor = DataSupport.findBySQL("select * from flower where flowername = ?",flower[i].getFlowerName());
             if(cursor.moveToFirst()){
@@ -41,6 +41,7 @@ public class FlowerDao {
                 Log.e("info","插入的花名为："+flowerName+"");
                 if(flowerName.equals(flower[i].getFlowerName()))
                     Log.e("info",""+flowerName+"已存在");
+               //     flower[i].updateAll("flowername = ?", flowerName);
                     continue;
             }
             flower[i].save();

@@ -279,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                         break;
                     case 3 :
-                        intent  = new Intent(MainActivity.this,CameraRollActivity.class);
+                        intent  = new Intent(MainActivity.this,CameraActivity.class);
                         intent.putExtra("UserInfo",userInfo);
                         startActivity(intent);
                         break;

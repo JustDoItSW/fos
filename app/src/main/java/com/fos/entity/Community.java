@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 
 public class Community implements Serializable{
-    private String ID;
+    private int id;
     /**
      * 用户对象
      */
@@ -53,12 +53,12 @@ public class Community implements Serializable{
     }
 
 
-    public String getID() {
-        return ID;
+    public int getId() {
+        return id;
     }
 
-    public void setID(String ID) {
-        this.ID = ID;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public UserInfo getUserInfo() {
@@ -111,7 +111,8 @@ public class Community implements Serializable{
         this.className = className;
     }
     public String toString(){
-        return "Community [userInfo=" + userInfo.toString() + ", time=" + time + ", content=" + content + ", picture=" + picture + ", browse=" + browse +
+
+        return "Community [userInfo=" + userInfo.toString() + ", id=" + id +", time=" + time + ", content=" + content + ", picture=" + picture + ", browse=" + browse +
                 ", support=" + support + ",evaluate=" + evaluate+", className=" + className + ",type="+type+" ]";
     }
 }

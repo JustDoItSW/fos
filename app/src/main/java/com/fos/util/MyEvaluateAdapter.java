@@ -65,7 +65,7 @@ public class MyEvaluateAdapter extends BaseAdapter {
                 .priority(Priority.HIGH)
                 .into(viewholder.userIcon);
         viewholder.userName.setText(mapList.get(position).getUserInfo().getUserName().toString());
-        viewholder.date.setText(mapList.get(position).getDate().toString());
+        viewholder.date.setText(TimeUtils.dateBefore(mapList.get(position).getDate().toString()));
         viewholder.context.setText(mapList.get(position).getContent().toString());
         return convertView;
     }

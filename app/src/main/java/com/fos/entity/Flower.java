@@ -15,7 +15,6 @@ import java.io.Serializable;
 
 public class Flower extends DataSupport implements Serializable{
 
-    private  Bitmap image;
     /**
      * 植物ID
      */
@@ -51,15 +50,7 @@ public class Flower extends DataSupport implements Serializable{
      */
     private String flowerInfo;
 
-    private int type;
 
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
-    }
 
 
     public String getFlowerImage() {

@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.speech.tts.TextToSpeech;
 import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v7.app.AppCompatActivity;
@@ -44,8 +45,9 @@ import org.json.JSONTokener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-public class RecordControlActivity extends AppCompatActivity {
+public class RecordControlActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
     private Flower flower;
     private Intent intent;
@@ -58,6 +60,7 @@ public class RecordControlActivity extends AppCompatActivity {
     private List<Object> data;
     private MyRecordAdapter myRecordAdapter;
     private SpeechRecognizer mIat;
+    private TextToSpeech tts;
 
     private FlowerDao flowerDao;
     @Override
@@ -92,6 +95,7 @@ public class RecordControlActivity extends AppCompatActivity {
         exit_record = (RelativeLayout)findViewById(R.id.exit_record);
         img_record = (ImageView)findViewById(R.id.img_record) ;
         list_record = (ListView)findViewById(R.id.list_record);
+        tts = new TextToSpeech(this, this);
         btn_record.setOnClickListener(onClickListener);
         exit_record.setOnClickListener(onClickListener);
 
@@ -100,8 +104,10 @@ public class RecordControlActivity extends AppCompatActivity {
             @Override
             public void handleMessage(Message msg) {
                 if(msg.what == 0x003){
-                    addData(new ServiceMessage("您查询的植物不存在"));
+                    tts.speak("您查询的植物不存在。",TextToSpeech.QUEUE_FLUSH,null);
+                    addData(new ServiceMessage("您查询的植物不存在。"));
                 }else{
+                    tts.speak("已为您找的以下植物：",TextToSpeech.QUEUE_FLUSH,null);
                     addData(new ServiceMessage("已为您找的以下植物："));
                     Bundle bundle =  msg.getData();
                     String info = bundle.getString("info");
@@ -127,73 +133,92 @@ public class RecordControlActivity extends AppCompatActivity {
         switch (str) {
             case "开灯":
                 Client.getClient("b");
+                tts.speak("当前灯光状态:打开。",TextToSpeech.QUEUE_FLUSH,null);
                 addData(new ServiceMessage("当前灯光状态:打开。"));
                 if (ControlFragment.fab_light != null)
                     ControlFragment.fab_light.setSelected(false);
                 break;
             case "关灯":
                 Client.getClient("e");
+                tts.speak("当前灯光状态:关闭。",TextToSpeech.QUEUE_FLUSH,null);
                 addData(new ServiceMessage("当前灯光状态:关闭。"));
                 if (ControlFragment.fab_light != null)
                     ControlFragment.fab_light.setSelected(false);
                 break;
             case "浇水":
                 Client.getClient("m");
+                tts.speak("当前浇水状态:开始。",TextToSpeech.QUEUE_FLUSH,null);
                 addData(new ServiceMessage("当前浇水状态:开始。"));
                 if (ControlFragment.fab_light != null)
                     ControlFragment.fab_light.setSelected(false);
                 break;
             case "停止浇水":
                 Client.getClient("1");
+                tts.speak("当前浇水状态:停止。",TextToSpeech.QUEUE_FLUSH,null);
                 addData(new ServiceMessage("当前浇水状态:停止。"));
                 if (ControlFragment.fab_light != null)
                     ControlFragment.fab_light.setSelected(false);
                 break;
             case "加热":
                 Client.getClient("p");
+                tts.speak("当前加热状态:开始。",TextToSpeech.QUEUE_FLUSH,null);
                 addData(new ServiceMessage("当前加热状态:开始。"));
                 if (ControlFragment.fab_light != null)
                     ControlFragment.fab_light.setSelected(false);
                 break;
             case "停止加热":
                 Client.getClient("s");
+                tts.speak("当前加热状态:停止。",TextToSpeech.QUEUE_FLUSH,null);
                 addData(new ServiceMessage("当前加热状态:停止。"));
                 if (ControlFragment.fab_light != null)
                     ControlFragment.fab_light.setSelected(false);
                 break;
             case "施肥":
                 Client.getClient("v");
+                tts.speak("当前施肥状态:开始。",TextToSpeech.QUEUE_FLUSH,null);
                 addData(new ServiceMessage("当前施肥状态:开始。"));
                 if (ControlFragment.fab_light != null)
                     ControlFragment.fab_light.setSelected(false);
                 break;
             case "停止施肥":
                 Client.getClient("y");
-                addData(new ServiceMessage("当前施肥状态:停止."));
+                tts.speak("当前施肥状态:停止.",TextToSpeech.QUEUE_FLUSH,null);
+                addData(new ServiceMessage("当前施肥状态:停止。"));
                 if (ControlFragment.fab_light != null)
                     ControlFragment.fab_light.setSelected(false);
                 break;
             case "开启智能模式":
                 Client.getClient("smart" + flower.getFlowerName());
+                tts.speak("当前智能模式:开启。",TextToSpeech.QUEUE_FLUSH,null);
                 addData(new ServiceMessage("当前智能模式:开启。"));
                 if (ControlFragment.fab_light != null)
                     ControlFragment.fab_light.setSelected(false);
                 break;
             case "关闭智能模式":
                 Client.getClient("smart");
+                tts.speak("当前智能模式:关闭。",TextToSpeech.QUEUE_FLUSH,null);
                 addData(new ServiceMessage("当前智能模式:关闭。"));
                 if (ControlFragment.fab_light != null)
                     ControlFragment.fab_light.setSelected(false);
                 break;
             default:
                 if (str.length() >= 3 && str.substring(0, 2).equals("查询")){
+                    tts.speak("正在为您查询",TextToSpeech.QUEUE_FLUSH,null);
                     addData(new ServiceMessage("正在为您查询" + str.substring(2) + "。"));
                     Client.getClient("search" + str.substring(2));
                 }
                 else if("你好".equals(str)){
+                    tts.speak("你好",TextToSpeech.QUEUE_FLUSH,null);
                     addData(new ServiceMessage("你好。"));
-                }else
+
+                }else if("傻逼".equals(str.substring(str.length()-2))){
+                    tts.speak("是的，我"+str,TextToSpeech.QUEUE_FLUSH,null);
+                    addData(new ServiceMessage("是的，我"+str));
+
+                }else {
+                    tts.speak("对不起，我不知道你在说什么。", TextToSpeech.QUEUE_FLUSH, null);
                     addData(new ServiceMessage("对不起，我不知道你在说什么。"));
+                }
         }
     }
     View.OnClickListener onClickListener=new View.OnClickListener() {
@@ -351,4 +376,18 @@ public class RecordControlActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onInit(int status) {
+        // 判断是否转化成功
+        if (status == TextToSpeech.SUCCESS){
+            //默认设定语言为中文，原生的android貌似不支持中文。
+            int result = tts.setLanguage(Locale.CHINESE);
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED){
+             //   Toast.makeText(MainActivity.this, R.string.notAvailable, Toast.LENGTH_SHORT).show();
+            }else{
+                //不支持中文就将语言设置为英文
+                tts.setLanguage(Locale.US);
+            }
+        }
+    }
 }

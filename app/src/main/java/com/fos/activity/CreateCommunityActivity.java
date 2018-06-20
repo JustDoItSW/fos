@@ -32,6 +32,7 @@ import com.fos.service.netty.Client;
 import com.fos.util.InfomationAnalysis;
 import com.fos.util.MyGridViewAdapter2;
 import com.fos.util.GetPath;
+import com.fos.util.TimeUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -356,7 +357,7 @@ public class CreateCommunityActivity extends AppCompatActivity {
         userInfo.setType(0);
         Community community = new Community();
         community.setPicture(res);
-        community.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(System.currentTimeMillis())));
+        community.setTime(TimeUtils.getCurrentTime());
         community.setContent(edit_community.getText().toString());
         community.setUserInfo(userInfo);
         Client.getClient(InfomationAnalysis.BeanToCommunity(community));

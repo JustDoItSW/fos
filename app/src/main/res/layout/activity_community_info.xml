@@ -36,16 +36,12 @@
             android:layout_height="wrap_content"/>
     </RelativeLayout>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/communityInfoLabel"
-        android:layout_marginBottom="50dp"
-       >
         <LinearLayout
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/communityInfoLabel"
+            android:layout_marginBottom="50dp"
             android:id="@+id/currentInfo"
             android:orientation="vertical">
             <LinearLayout
@@ -199,11 +195,14 @@
             <RelativeLayout
                 android:layout_margin="15dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
                 <ListView
                     android:id="@+id/list_allEvaluate"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:scrollbars="none"
+                    android:divider="#66bfbfbf"
+                    android:dividerHeight="0.1dp"
                     ></ListView>
 
                 <TextView
@@ -219,7 +218,6 @@
 
 
         </LinearLayout>
-    </ScrollView>
     <LinearLayout
         android:id="@+id/line_sendEvaluate"
         android:background="#ffffff"

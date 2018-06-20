@@ -159,4 +159,12 @@ public class CommunityActivity extends AppCompatActivity {
             startActivity(intent);
         }
     };
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Community community  = new Community();
+        community.setType(2);
+        Client.getClient(InfomationAnalysis.BeanToCommunity(community));
+    }
 }

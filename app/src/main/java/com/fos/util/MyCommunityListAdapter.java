@@ -21,6 +21,7 @@ import com.fos.activity.CommunityActivity;
 import com.fos.activity.CommunityInfoActivity;
 import com.fos.entity.Community;
 import com.fos.entity.Flower;
+import com.fos.service.netty.Client;
 
 import java.util.List;
 import java.util.Map;
@@ -85,7 +86,7 @@ public class MyCommunityListAdapter extends BaseAdapter {
                 .priority(Priority.HIGH)
                 .into(viewholder.userIcon);
         viewholder.userID.setText(mapList.get(position).getUserInfo().getUserName().toString());
-        viewholder.date.setText(mapList.get(position).getTime().toString());
+        viewholder.date.setText(TimeUtils.dateBefore(mapList.get(position).getTime().toString()));
         viewholder.comContext.setText(mapList.get(position).getContent().toString());
         viewholder.count_support.setText(mapList.get(position).getSupport()+"");
         viewholder.count_browse.setText(mapList.get(position).getBrowse()+"");
@@ -112,25 +113,34 @@ public class MyCommunityListAdapter extends BaseAdapter {
             viewholder.gridView.setAdapter(new MyGridViewAdapter(context, R.layout.layout_gridview, getAllImageUri(mapList.get(position).getPicture().toString().toString())));
         }
         viewholder.gridView.setLayoutParams(para);
+        final View finalConvertView = convertView;
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Community community = new Community();
+                community.setId(mapList.get(position).getId());
                 switch (v.getId()){
                     case R.id.count_support:
                         TextView textView1 = (TextView) v;
                         if(v.isSelected()) {
                             v.setSelected(false);
-                            textView1.setText((Integer.parseInt(textView1.getText().toString()) - 1) + "");
+                            community.setType(5);
+                            Client.getClient(InfomationAnalysis.BeanToCommunity(community));
+                            mapList.get(position).setSupport(mapList.get(position).getSupport()-1);
                         }else{
                             v.setSelected(true);
-
-                            textView1.setText((Integer.parseInt(textView1.getText().toString()) + 1) + "");
+                            community.setType(4);
+                            Client.getClient(InfomationAnalysis.BeanToCommunity(community));
+                            mapList.get(position).setSupport(mapList.get(position).getSupport()+1);
                         }
                         break;
                     case R.id.count_evaluate:
                         TextView textView3 = (TextView) v;
+                        community.setType(6);
+                        Client.getClient(InfomationAnalysis.BeanToCommunity(community));
+                        mapList.get(position).setBrowse(mapList.get(position).getBrowse()+1);
                         Intent intent = new Intent(context, CommunityInfoActivity.class);
-                             intent.putExtra("Community",mapList.get(position));
+                        intent.putExtra("Community",mapList.get(position));
                         intent.putExtra("UserInfo", CommunityActivity.userInfo);
                         context.startActivity(intent);
                         break;

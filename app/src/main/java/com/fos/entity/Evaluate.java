@@ -12,7 +12,7 @@ public class Evaluate {
     private String className = "Evaluate";
 
 
-    private String communityID;//s所属动态id
+    private int communityID;//所属动态id
     private int type;
 
     public int getType() {
@@ -46,11 +46,11 @@ public class Evaluate {
     public void setDate(String date) {
         this.date = date;
     }
-    public String getCommunityID() {
+    public int getCommunityID() {
         return communityID;
     }
 
-    public void setCommunityID(String communityID) {
+    public void setCommunityID(int communityID) {
         this.communityID = communityID;
     }
 
@@ -63,6 +63,6 @@ public class Evaluate {
     }
 
     public String toString() {
-        return "Evaluate [ userInfo"+userInfo.toString()+",content="+content+",date="+date+",className="+className+",communityID="+communityID+",type="+type+" ]";
+        return "Evaluate [ userInfo = "+userInfo.toString()+",content="+content+",date="+date+",className="+className+",communityID="+communityID+",type="+type+" ]";
     }
 }

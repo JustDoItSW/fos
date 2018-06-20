@@ -193,8 +193,6 @@ public class CameraActivity extends AppCompatActivity {
         SECRET_KEY=getResources().getString(R.string.AIPlantSECRET_KEY);
         aipImageClassify=AIPlantUtil.getAccess_token(APP_ID,API_KEY,SECRET_KEY);
 
-
-
         showCamera.setSurfaceTextureListener(surfaceTextureListener);//设置TextureView监听
         fromPhotograph.setOnClickListener(onClickListener);
         changeCamera.setOnClickListener(onClickListener);
@@ -852,16 +850,22 @@ public class CameraActivity extends AppCompatActivity {
     private void classifyImage(Bitmap bitmap) {
 
         final List<Classifier.Recognition> results = classifier.recognizeImage(bitmap);
-
-        if(results.size()>0) {
-            final String str = results.get(0).getTitle();
-            result_disease.setVisibility(View.VISIBLE);
-            result_disease.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    result_disease.setText("可能为:"+str);
-                }
-            });
+        final String title = results.get(0).getTitle();
+        final float confidence = results.get(0).getConfidence();
+        Log.e("info",results.get(0).getTitle()+results.get(0).getConfidence());
+        if(results.size()>0 && confidence>=0.4 ) {
+            if(!"健康".equals(title.substring(title.length()-2))) {
+                result_disease.setVisibility(View.VISIBLE);
+                result_disease.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        result_disease.setText("可能为:" + title);
+                    }
+                });
+            }else{
+                result_disease.setVisibility(View.VISIBLE);
+                result_disease.setText("你的植物很健康哦！");
+            }
         }
 
     }

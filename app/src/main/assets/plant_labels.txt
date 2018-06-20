@@ -1,38 +1,38 @@
-apple apple scab
-apple black rot
-apple cedar apple rust
-apple healthy
-blueberry healthy
-cherry including sour powdery mildew
-cherry including sour healthy
-corn maize cercospora leaf spot gray leaf spot
-corn maize common rust 
-corn maize northern leaf blight
-corn maize healthy
-grape black rot
-葡萄黑斑病
-grape leaf blight isariopsis leaf spot 
-grape healthy
-orange haunglongbing citrus greening 
-peach bacterial spot
-peach healthy
-pepper bell bacterial spot
-pepper bell healthy
-potato early blight
-potato late blight
-potato healthy
-raspberry healthy
-soybean healthy
-squash powdery mildew
-草莓叶焦黄
-strawberry healthy
-tomato bacterial spot
-tomato early blight
-tomato late blight
-tomato leaf mold
-tomato septoria leaf spot
-tomato spider mites two spotted spider mite
-tomato target spot
-tomato tomato yellow leaf curl virus
-tomato tomato mosaic virus
-tomato healthy
+苹果痂
+苹果黑腐病
+苹果雪松苹果锈
+苹果健康
+蓝莓健康
+樱桃酸白粉病
+樱桃酸腐健康
+玉米褐斑病叶片灰斑叶片斑
+玉米普通锈病
+玉米北叶片枯萎病
+玉米健康
+葡萄黑腐病
+黑斑病
+葡萄叶片叶锈病叶片斑
+葡萄健康
+柑橘黄龙病
+桃子细菌性斑点
+桃子健康
+辣椒顶细菌性斑点
+辣椒顶健康
+土豆早疫病
+土豆晚疫病
+土豆健康
+覆盆子健康
+大豆健康
+南瓜白粉病
+叶片焦黄
+草莓健康
+番茄细菌性斑点
+番茄早疫病
+番茄晚疫病
+番茄叶片发霉
+番茄斑枯叶片斑
+番茄蜘蛛螨二斑蜘蛛螨
+番茄目标斑病
+番茄黄叶片卷曲病毒
+番茄花叶病毒
+番茄健康
