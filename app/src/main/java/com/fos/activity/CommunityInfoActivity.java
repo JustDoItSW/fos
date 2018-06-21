@@ -132,8 +132,10 @@ public class CommunityInfoActivity extends AppCompatActivity {
                 sendEvaluate.setEnabled(true);
                 if(evaluates[0].getType() ==  1){
                     Toast.makeText(CommunityInfoActivity.this,"评论失败！",Toast.LENGTH_SHORT).show();
-                }else {
+                }else if(evaluates[0].getType() ==  0){
                     Toast.makeText(CommunityInfoActivity.this, "评论成功！", Toast.LENGTH_SHORT).show();
+                    refreshListView(evaluates);
+                }else{
                     refreshListView(evaluates);
                 }
             }

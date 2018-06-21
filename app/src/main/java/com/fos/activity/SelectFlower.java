@@ -231,6 +231,7 @@ public class SelectFlower extends AppCompatActivity {
             Intent intent = new Intent(SelectFlower.this,FlowerInfo.class);
             intent.putExtra("Flower",data.get(position));
             intent.putExtra("isSelect",true);
+            intent.putExtra("UserInfo",getIntent().getSerializableExtra("UserInfo"));
             startActivity(intent);
         }
     };

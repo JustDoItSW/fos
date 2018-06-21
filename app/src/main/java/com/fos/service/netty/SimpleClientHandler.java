@@ -8,6 +8,7 @@ import com.fos.activity.CameraActivity;
 import com.fos.activity.CommunityActivity;
 import com.fos.activity.CommunityInfoActivity;
 import com.fos.activity.CreateCommunityActivity;
+import com.fos.activity.FlowerInfo;
 import com.fos.activity.LoginActivity;
 import com.fos.activity.RecordControlActivity;
 import com.fos.activity.SelectFlower;
@@ -141,6 +142,10 @@ public class SimpleClientHandler extends SimpleChannelInboundHandler<String> {
                     }else if(type == 4){
                         msg.what =  0x002;
                         UserInfoActivity.handler.sendMessage(msg);//失败
+                    }else if(type  == 7){
+                        FlowerInfo.handler.sendEmptyMessage(0x001);
+                    }else if(type == 8){
+                        FlowerInfo.handler.sendEmptyMessage(0x002);
                     }
                 }
             } catch (Exception e) {

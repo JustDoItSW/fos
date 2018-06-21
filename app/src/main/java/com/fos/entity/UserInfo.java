@@ -43,6 +43,18 @@ public class UserInfo implements Serializable {
 
 
     private int type;
+    /**
+     * 用户绑定的花
+     */
+    private String flowerName;
+
+    public String getFlowerName() {
+        return flowerName;
+    }
+    public void setFlowerName(String flowerName) {
+        this.flowerName = flowerName;
+    }
+
 
     public int getType() {
         return type;
@@ -109,7 +121,8 @@ public class UserInfo implements Serializable {
 
     public String toString(){
         return "UserInfo [userId="+ userId + ", userName=" + userName +", userPassword=" + userPassword +", userHeadImage=" + userHeadImage +
-                ", userArduinoDeviceId=" + userArduinoDeviceId +", userCameraDeviceId=" + userCameraDeviceId + ", className=" + className + ",type="+type+"]";
+                ", userArduinoDeviceId=" + userArduinoDeviceId +", userCameraDeviceId=" + userCameraDeviceId + ", className=" + className + ", type=" +type + ", flowerName" + flowerName + "]";
     }
+
 
 }

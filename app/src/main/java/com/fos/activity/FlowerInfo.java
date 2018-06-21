@@ -2,6 +2,7 @@ package com.fos.activity;
 
 import android.content.Intent;
 import android.media.Image;
+import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,12 +14,15 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.fos.R;
 import com.fos.entity.Flower;
+import com.fos.entity.UserInfo;
 import com.fos.fragment.DataFragment;
+import com.fos.service.netty.Client;
 import com.fos.util.BitmapSetting;
 import com.fos.util.InfomationAnalysis;
 import com.fos.util.LoadImageUtil;
@@ -46,6 +50,8 @@ public class FlowerInfo extends AppCompatActivity {
     private String[] strData = {"土壤","光照","浇水","施肥"};
     private List<Map<String,String>> data;
     public static boolean isSelect ;
+    private UserInfo userInfo;
+    public static Handler handler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,18 +87,17 @@ public class FlowerInfo extends AppCompatActivity {
                 MainActivity.editor.putString("image",flower.getFlowerImage().toString());
                 //   MainActivity.editor.putString("nut",data.get(position).getFlowerN());
                 MainActivity.editor.putString("date",date);
-                MainActivity.editor.commit();
-
-                MainActivity.flower.setFlowerName(flower.getFlowerName().toString());
                 /**
                  * 这里选择了植物的花名，是否选择植物标识置为true
                  */
+                MainActivity.editor.commit();
                 MainActivity.isSelectedFlower=true;
-
-                MainActivity.flower.setFlowerLux(flower.getFlowerLux().toString());
-                MainActivity.flower.setFlowerSoilHum(flower.getFlowerSoilHum().toString());
-                MainActivity.flower.setFlowerTemp(flower.getFlowerTemp().toString());
-                MainActivity.flower.setFlowerImage(flower.getFlowerImage().toString());
+                MainActivity.flower = flower;
+//                MainActivity.flower.setFlowerName(flower.getFlowerName().toString());
+//                MainActivity.flower.setFlowerLux(flower.getFlowerLux().toString());
+//                MainActivity.flower.setFlowerSoilHum(flower.getFlowerSoilHum().toString());
+//                MainActivity.flower.setFlowerTemp(flower.getFlowerTemp().toString());
+//                MainActivity.flower.setFlowerImage(flower.getFlowerImage().toString());
                 MainActivity.browseDate =  date;
 
 
@@ -100,10 +105,27 @@ public class FlowerInfo extends AppCompatActivity {
                 message.what = 0x004;
                 message.setData(new Bundle());
                 DataFragment.handler.sendMessage(message);
-                finish();
+                userInfo.setFlowerName(flower.getFlowerName());
+                userInfo.setType(6);
+                Client.getClient(InfomationAnalysis.BeantoUserInfo(userInfo));
+                btn_finish.setEnabled(false);;
 
             }
         });
+
+        handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if(msg.what == 0x001){
+                    Toast.makeText(FlowerInfo.this,"植物选择成功！",Toast.LENGTH_SHORT).show();
+                    finish();
+                }else {
+                    Toast.makeText(FlowerInfo.this, "植物选择失败，请重试！", Toast.LENGTH_SHORT).show();
+                    btn_finish.setEnabled(true);
+                }
+            }
+        };
 
     }
     private void getIntentData(){
@@ -112,6 +134,7 @@ public class FlowerInfo extends AppCompatActivity {
         if(intent.getBooleanExtra("isSelect",false)) {
             table_flowerInfo.setText("您将要添加的植物是");
             btn_finish.setVisibility(View.VISIBLE);
+            userInfo = (UserInfo)intent.getSerializableExtra("UserInfo");
         }else {
             table_flowerInfo.setText(flower.getFlowerName());
             btn_finish.setVisibility(View.GONE);
