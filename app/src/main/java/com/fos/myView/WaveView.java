@@ -53,7 +53,7 @@ public class WaveView extends View {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setStrokeWidth(3);
         setStyle(Paint.Style.STROKE);
-        mPaint.setColor(Color.parseColor("#00daff"));
+        mPaint.setColor(Color.parseColor("#2c99e9"));
     }
 
     public void setStyle(Paint.Style style) {

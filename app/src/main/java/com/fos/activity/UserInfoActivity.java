@@ -163,6 +163,7 @@ public class UserInfoActivity extends AppCompatActivity {
     }
 
     private void createMyDialog(){
+
         AlertDialog.Builder builder = new AlertDialog.Builder(UserInfoActivity.this);
         dialog  = builder.create();
         View dialogView = View.inflate(UserInfoActivity.this,R.layout.selectimage,null);

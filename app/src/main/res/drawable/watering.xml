@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-<item android:state_selected="true" android:drawable="@mipmap/ic_watering_g"/>
-<item  android:drawable="@mipmap/ic_watering"/>
-</selector>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@android:id/background" android:drawable="@mipmap/ic_watering" />
+    <item android:id="@android:id/progress" >
+        <clip android:drawable="@mipmap/ic_watering_g" android:gravity="bottom" android:clipOrientation="vertical" />
+    </item>
+</layer-list>

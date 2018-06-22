@@ -129,7 +129,7 @@ public class RecordControlActivity extends AppCompatActivity implements TextToSp
         data.add(o);
         myRecordAdapter.notifyDataSetChanged();
     }
-    private void recordSendToService(String str){
+    public void recordSendToService(String str){
         switch (str) {
             case "开灯":
                 Client.getClient("b");
@@ -251,7 +251,6 @@ public class RecordControlActivity extends AppCompatActivity implements TextToSp
             btn_record.setSelected(false);
             img_record.setSelected(false);
             mWaveView.stop();
-
             mIat.cancel();
         }else {
             btn_record.setSelected(true);

@@ -30,9 +30,7 @@ import com.fos.util.MyEvaluateAdapter;
 import com.fos.util.MyGridViewAdapter;
 import com.fos.util.TimeUtils;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class CommunityInfoActivity extends AppCompatActivity {

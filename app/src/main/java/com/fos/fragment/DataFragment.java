@@ -154,7 +154,7 @@ public class DataFragment extends Fragment {
         data_flowerName.setText(MainActivity.flower.getFlowerName());
         data_flowerName_g.setText(MainActivity.flower.getFlowerName());
 
-        data_date.setText("已监测"+ TimeUtils.dateDiff(MainActivity.browseDate)+"天");
+        data_date.setText("已监测"+ TimeUtils.dateDiff(MainActivity.browseDate));
     }
     private void initLevel(){
         light_lv1.setBackgroundResource(R.drawable.round_view_gray);

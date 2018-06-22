@@ -1,6 +1,7 @@
 package com.fos.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.Image;
 import android.os.Handler;
 import android.os.Message;
@@ -26,6 +27,7 @@ import com.fos.service.netty.Client;
 import com.fos.util.BitmapSetting;
 import com.fos.util.InfomationAnalysis;
 import com.fos.util.LoadImageUtil;
+import com.fos.util.TimeUtils;
 
 import org.w3c.dom.Text;
 
@@ -38,6 +40,12 @@ import java.util.Map;
 
 public class FlowerInfo extends AppCompatActivity {
 
+    public static final String PREFERENCE_NAME = "SaveContent";
+
+    //Preferece机制的操作模式
+    public static int MODE = MODE_PRIVATE;
+    public static SharedPreferences.Editor editor;
+    private SharedPreferences sharedPreferences;
     private RelativeLayout exit_flowerInfo;
     private ImageView image_flowerInfo;
     private Button btn_finish;
@@ -79,33 +87,30 @@ public class FlowerInfo extends AppCompatActivity {
         btn_finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis()));
-                MainActivity.editor.putString("flowerName",flower.getFlowerName().toString());
-                MainActivity.editor.putString("light",flower.getFlowerLux().toString());
-                MainActivity.editor.putString("hum",flower.getFlowerSoilHum().toString());
-                MainActivity.editor.putString("temp",flower.getFlowerTemp().toString());
-                MainActivity.editor.putString("image",flower.getFlowerImage().toString());
-                //   MainActivity.editor.putString("nut",data.get(position).getFlowerN());
-                MainActivity.editor.putString("date",date);
-                /**
-                 * 这里选择了植物的花名，是否选择植物标识置为true
-                 */
-                MainActivity.editor.commit();
-                MainActivity.isSelectedFlower=true;
-                MainActivity.flower = flower;
+                String date = TimeUtils.getCurrentTime();
+                    sharedPreferences = getSharedPreferences(PREFERENCE_NAME,MODE);
+                    editor = sharedPreferences.edit();
+                    editor.putString("flowerName", flower.getFlowerName().toString());
+                    editor.putString("light", flower.getFlowerLux().toString());
+                    editor.putString("hum", flower.getFlowerSoilHum().toString());
+                    editor.putString("temp", flower.getFlowerTemp().toString());
+                    editor.putString("image", flower.getFlowerImage().toString());
+                    editor.putString("date", date);
+                    /**
+                     * 这里选择了植物的花名，是否选择植物标识置为true
+                     */
+                    editor.commit();
+                  MainActivity.isSelectedFlower=true;
+                  MainActivity.flower = flower;
 //                MainActivity.flower.setFlowerName(flower.getFlowerName().toString());
 //                MainActivity.flower.setFlowerLux(flower.getFlowerLux().toString());
 //                MainActivity.flower.setFlowerSoilHum(flower.getFlowerSoilHum().toString());
 //                MainActivity.flower.setFlowerTemp(flower.getFlowerTemp().toString());
 //                MainActivity.flower.setFlowerImage(flower.getFlowerImage().toString());
-                MainActivity.browseDate =  date;
-
-
-                Message message = new Message();
-                message.what = 0x004;
-                message.setData(new Bundle());
-                DataFragment.handler.sendMessage(message);
-                userInfo.setFlowerName(flower.getFlowerName());
+                 MainActivity.browseDate =  date;
+                 if(DataFragment.handler!=null)
+                DataFragment.handler.sendEmptyMessage(0x004);
+                userInfo.setFlowerName(flower.getFlowerName()+"");
                 userInfo.setType(6);
                 Client.getClient(InfomationAnalysis.BeantoUserInfo(userInfo));
                 btn_finish.setEnabled(false);;
@@ -119,6 +124,9 @@ public class FlowerInfo extends AppCompatActivity {
                 super.handleMessage(msg);
                 if(msg.what == 0x001){
                     Toast.makeText(FlowerInfo.this,"植物选择成功！",Toast.LENGTH_SHORT).show();
+                        Intent intent  =  new Intent(FlowerInfo.this,MainActivity.class);
+                        intent.putExtra("UserInfo",userInfo);
+                        startActivity(intent);
                     finish();
                 }else {
                     Toast.makeText(FlowerInfo.this, "植物选择失败，请重试！", Toast.LENGTH_SHORT).show();

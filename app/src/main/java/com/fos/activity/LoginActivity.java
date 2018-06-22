@@ -6,6 +6,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Camera;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -54,7 +55,8 @@ import java.util.Set;
 
 public class LoginActivity extends AppCompatActivity {
 
-    public static final String PREFERENCE_NAME = "UserContent";
+    public static final String PREFERENCE_NAME = "SaveContent";
+
     //Preferece机制的操作模式
     public static int MODE = MODE_PRIVATE;
     public static SharedPreferences.Editor editor;
@@ -77,6 +79,7 @@ public class LoginActivity extends AppCompatActivity {
     private int port = 8000;
     // public static SimpleClient Client_phone;
     public static Handler handler;
+    private Intent intent;
 
 
     @Override
@@ -153,12 +156,16 @@ public class LoginActivity extends AppCompatActivity {
                     user.setUserName(InfomationAnalysis.jsonToUserInfo(str).getUserName());
                     user.setUserHeadImage(InfomationAnalysis.jsonToUserInfo(str).getUserHeadImage());
                     saveCountInfo();
-                    Bundle b = new Bundle();
-                    b.putString("userName", user.getUserName());
-                    b.putString("userID", user.getUserId());
-                    b.putString("userIcon",user.getUserHeadImage());
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.putExtras(b);
+                    UserInfo  userInfo2 =  new UserInfo();
+                    userInfo2.setUserName(user.getUserName());
+                    userInfo2.setUserId(user.getUserId());
+                    userInfo2.setUserHeadImage(user.getUserHeadImage());
+                    sharedPreferences = getSharedPreferences(PREFERENCE_NAME,MODE);
+                    if("未选择".equals(sharedPreferences.getString("flowerName","未选择")))
+                        intent = new Intent(LoginActivity.this, CameraActivity.class);
+                    else
+                        intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.putExtra("UserInfo",userInfo2);
                     startActivity(intent);
                     finish();
 

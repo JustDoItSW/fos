@@ -58,7 +58,7 @@ public class TimeUtils {
 
             return strTime;
         } catch (ParseException e) {
-            // e.printStackTrace();
+            e.printStackTrace();
         }
         return "";
 

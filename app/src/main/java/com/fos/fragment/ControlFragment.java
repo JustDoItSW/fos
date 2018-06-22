@@ -2,37 +2,24 @@ package com.fos.fragment;
 
 import android.animation.ObjectAnimator;
 import android.app.KeyguardManager;
-import android.graphics.Color;
-import android.graphics.drawable.AnimationDrawable;
 import android.net.TrafficStats;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
-import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.demo.sdk.Controller;
 import com.demo.sdk.Enums;
@@ -40,21 +27,34 @@ import com.demo.sdk.Module;
 import com.demo.sdk.Player;
 import com.demo.sdk.Scanner;
 import com.fos.R;
-import com.fos.activity.LoginActivity;
 import com.fos.activity.MainActivity;
+import com.fos.activity.RecordControlActivity;
 import com.fos.entity.Infomation;
-import com.fos.service.Client_phone;
+import com.fos.entity.UserMessage;
 import com.fos.service.netty.Client;
 import com.fos.util.InfomationAnalysis;
 import com.fos.util.LogUtil;
 import com.fos.util.RemoteTunnel;
 import com.github.onlynight.waveview.WaveView;
+import com.iflytek.cloud.ErrorCode;
+import com.iflytek.cloud.InitListener;
+import com.iflytek.cloud.RecognizerListener;
+import com.iflytek.cloud.RecognizerResult;
+import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechError;
+import com.iflytek.cloud.SpeechRecognizer;
+import com.iflytek.cloud.SpeechUtility;
 import com.mingle.widget.LoadingView;
-import com.romainpiel.shimmer.Shimmer;
-import com.romainpiel.shimmer.ShimmerTextView;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.net.InetAddress;
+import java.util.Locale;
 import java.util.Map;
+
+import static com.fos.activity.RecordControlActivity.parseIatResult;
 
 
 /**
@@ -63,7 +63,7 @@ import java.util.Map;
  * Package_name dqn.demo.com.tianshow.MyFragment
  * Email 745267209@QQ.com
  */
-public class ControlFragment extends Fragment {
+public class ControlFragment extends Fragment implements TextToSpeech.OnInitListener {
 
     private LoadingView video_connecting_layout;
     public static Handler  handler;
@@ -85,7 +85,6 @@ public class ControlFragment extends Fragment {
     private  int _videoScreen=1;
     private int _devicePort=554;
     private int _fps=20;
-    private LinearLayout _videoConnectLayout;
     private com.demo.sdk.DisplayView _videoView;
     private RemoteTunnel _remoteTunnel1=null;
     private static Module _module;
@@ -100,6 +99,13 @@ public class ControlFragment extends Fragment {
     private Scanner _scanner;
     private boolean isSmart  = false;
     private ObjectAnimator objectAnimator;
+    private Thread thread;
+    private String recordContent = "";
+    private com.fos.myView.WaveView mWaveView;
+    private RelativeLayout btn_record,recordControl,r1;
+    private ImageView img_record;
+    private SpeechRecognizer mIat;
+    private TextToSpeech tts;
 
     public static ControlFragment newInstance(){
         if(controlFragment == null )
@@ -143,7 +149,6 @@ public class ControlFragment extends Fragment {
     }
 
     private void initVideo(){
-        _videoConnectLayout=view.findViewById(R.id.video_connecting_layout);
         _videoView=view.findViewById(R.id.video_view);
         _videoView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,12 +159,21 @@ public class ControlFragment extends Fragment {
                 }
             }
         });
+        _videoView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                recordControl();
+                return false;
+            }
+        });
         _deviceId = "brexco.2.us.ytong.rakwireless.com";
         _devicePsk = "admin";
         _fps = 20;
         _scanner.scanAll();
     }
     private void init(){
+        mIat=SpeechRecognizer.createRecognizer(getContext(),mInitListener);
+        SpeechUtility.createUtility( getContext(), SpeechConstant.APPID+"=5b1cb818"); //+SpeechConstant.FORCE_LOGIN+"=true"
         fab_light =  (ImageView)view.findViewById(R.id.fab_light) ;
         fab_heating =  (ImageView)view.findViewById(R.id.fab_heating) ;
         fab_watering =  (ImageView)view.findViewById(R.id.fab_watering) ;
@@ -167,17 +181,31 @@ public class ControlFragment extends Fragment {
         fab_ctrl =  (ImageView)view.findViewById(R.id.fab_ctrl) ;
         fab_wind =  (ImageView)view.findViewById(R.id.fab_wind) ;
         nowState = (TextView)view.findViewById(R.id.nowState);
+        mWaveView = (com.fos.myView.WaveView) view.findViewById(R.id.wave_view);
+        recordControl = (RelativeLayout)view.findViewById(R.id.recordControl);
+        r1 = (RelativeLayout)view.findViewById(R.id.r1);
+        btn_record = (RelativeLayout)view.findViewById(R.id.btn_record);
+        img_record = (ImageView)view.findViewById(R.id.img_record) ;
+        tts = new TextToSpeech(getContext(),this );
+
         progress_light = (WaveView)view.findViewById(R.id.progress_light) ;
         progress_heating = (WaveView)view.findViewById(R.id.progress_heating) ;
         progress_hum = (WaveView)view.findViewById(R.id.progress_hum) ;
         progress_nutrition = (WaveView)view.findViewById(R.id.progress_nutrition) ;
-//        progress_light.start();
-//        progress_heating.start();
-//        progress_hum.start();
-//        progress_nutrition.start();
+        objectAnimator = ObjectAnimator.ofFloat(fab_wind,"rotation",0,360);
+        objectAnimator.setRepeatCount(-1);
+        objectAnimator.setDuration(500);
+
         progress_water = (NumberProgressBar)view.findViewById(R.id.progress_water);
         progress_nut = (NumberProgressBar)view.findViewById(R.id.progress_nut);
 
+        r1.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                recordControl();
+                return false;
+            }
+        });
         fab_light.setOnClickListener(onClickListener);
         fab_heating.setOnClickListener(onClickListener);
         fab_watering.setOnClickListener(onClickListener);
@@ -194,7 +222,7 @@ public class ControlFragment extends Fragment {
                         isSmart = false;
                     } else {
                         Client.getClient("smart" + MainActivity.flower.getFlowerName());
-                        nowState.setText("当前智能模式：开启");
+                        nowState.setText("当前智能模式：打开");
                         fab_ctrl.setSelected(true);
                         isSmart = true;
                     }
@@ -208,22 +236,26 @@ public class ControlFragment extends Fragment {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
-                try {
+
+                    try {
                         Bundle bundle = msg.getData();
-                        String str = bundle.getString("info");
+
+                        if(msg.what == 0x003){
+                            String str = bundle.getString("info");
                         Log.e("Ctrl收到：", str);
                         Infomation infomation = InfomationAnalysis.jsonToData(str);
-//                        fab_light.setTitle("光强:"+infomation.getLux()+"lux");
-//                        fab_heating.setTitle("温度:"+infomation.getTemperature()+"°");
-//                        fab_watering.setTitle("土壤湿度:"+Integer.parseInt(infomation.getSoilHumidity())/10+"%");
-                      //  fab_nut.setTitle("肥力:"+);
 
-                    progress_water.setProgress(((3000-100*Integer.parseInt(infomation.getWaterHigh()))/30));
-                        progress_nut.setProgress(((3000-100*Integer.parseInt(infomation.getWaterHigh()))/30));
+                        progress_water.setProgress(((4000-100*Integer.parseInt(infomation.getWaterHigh()))/40));
+                        progress_nut.setProgress(((4000-100*Integer.parseInt(infomation.getWaterHigh()))/40));
+                        }
+                        else if(msg.what == 0x004){
+                            ((ImageView)msg.obj).getDrawable().setLevel(msg.arg1);
+                            Log.e("info",msg.arg1+"");
+                        }
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
 
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
             }
         };
     }
@@ -267,6 +299,43 @@ public class ControlFragment extends Fragment {
             }
         });
     }
+
+    private void setDrawableLevel(final ImageView imageView, final int start, final int end){
+
+        try {
+            if(thread!=null) {
+                thread.interrupt();
+            }
+        }catch (Exception  e){e.printStackTrace();}
+        thread =  new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    int sLocation = start;
+                    while (true) {
+                        if (start > end) {
+                            sLocation -= 20;
+                        } else if (start < end) {
+                            sLocation += 20;
+                        }
+                        else
+                            break;
+                        Message message = Message.obtain();
+                        message.what = 0x004;
+                        message.arg1 = sLocation;
+                        message.obj = imageView;
+                        handler.sendMessage(message);
+                        sleep(1);
+                    }
+                }catch (Exception e){}
+            }
+        };
+        thread.start();
+    }
+
+
+
     View.OnClickListener onClickListener= new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -279,57 +348,70 @@ public class ControlFragment extends Fragment {
                 if (!isSmart) {
                     switch (v.getId()) {
                         case R.id.fab_light:
+
                             if (fab_light.isSelected()) {
                                 Client.getClient("e");
+                                setDrawableLevel(fab_light,10000,0);
                                 nowState.setText("当前灯光状态：关闭");
                                 fab_light.setSelected(false);
                             } else {
                                 Client.getClient("b");
-                                nowState.setText("当前灯光状态：开启");
+                                setDrawableLevel(fab_light,0,10000);
+                                nowState.setText("当前灯光状态：打开");
                                 fab_light.setSelected(true);
                             }
                             break;
                         case R.id.fab_watering:
                             if (fab_watering.isSelected()) {
                                 Client.getClient("1");
+                                setDrawableLevel(fab_watering,10000,0);
                                 nowState.setText("当前浇水状态：关闭");
                                 fab_watering.setSelected(false);
                             } else {
                                 Client.getClient("m");
-                                nowState.setText("当前浇水状态：开启");
+                                setDrawableLevel(fab_watering,0,10000);
+                                nowState.setText("当前浇水状态：打开");
                                 fab_watering.setSelected(true);
                             }
                             break;
                         case R.id.fab_heating:
                             if (fab_heating.isSelected()) {
                                 Client.getClient("s");
+                                setDrawableLevel(fab_heating,10000,0);
                                 nowState.setText("当前加热状态：关闭");
                                 fab_heating.setSelected(false);
                             } else {
                                 Client.getClient("p");
-                                nowState.setText("当前加热状态：开启");
+                                setDrawableLevel(fab_heating,0,10000);
+                                nowState.setText("当前加热状态：打开");
                                 fab_heating.setSelected(true);
                             }
                             break;
                         case R.id.fab_nut:
                             if (fab_nut.isSelected()) {
                                 Client.getClient("y");
+                                setDrawableLevel(fab_nut,10000,0);
                                 nowState.setText("当前施肥状态：关闭");
                                 fab_nut.setSelected(false);
                             } else {
                                 Client.getClient("v");
-                                nowState.setText("当前施肥状态：开启");
+                                setDrawableLevel(fab_nut,0,10000);
+                                nowState.setText("当前施肥状态：打开");
                                 fab_nut.setSelected(true);
                             }
                             break;
                         case R.id.fab_wind:
                             if (fab_wind.isSelected()) {
                                 Client.getClient("8");
+                                objectAnimator.pause();
+                               // setDrawableLevel(fab_wind,10000,0);
                                 nowState.setText("当前通风状态：关闭");
                                 fab_wind.setSelected(false);
                             } else {
                                 Client.getClient("5");
-                                nowState.setText("当前通风状态：开启");
+                                objectAnimator.start();
+                             //   setDrawableLevel(fab_wind,0,10000);
+                                nowState.setText("当前通风状态：打开");
                                 fab_wind.setSelected(true);
                             }
                             break;
@@ -351,7 +433,6 @@ public class ControlFragment extends Fragment {
      * 连接远程的服务器，服务器端口554，映射客户端端口5555
      */
     void _startPlay(){
-        _videoConnectLayout.setVisibility(View.VISIBLE);
         if(_deviceIp.equals("127.0.0.1")){
             LogUtil.i("remote");
             if(_remoteTunnel1==null)
@@ -495,7 +576,6 @@ public class ControlFragment extends Fragment {
                             if(_player!=null){
                                LogUtil.i("Reconnect...Please wait!");
                                 if(_player.getState()== Enums.State.IDLE){
-                                    _videoConnectLayout.setVisibility(View.VISIBLE);
                                     _player.stop();
                                     if(_deviceIp.equals("127.0.0.1")){
                                         if(_deviceId.equals("www.sunnyoptical.com")) {
@@ -554,7 +634,6 @@ public class ControlFragment extends Fragment {
                 break;
             case PLAYING:
                 _getTraffic = true;
-                _videoConnectLayout.setVisibility(View.GONE);
             case STOPPED:
                 _getTraffic = false;
                 break;
@@ -574,4 +653,234 @@ public class ControlFragment extends Fragment {
         }
     }
 
+    private void recordControl(){
+        if(recordContent!=null&&recordContent.length()!=0)
+            recordContent="";
+        recordControl.setVisibility(View.VISIBLE);
+        btn_record.setSelected(true);
+        img_record.setSelected(true);
+        mWaveView.start();
+        setParam();
+        int ret =mIat.startListening(mRecognizerListener);
+        if(ret!= ErrorCode.SUCCESS){
+            Log.e("big11","识别失败，错误码："+ret);
+        }
+    }
+    public void setParam(){
+        if(mIat==null)
+            mIat= SpeechRecognizer.createRecognizer(getContext(),null);
+        mIat.setParameter(SpeechConstant.DOMAIN, "iat");
+        // 设置语言
+        mIat.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
+        // 设置语言区域
+        mIat.setParameter(SpeechConstant.ACCENT, "mandarin");
+    }
+    private void printResult(RecognizerResult results) {
+        String text = parseIatResult(results.getResultString());
+        // 自动填写地址
+        Log.e("111",text);
+        recordContent += text;
+    }
+    public static String parseIatResult(String json) {
+        StringBuffer ret = new StringBuffer();
+        try {
+            JSONTokener tokener = new JSONTokener(json);
+            JSONObject joResult = new JSONObject(tokener);
+
+            JSONArray words = joResult.getJSONArray("ws");
+            for (int i = 0; i < words.length(); i++) {
+                // 转写结果词，默认使用第一个结果
+                JSONArray items = words.getJSONObject(i).getJSONArray("cw");
+                JSONObject obj = items.getJSONObject(0);
+                ret.append(obj.getString("w"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ret.toString();
+    }
+    private RecognizerListener mRecognizerListener = new RecognizerListener() {
+
+        @Override
+        public void onBeginOfSpeech() {
+        }
+
+        @Override
+        public void onError(SpeechError error) {
+            // Tips：
+            // 错误码：10118(您没有说话)，可能是录音机权限被禁，需要提示用户打开应用的录音权限。
+            if(error.getErrorCode() == 14002) {
+                Log.e("11",error.getPlainDescription(true)+"\n请确认是否已开通翻译功能" );
+            } else {
+                Log.e("11error",error.getPlainDescription(true));
+            }
+        }
+
+        @Override
+        public void onEndOfSpeech() {
+            recordControl.setVisibility(View.GONE);
+            btn_record.setSelected(false);
+            img_record.setSelected(false);
+            mWaveView.stop();
+            mIat.cancel();
+            if (!"".equals(recordContent)) {
+                String str = recordContent;
+              //  addData(new UserMessage(str));
+                recordSendToService(str);
+                recordContent = "";
+            }
+        }
+
+        @Override
+        public void onResult(RecognizerResult results, boolean isLast) {
+            Log.d("result11文字", results.getResultString());
+            printResult(results);
+        }
+
+        @Override
+        public void onVolumeChanged(int volume, byte[] data) {
+
+        }
+
+        @Override
+        public void onEvent(int eventType, int arg1, int arg2, Bundle obj) {
+        }
+    };
+    private InitListener mInitListener = new InitListener() {
+
+        @Override
+        public void onInit(int code) {
+            Log.d("11", "SpeechRecognizer init() code = " + code);
+        }
+    };
+    public void recordSendToService(String str){
+        switch (str) {
+            case "开灯":
+                Client.getClient("b");
+                tts.speak("当前灯光状态:打开。",TextToSpeech.QUEUE_FLUSH,null);
+                setDrawableLevel(fab_light,0,10000);
+                nowState.setText("当前灯光状态：打开");
+                fab_light.setSelected(true);
+                break;
+            case "关灯":
+                Client.getClient("e");
+                tts.speak("当前灯光状态:关闭。",TextToSpeech.QUEUE_FLUSH,null);
+                setDrawableLevel(fab_light,10000,0);
+                nowState.setText("当前灯光状态：关闭");
+                fab_light.setSelected(false);
+                break;
+            case "浇水":
+                Client.getClient("m");
+                tts.speak("当前浇水状态:打开。",TextToSpeech.QUEUE_FLUSH,null);
+                setDrawableLevel(fab_watering,0,10000);
+                nowState.setText("当前浇水状态：打开");
+                fab_watering.setSelected(true);
+                break;
+            case "停止浇水":
+                Client.getClient("1");
+                tts.speak("当前浇水状态:停止。",TextToSpeech.QUEUE_FLUSH,null);
+                setDrawableLevel(fab_watering,10000,0);
+                nowState.setText("当前浇水状态：关闭");
+                fab_watering.setSelected(false);
+                break;
+            case "加热":
+                Client.getClient("p");
+                tts.speak("当前加热状态:打开。",TextToSpeech.QUEUE_FLUSH,null);
+                setDrawableLevel(fab_heating,0,10000);
+                nowState.setText("当前加热状态：打开");
+                fab_heating.setSelected(true);
+                break;
+            case "停止加热":
+                Client.getClient("s");
+                tts.speak("当前加热状态:停止。",TextToSpeech.QUEUE_FLUSH,null);
+                setDrawableLevel(fab_heating,10000,0);
+                nowState.setText("当前加热状态：关闭");
+                fab_heating.setSelected(false);
+                break;
+            case "施肥":
+                Client.getClient("v");
+                tts.speak("当前施肥状态:打开。",TextToSpeech.QUEUE_FLUSH,null);
+                setDrawableLevel(fab_nut,0,10000);
+                nowState.setText("当前施肥状态：打开");
+                fab_nut.setSelected(true);
+                break;
+            case "停止施肥":
+                Client.getClient("y");
+                tts.speak("当前施肥状态:停止.",TextToSpeech.QUEUE_FLUSH,null);
+                setDrawableLevel(fab_nut,10000,0);
+                nowState.setText("当前施肥状态：关闭");
+                fab_nut.setSelected(false);
+                break;
+            case "通风":
+                Client.getClient("5");
+                tts.speak("当前通风状态:打开。",TextToSpeech.QUEUE_FLUSH,null);
+                objectAnimator.start();
+                //   setDrawableLevel(fab_wind,0,10000);
+                nowState.setText("当前通风状态：打开");
+                fab_wind.setSelected(true);
+                break;
+            case "停止通风":
+                Client.getClient("8");
+                tts.speak("当前通风状态:关闭。",TextToSpeech.QUEUE_FLUSH,null);
+                objectAnimator.pause();
+                // setDrawableLevel(fab_wind,10000,0);
+                nowState.setText("当前通风状态：关闭");
+                fab_wind.setSelected(false);
+                break;
+            case "打开智能模式":
+                Client.getClient("smart" + MainActivity.flower.getFlowerName());
+                tts.speak("当前智能模式:打开。",TextToSpeech.QUEUE_FLUSH,null);
+                nowState.setText("当前智能模式：打开");
+                fab_ctrl.setSelected(true);
+                isSmart = true;
+                break;
+            case "关闭智能模式":
+                Client.getClient("smart");
+                tts.speak("当前智能模式:关闭。",TextToSpeech.QUEUE_FLUSH,null);
+                nowState.setText("当前智能模式：关闭");
+                fab_ctrl.setSelected(false);
+                isSmart = false;
+                break;
+            default:
+                if (str.length() >= 3 && str.substring(0, 2).equals("查询")){
+                    tts.speak("正在为您查询",TextToSpeech.QUEUE_FLUSH,null);
+                    nowState.setText("正在为您查询" + str.substring(2) + "。");
+                    Client.getClient("search" + str.substring(2));
+                }
+                else if("你好".equals(str)){
+                    tts.speak("你好",TextToSpeech.QUEUE_FLUSH,null);
+
+                }else if("傻逼".equals(str.substring(str.length()-2))||"吃屎".equals(str.substring(str.length()-2))){
+                    tts.speak("是的，我"+str,TextToSpeech.QUEUE_FLUSH,null);
+
+                }else {
+                    tts.speak("对不起，我不知道你在说什么。", TextToSpeech.QUEUE_FLUSH, null);
+                }
+        }
+    }
+
+    @Override
+    public void onInit(int status) {
+        // 判断是否转化成功
+        if (status == TextToSpeech.SUCCESS){
+            //默认设定语言为中文，原生的android貌似不支持中文。
+            int result = tts.setLanguage(Locale.CHINESE);
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED){
+                //   Toast.makeText(MainActivity.this, R.string.notAvailable, Toast.LENGTH_SHORT).show();
+            }else{
+                //不支持中文就将语言设置为英文
+                tts.setLanguage(Locale.US);
+            }
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if( null != mIat ){
+            // 退出时释放连接
+            mIat.cancel();
+            mIat.destroy();
+        }
+    }
 }

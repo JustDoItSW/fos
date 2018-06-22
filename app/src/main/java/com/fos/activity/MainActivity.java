@@ -83,10 +83,9 @@ public class MainActivity extends AppCompatActivity {
     private ServiceConnection serviceConnection;
     public static Handler  handler;
     private Thread queryThread;
-    public static UserInfo userInfo = new UserInfo();
-    private Intent i;
-    String[] listContent = {"我的消息","社区动态","选择植物","看图识花","语言控制","我的好友","附近的人"};
-    int [] listImage ={R.mipmap.ic_message,R.mipmap.ic_friend,R.mipmap.ic_plant,R.mipmap.ic_scan,R.mipmap.ic_record,R.mipmap.ic_community,R.mipmap.ic_location};
+    public static UserInfo userInfo;
+    String[] listContent = {"看图识花","我的消息","社区动态","选择植物","语言控制","我的好友","附近的人"};
+    int [] listImage ={R.mipmap.ic_scan,R.mipmap.ic_message,R.mipmap.ic_friend,R.mipmap.ic_plant,R.mipmap.ic_record,R.mipmap.ic_community,R.mipmap.ic_location};
     /**
      * 用户是否已经选择了植物
      */
@@ -121,12 +120,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     private void initUser(){
-        i = getIntent();
+        userInfo = (UserInfo)getIntent().getSerializableExtra("UserInfo");
+        getSharePreferences();
+    }
 
-        userInfo.setUserName(i.getExtras().getString("userName"));
-        userInfo.setUserId(i.getExtras().getString("userID"));
-        userInfo.setUserHeadImage(i.getExtras().getString("userIcon"));
-        Log.e("原来的头像：",i.getExtras().getString("userIcon")+" ");
+    private void getSharePreferences(){
+
         sharedPreferences = getSharedPreferences(PREFERENCE_NAME,MODE);
         editor = sharedPreferences.edit();
         if((sharedPreferences.getString("flowerName","")).equals(""))
@@ -188,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
         };
         queryThread.start();
 
-        main_userName.setText(i.getExtras().getString("userName"));
+        main_userName.setText(userInfo.getUserName());
         menu_tab.setOnClickListener(onClickListener);
         text_control.setSelected(true);
         serviceConnection = new ServiceConnection() {
@@ -268,18 +267,18 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent;
                 switch (position){
-                    case 1:
+                    case 0:
+                        intent  = new Intent(MainActivity.this,CameraActivity.class);
+                        intent.putExtra("UserInfo",userInfo);
+                        startActivity(intent);
+                        break;
+                    case 2:
                         intent  = new Intent(MainActivity.this,CommunityActivity.class);
                         intent.putExtra("UserInfo",userInfo);
                         startActivity(intent);
                         break;
-                    case  2:
+                    case  3:
                         intent  = new Intent(MainActivity.this,SelectFlower.class);
-                        intent.putExtra("UserInfo",userInfo);
-                        startActivity(intent);
-                        break;
-                    case 3 :
-                        intent  = new Intent(MainActivity.this,CameraActivity.class);
                         intent.putExtra("UserInfo",userInfo);
                         startActivity(intent);
                         break;
@@ -432,5 +431,11 @@ public class MainActivity extends AppCompatActivity {
         ActivityCollector.removeActivity(this);
         stopService(intent);//关闭服务
         unbindService(serviceConnection);//解除服务绑定
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        getSharePreferences();
     }
 }

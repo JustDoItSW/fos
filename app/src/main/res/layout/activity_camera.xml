@@ -109,4 +109,15 @@
             android:layout_height="match_parent"/>
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/gotoSelect"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="15dp"
+        android:text="不想拍照？点这里"
+        android:textSize="13dp"
+        android:textColor="@color/ThemeColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 </RelativeLayout>

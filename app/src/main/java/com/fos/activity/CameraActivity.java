@@ -58,6 +58,7 @@ import com.bumptech.glide.Priority;
 import com.fos.R;
 import com.fos.entity.AIPlant;
 import com.fos.entity.Flower;
+import com.fos.entity.UserInfo;
 import com.fos.service.netty.Client;
 import com.fos.tensorflow.Classifier;
 import com.fos.tensorflow.TensorFlowImageClassifier;
@@ -109,7 +110,7 @@ public class CameraActivity extends AppCompatActivity {
 
     private Button  btn1,btn2,remake2;
     private RelativeLayout takePicture,exit_Camera,rl_bottom,rl_top,rl1_bottom,rl2_bottom,remake;
-    private TextView fromPhotograph,result_flowerName,result_disease;
+    private TextView fromPhotograph,result_flowerName,result_disease,gotoSelect;
     private LoadingView isAppraisal;
     private ImageView changeCamera,picture_local,result_flowerImage;
     private ObjectAnimator objectAnimator1,objectAnimator2,objectAnimator4,objectAnimator5;
@@ -125,6 +126,7 @@ public class CameraActivity extends AppCompatActivity {
     private ImageReader imageReader;
     private int height=0,width=0;
     private Size previewSize;
+    private UserInfo userInfo;
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     static
     {
@@ -168,7 +170,9 @@ public class CameraActivity extends AppCompatActivity {
                         INPUT_NAME,
                         OUTPUT_NAME);
 
+        userInfo = (UserInfo)getIntent().getSerializableExtra("UserInfo");
         exit_Camera = (RelativeLayout)findViewById(R.id.exit_Camera) ;
+        gotoSelect=(TextView)findViewById(R.id.gotoSelect);
         changeCamera = (ImageView)findViewById(R.id.changeCamera);
         picture_local  = (ImageView)findViewById(R.id.picture_local);
         remake= (RelativeLayout)findViewById(R.id.remake) ;
@@ -178,6 +182,7 @@ public class CameraActivity extends AppCompatActivity {
         fromPhotograph = (TextView)findViewById(R.id.fromPhotograph);
         takePicture = (RelativeLayout)findViewById(R.id.takePicture) ;
         result_flowerName = (TextView)findViewById(R.id.result_flowerName);
+
         result_flowerImage = (ImageView)findViewById(R.id.result_flowerImage);
         result_disease = (TextView)findViewById(R.id.result_disease);
         isAppraisal = (LoadingView)findViewById(R.id.isAppraisal);
@@ -193,7 +198,9 @@ public class CameraActivity extends AppCompatActivity {
         SECRET_KEY=getResources().getString(R.string.AIPlantSECRET_KEY);
         aipImageClassify=AIPlantUtil.getAccess_token(APP_ID,API_KEY,SECRET_KEY);
 
+
         showCamera.setSurfaceTextureListener(surfaceTextureListener);//设置TextureView监听
+        gotoSelect.setOnClickListener(onClickListener);
         fromPhotograph.setOnClickListener(onClickListener);
         changeCamera.setOnClickListener(onClickListener);
         takePicture.setOnClickListener(onClickListener);//拍照
@@ -224,7 +231,8 @@ public class CameraActivity extends AppCompatActivity {
                                 public void onClick(View v) {
                                     Intent intent = new Intent(CameraActivity.this,FlowerInfo.class);
                                     intent.putExtra("Flower",flowers[0]);
-                                    intent.putExtra("isSelect",false);
+                                    intent.putExtra("UserInfo",userInfo);
+                                    intent.putExtra("isSelect",true);
                                     startActivity(intent);
                                 }
                             });
@@ -318,6 +326,11 @@ public class CameraActivity extends AppCompatActivity {
                         mCameraId ="0";
                     stopCamera();
                     startCamera();
+                    break;
+                case R.id.gotoSelect:
+                    Intent intent2 = new Intent(CameraActivity.this,SelectFlower.class);
+                    intent2.putExtra("UserInfo",userInfo);
+                    startActivity(intent2);
                     break;
                     default:
                         break;
@@ -694,6 +707,7 @@ public class CameraActivity extends AppCompatActivity {
         isAppraisal.setVisibility(View.VISIBLE);
       //  rl2_bottom.setVisibility(View.VISIBLE);
         remake.setVisibility(View.VISIBLE);
+        gotoSelect.setVisibility(View.GONE);
         ring_camera.setVisibility(View.GONE);
         animationSet1.start();
 
