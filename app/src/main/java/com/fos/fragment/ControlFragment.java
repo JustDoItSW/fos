@@ -2,6 +2,7 @@ package com.fos.fragment;
 
 import android.animation.ObjectAnimator;
 import android.app.KeyguardManager;
+import android.graphics.Bitmap;
 import android.net.TrafficStats;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,6 +33,7 @@ import com.fos.activity.RecordControlActivity;
 import com.fos.entity.Infomation;
 import com.fos.entity.UserMessage;
 import com.fos.service.netty.Client;
+import com.fos.tensorflow.Classifier;
 import com.fos.util.InfomationAnalysis;
 import com.fos.util.LogUtil;
 import com.fos.util.RemoteTunnel;
@@ -64,6 +66,17 @@ import static com.fos.activity.RecordControlActivity.parseIatResult;
  * Email 745267209@QQ.com
  */
 public class ControlFragment extends Fragment implements TextToSpeech.OnInitListener {
+
+    // Classifier
+    private Bitmap bitmap;
+    private Classifier classifier;
+    private static final int INPUT_SIZE = 224;
+    private static final int IMAGE_MEAN = 128;
+    private static final float IMAGE_STD = 128.0f;
+    private static final String INPUT_NAME = "input";
+    private static final String OUTPUT_NAME = "final_result";
+    private static final String MODEL_FILE = "file:///android_asset/optimized_mobilenet_plant_graph.pb";
+    private static final String LABEL_FILE = "file:///android_asset/plant_labels.txt";
 
     private LoadingView video_connecting_layout;
     public static Handler  handler;
@@ -103,9 +116,10 @@ public class ControlFragment extends Fragment implements TextToSpeech.OnInitList
     private String recordContent = "";
     private com.fos.myView.WaveView mWaveView;
     private RelativeLayout btn_record,recordControl,r1;
-    private ImageView img_record;
+    private ImageView img_record,redPoint;
     private SpeechRecognizer mIat;
     private TextToSpeech tts;
+    private Boolean isDisease =false;
 
     public static ControlFragment newInstance(){
         if(controlFragment == null )
@@ -181,6 +195,7 @@ public class ControlFragment extends Fragment implements TextToSpeech.OnInitList
         fab_ctrl =  (ImageView)view.findViewById(R.id.fab_ctrl) ;
         fab_wind =  (ImageView)view.findViewById(R.id.fab_wind) ;
         nowState = (TextView)view.findViewById(R.id.nowState);
+        redPoint = (ImageView)view.findViewById(R.id.point_red);
         mWaveView = (com.fos.myView.WaveView) view.findViewById(R.id.wave_view);
         recordControl = (RelativeLayout)view.findViewById(R.id.recordControl);
         r1 = (RelativeLayout)view.findViewById(R.id.r1);
@@ -269,10 +284,12 @@ public class ControlFragment extends Fragment implements TextToSpeech.OnInitList
             public void onClick(View v) {
                 if(v.isSelected()){
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
+                    if(isDisease)
+                        redPoint.setVisibility(View.VISIBLE);
                     v.setSelected(false);
                 }else {
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    redPoint.setVisibility(View.GONE);
                     v.setSelected(true);
                 }
             }
@@ -283,8 +300,11 @@ public class ControlFragment extends Fragment implements TextToSpeech.OnInitList
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED ||bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
+                    if(isDisease)
+                        redPoint.setVisibility(View.VISIBLE);
                     imageView.setSelected(false);
                 }else{
+                    redPoint.setVisibility(View.GONE);
                     imageView.setSelected(true);
                 }
 
@@ -292,8 +312,11 @@ public class ControlFragment extends Fragment implements TextToSpeech.OnInitList
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
                 if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED ||bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
+                    if(isDisease)
+                        redPoint.setVisibility(View.VISIBLE);
                     imageView.setSelected(false);
                 }else{
+                    redPoint.setVisibility(View.GONE);
                     imageView.setSelected(true);
                 }
             }
