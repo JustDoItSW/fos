@@ -85,6 +85,7 @@ public class ControlFragment extends Fragment implements TextToSpeech.OnInitList
     private View view;
     private TextView nowState;
     public static ImageView fab_light,fab_heating,fab_nut,fab_watering,fab_ctrl,fab_wind;
+
     private WaveView progress_light,progress_heating,progress_hum,progress_nutrition;
     private NumberProgressBar progress_water,progress_nut;
     private KeyguardManager mKeyguardManager = null;
