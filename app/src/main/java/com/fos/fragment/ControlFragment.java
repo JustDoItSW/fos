@@ -55,6 +55,8 @@ import org.json.JSONTokener;
 import java.net.InetAddress;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static com.fos.activity.RecordControlActivity.parseIatResult;
 
@@ -573,6 +575,19 @@ public class ControlFragment extends Fragment implements TextToSpeech.OnInitList
                     LogUtil.i("wlan error");
                 }
             }
+            /**
+             * 计时器，定时对植物拍照
+             */
+            Timer timer=new Timer();
+            TimerTask timerTask=new TimerTask() {
+                @Override
+                public void run() {
+                    Bitmap bm=_player.takePhoto();
+                    takePhotoEventListener(bm);
+                }
+            };
+            timer.schedule(timerTask,10*60*1000);
+//            .compress(Bitmap.CompressFormat.JPEG, 100, null)
         }
         else
         {
@@ -644,6 +659,14 @@ public class ControlFragment extends Fragment implements TextToSpeech.OnInitList
             }
         });
         _trafficThread.start();
+    }
+
+    /**
+     * 监听接口，对摄像头拍摄的bitmap进行植物病害识别
+     * @param bm
+     */
+    private void takePhotoEventListener(Bitmap bm) {
+
     }
 
     /**
