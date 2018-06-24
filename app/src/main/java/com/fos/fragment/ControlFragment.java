@@ -34,6 +34,7 @@ import com.fos.entity.Infomation;
 import com.fos.entity.UserMessage;
 import com.fos.service.netty.Client;
 import com.fos.tensorflow.Classifier;
+import com.fos.tensorflow.TensorFlowImageClassifier;
 import com.fos.util.InfomationAnalysis;
 import com.fos.util.LogUtil;
 import com.fos.util.RemoteTunnel;
@@ -53,6 +54,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.net.InetAddress;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Timer;
@@ -85,7 +87,7 @@ public class ControlFragment extends Fragment implements TextToSpeech.OnInitList
     private static ControlFragment controlFragment;
     private BottomSheetBehavior bottomSheetBehavior;
     private View view;
-    private TextView nowState;
+    private TextView nowState,hintDisease;
     public static ImageView fab_light,fab_heating,fab_nut,fab_watering,fab_ctrl,fab_wind;
 
     private WaveView progress_light,progress_heating,progress_hum,progress_nutrition;
@@ -189,6 +191,17 @@ public class ControlFragment extends Fragment implements TextToSpeech.OnInitList
         _scanner.scanAll();
     }
     private void init(){
+        classifier =
+                TensorFlowImageClassifier.create(
+                        getContext().getAssets(),
+                        MODEL_FILE,
+                        LABEL_FILE,
+                        INPUT_SIZE,
+                        IMAGE_MEAN,
+                        IMAGE_STD,
+                        INPUT_NAME,
+                        OUTPUT_NAME);
+
         mIat=SpeechRecognizer.createRecognizer(getContext(),mInitListener);
         SpeechUtility.createUtility( getContext(), SpeechConstant.APPID+"=5b1cb818"); //+SpeechConstant.FORCE_LOGIN+"=true"
         fab_light =  (ImageView)view.findViewById(R.id.fab_light) ;
@@ -198,6 +211,7 @@ public class ControlFragment extends Fragment implements TextToSpeech.OnInitList
         fab_ctrl =  (ImageView)view.findViewById(R.id.fab_ctrl) ;
         fab_wind =  (ImageView)view.findViewById(R.id.fab_wind) ;
         nowState = (TextView)view.findViewById(R.id.nowState);
+        hintDisease = (TextView)view.findViewById(R.id.hintDisease);
         redPoint = (ImageView)view.findViewById(R.id.point_red);
         mWaveView = (com.fos.myView.WaveView) view.findViewById(R.id.wave_view);
         recordControl = (RelativeLayout)view.findViewById(R.id.recordControl);
@@ -268,7 +282,12 @@ public class ControlFragment extends Fragment implements TextToSpeech.OnInitList
                         }
                         else if(msg.what == 0x004){
                             ((ImageView)msg.obj).getDrawable().setLevel(msg.arg1);
-                            Log.e("info",msg.arg1+"");
+                        }else if(msg.what == 0x005){
+                            hintDisease.setText("植物生病啦~点击查看详情");
+                            hintDisease.setVisibility(View.VISIBLE);
+                            redPoint.setVisibility(View.VISIBLE);
+                        }else if(msg.what == 0x006){
+                            hintDisease.setVisibility(View.GONE);
                         }
                     }catch(Exception e){
                         e.printStackTrace();
@@ -340,13 +359,15 @@ public class ControlFragment extends Fragment implements TextToSpeech.OnInitList
                 try {
                     int sLocation = start;
                     while (true) {
-                        if (start > end) {
+                        if (sLocation > end) {
                             sLocation -= 20;
-                        } else if (start < end) {
+                        } else if (sLocation < end) {
                             sLocation += 20;
                         }
-                        else
-                            break;
+                        else{
+                            Log.e("info","操作完成");
+                            break;}
+
                         Message message = Message.obtain();
                         message.what = 0x004;
                         message.arg1 = sLocation;
@@ -582,11 +603,13 @@ public class ControlFragment extends Fragment implements TextToSpeech.OnInitList
             TimerTask timerTask=new TimerTask() {
                 @Override
                 public void run() {
-                    Bitmap bm=_player.takePhoto();
+                    Bitmap bm= Bitmap.createScaledBitmap(_player.takePhoto(), 224, 224, false);
+                    if(bm!=null)
+                        Log.e("11111111111",bm.getWidth()+"       "+bm.getHeight()+"");
                     takePhotoEventListener(bm);
                 }
             };
-            timer.schedule(timerTask,10*60*1000);
+            timer.schedule(timerTask,10*1*1000);
 //            .compress(Bitmap.CompressFormat.JPEG, 100, null)
         }
         else
@@ -663,12 +686,33 @@ public class ControlFragment extends Fragment implements TextToSpeech.OnInitList
 
     /**
      * 监听接口，对摄像头拍摄的bitmap进行植物病害识别
-     * @param bm
+     * @param bitmap
      */
-    private void takePhotoEventListener(Bitmap bm) {
+    private void takePhotoEventListener(Bitmap bitmap) {
+
+        Log.e("info","开始病理识别");
+        final List<Classifier.Recognition> results = classifier.recognizeImage(bitmap);
+        final String title = results.get(0).getTitle();
+        final float confidence = results.get(0).getConfidence();
+        Log.e("info",results.get(0).getTitle()+results.get(0).getConfidence());
+        if(results.size()>0 && confidence>=0.4 ) {
+            if(!"健康".equals(title.substring(title.length()-2))) {
+
+                handler.sendEmptyMessage(0x005);
+                isDisease = true;
+                hintDisease.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        hintDisease.setText("可能为:" + title);
+                    }
+                });
+            }else{
+                isDisease = false;
+                handler.sendEmptyMessage(0x006);
+            }
+        }
 
     }
-
     /**
      * 更新视屏播放的状态
      * @param state

@@ -237,7 +237,7 @@ public class CameraActivity extends AppCompatActivity {
                                 }
                             });
                             //病识别
-                            classifyImage(bitmap);
+                            classifyImage(Bitmap.createScaledBitmap(bitmap, 224, 224, false));
                         }else{
                             result_flowerImage.setOnClickListener(null);
                         }
@@ -348,6 +348,7 @@ public class CameraActivity extends AppCompatActivity {
         result_disease.setVisibility(View.INVISIBLE);
         result_disease.setText("植物可能生病啦,点击查看详情");
         remake.setVisibility(View.INVISIBLE);
+        gotoSelect.setVisibility(View.VISIBLE);
         ring_camera.setVisibility(View.VISIBLE);
         animationSet2.start();
     }
@@ -681,10 +682,6 @@ public class CameraActivity extends AppCompatActivity {
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inSampleSize = 2;
                 bitmap = BitmapFactory.decodeByteArray(data, 0, data.length, options);
-
-
-
-                Log.e("onResponse","判断前"+picturePath);
                 afterTakePicture();
                 getResult(filePath+picturePath);
 
@@ -862,11 +859,11 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     private void classifyImage(Bitmap bitmap) {
-
+        Log.e("info","开始病理识别");
         final List<Classifier.Recognition> results = classifier.recognizeImage(bitmap);
         final String title = results.get(0).getTitle();
         final float confidence = results.get(0).getConfidence();
-        Log.e("info",results.get(0).getTitle()+results.get(0).getConfidence());
+        Log.e("1111111111111",results.get(0).getTitle()+results.get(0).getConfidence());
         if(results.size()>0 && confidence>=0.4 ) {
             if(!"健康".equals(title.substring(title.length()-2))) {
                 result_disease.setVisibility(View.VISIBLE);
