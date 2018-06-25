@@ -31,6 +31,7 @@ public class MyLineChart {
     public Axis axisX,axisY;
     public String sign;
     public static int TOP,BOTTOM,LEFT,RIGHT;
+    private static final int MaxSize = 300;
     private int count = 0;
 
 
@@ -78,7 +79,7 @@ public class MyLineChart {
        // axisX.setHasSeparationLine(true);
         axisX.setLineColor(Color.rgb(235,235,235));
 
-        for(int i = 2;i<=300;i+=5){
+        for(int i = 2;i<=MaxSize;i+=5){
             axisXValueList.add(new AxisValue(i).setLabel(""));
         }
 
@@ -140,7 +141,7 @@ public class MyLineChart {
 
     public void initLine(){
         List<PointValue> pointValueList = new ArrayList<>();
-        for(int i = 1;i<=300;){
+        for(int i = 1;i<=MaxSize;){
             pointValueList.add(new PointValue(i,25));
             i+=1;
         }

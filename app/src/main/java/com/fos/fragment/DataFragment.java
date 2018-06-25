@@ -134,11 +134,13 @@ public class DataFragment extends Fragment {
                     String str = bundle.getString("info");
                     Log.e("Data收到：", str);
                     Infomation infomation = InfomationAnalysis.jsonToData(str);
-                    HumFragment.myLineChart.repaintView(Integer.parseInt(infomation.getHumidity()), infomation.getDate().toString(), Color.rgb(199, 232, 245));
-                    LuxFragment.myLineChart.repaintView(Integer.parseInt(infomation.getLux()), infomation.getDate().toString(), Color.rgb(246, 235, 188));
-                    SoilHumFragment.myLineChart.repaintView(Math.round(Float.parseFloat(infomation.getSoilHumidity())), infomation.getDate().toString(), Color.rgb(199, 232, 245));
-                    TempFragment.myLineChart.repaintView(Integer.parseInt(infomation.getTemperature()), infomation.getDate().toString(), Color.rgb(255, 150, 150));
-                    setLevel(infomation);
+                    try {
+                        HumFragment.myLineChart.repaintView(Integer.parseInt(infomation.getHumidity()), infomation.getDate().toString(), Color.rgb(199, 232, 245));
+                        LuxFragment.myLineChart.repaintView(Integer.parseInt(infomation.getLux()), infomation.getDate().toString(), Color.rgb(246, 235, 188));
+                        SoilHumFragment.myLineChart.repaintView(Math.round(Float.parseFloat(infomation.getSoilHumidity())), infomation.getDate().toString(), Color.rgb(199, 232, 245));
+                        TempFragment.myLineChart.repaintView(Integer.parseInt(infomation.getTemperature()), infomation.getDate().toString(), Color.rgb(255, 150, 150));
+                        setLevel(infomation);
+                    }catch(Exception e){}
                 }
             }
         };
