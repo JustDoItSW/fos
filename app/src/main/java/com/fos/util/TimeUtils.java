@@ -42,7 +42,7 @@ public class TimeUtils {
             long sec = diff % nd % nh % nm / ns;// 计算差多少秒
             // 输出结果
             if (day >= 1) {
-                strTime = day + "天" + hour + "时";
+                strTime = day + "天" + hour + "小时";
             } else {
                 if (hour >= 1) {
                     strTime = hour + "时" + min + "分";

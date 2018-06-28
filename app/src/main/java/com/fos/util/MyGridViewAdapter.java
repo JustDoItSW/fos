@@ -2,6 +2,7 @@ package com.fos.util;
 
 import android.content.Context;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,6 +77,7 @@ public class MyGridViewAdapter extends BaseAdapter {
                 .priority(Priority.HIGH)
                 .into(viewHolder.imageView);
         viewHolder.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        Log.e("info","width:"+para.width+"height:"+para.height);
 
 
 

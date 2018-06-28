@@ -132,7 +132,8 @@ public class CommunityInfoActivity extends AppCompatActivity {
                     Toast.makeText(CommunityInfoActivity.this,"评论失败！",Toast.LENGTH_SHORT).show();
                 }else if(evaluates[0].getType() ==  0){
                     Toast.makeText(CommunityInfoActivity.this, "评论成功！", Toast.LENGTH_SHORT).show();
-                    refreshListView(evaluates);
+                    getEvaluate();
+                 //   refreshListView(evaluates);
                 }else{
                     refreshListView(evaluates);
                 }
@@ -167,15 +168,28 @@ public class CommunityInfoActivity extends AppCompatActivity {
             map = new ArrayList<Evaluate>();
             myEvaluateAdapter = new MyEvaluateAdapter(CommunityInfoActivity.this,R.layout.layout_evaluate,map);
             list_allEvaluate.setAdapter(myEvaluateAdapter);
+            setListViewHeight();
             if(community.getEvaluate()==0){
                 noneEvaluate.setVisibility(View.VISIBLE);
                 list_allEvaluate.setVisibility(View.INVISIBLE);
             }else{
-                Evaluate evaluate = new Evaluate();
-                evaluate.setCommunityID(community.getId());
-                evaluate.setType(1);
-                Client.getClient(InfomationAnalysis.BeanToEvaluate(evaluate));
+                getEvaluate();
             }
+    }
+
+    private void setListViewHeight(){
+        int totalHeight = 0;
+        for (int i = 0, len = myEvaluateAdapter.getCount(); i < len; i++) {   //listAdapter.getCount()返回数据项的数目
+            View listItem = myEvaluateAdapter.getView(i, null, list_allEvaluate);
+            listItem.measure(0, 0);  //计算子项View 的宽高
+            totalHeight += listItem.getMeasuredHeight();  //统计所有子项的总高度
+        }
+
+        ViewGroup.LayoutParams params = list_allEvaluate.getLayoutParams();
+        params.height = totalHeight + (list_allEvaluate.getDividerHeight() * (myEvaluateAdapter.getCount() - 1));
+        //listView.getDividerHeight()获取子项间分隔符占用的高度
+        //params.height最后得到整个ListView完整显示需要的高度
+        list_allEvaluate.setLayoutParams(params);
     }
 
     private void refreshListView(Evaluate[] evaluates){
@@ -188,6 +202,7 @@ public class CommunityInfoActivity extends AppCompatActivity {
             map.add(evaluates[i]);
         }
         myEvaluateAdapter.notifyDataSetChanged();
+        setListViewHeight();
     }
     private  String[] getAllImageUri(String str){
         String[] arr = str.split(";");
@@ -198,6 +213,23 @@ public class CommunityInfoActivity extends AppCompatActivity {
         String[] arr = str.split(";");
         return arr.length;
 
+    }
+
+    private  void sendEvaluate(){
+        Evaluate evaluate = new Evaluate();
+        evaluate.setUserInfo(userInfo);
+        evaluate.setContent(evaluateContent.getText().toString());
+        evaluate.setDate(TimeUtils.getCurrentTime());
+        evaluate.setCommunityID(community.getId());
+        evaluate.setType(0);
+        Client.getClient(InfomationAnalysis.BeanToEvaluate(evaluate));
+    }
+
+    private  void getEvaluate(){
+        Evaluate evaluate = new Evaluate();
+        evaluate.setCommunityID(community.getId());
+        evaluate.setType(1);
+        Client.getClient(InfomationAnalysis.BeanToEvaluate(evaluate));
     }
 
     View.OnClickListener onClickListener  =new View.OnClickListener() {
@@ -213,13 +245,7 @@ public class CommunityInfoActivity extends AppCompatActivity {
                     else {
                         evaluateContent.setEnabled(false);
                         sendEvaluate.setEnabled(false);
-                        Evaluate evaluate = new Evaluate();
-                        evaluate.setUserInfo(userInfo);
-                        evaluate.setContent(evaluateContent.getText().toString());
-                        evaluate.setDate(TimeUtils.getCurrentTime());
-                        evaluate.setCommunityID(community.getId());
-                        evaluate.setType(0);
-                        Client.getClient(InfomationAnalysis.BeanToEvaluate(evaluate));
+                        sendEvaluate();
                     }
                     break;
                     default:

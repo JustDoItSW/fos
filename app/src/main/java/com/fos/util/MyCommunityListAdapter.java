@@ -101,11 +101,15 @@ public class MyCommunityListAdapter extends BaseAdapter {
                 para.height =  (dm.widthPixels - 9)/2;
                 viewholder.gridView.setNumColumns(1);
             }
-            if (imageCount == 2) {
+            else if (imageCount == 2 ) {
                 para.height =  (dm.widthPixels - 9)/2;
                 viewholder.gridView.setNumColumns(2);
             }
-            if (imageCount >= 3) {
+            else if (imageCount == 4){
+                para.height =  (dm.widthPixels - 9);
+                viewholder.gridView.setNumColumns(2);
+            }
+            else {
                 viewholder.gridView.setNumColumns(3);
                 para.height = (int) (Math.ceil(imageCount / 3f)) * ((dm.widthPixels - 12) / 3);
             }
@@ -126,11 +130,13 @@ public class MyCommunityListAdapter extends BaseAdapter {
                             v.setSelected(false);
                             community.setType(5);
                             Client.getClient(InfomationAnalysis.BeanToCommunity(community));
+                            textView1.setText((Integer.parseInt(textView1.getText().toString())- 1) + "");
                             mapList.get(position).setSupport(mapList.get(position).getSupport()-1);
                         }else{
                             v.setSelected(true);
                             community.setType(4);
                             Client.getClient(InfomationAnalysis.BeanToCommunity(community));
+                            textView1.setText((Integer.parseInt(textView1.getText().toString())+ 1) + "");
                             mapList.get(position).setSupport(mapList.get(position).getSupport()+1);
                         }
                         break;
