@@ -284,7 +284,7 @@ public class ControlFragment extends Fragment implements TextToSpeech.OnInitList
                             ((ImageView)msg.obj).getDrawable().setLevel(msg.arg1);
                         }else if(msg.what == 0x005){
                             hintDisease.setText("植物生病啦~点击查看详情");
-                            hintDisease.setVisibility(View.GONE);
+                            hintDisease.setVisibility(View.VISIBLE);
                             redPoint.setVisibility(View.GONE);
                         }else if(msg.what == 0x006){
                             hintDisease.setVisibility(View.GONE);
@@ -696,7 +696,7 @@ public class ControlFragment extends Fragment implements TextToSpeech.OnInitList
         final String title = results.get(0).getTitle();
         final float confidence = results.get(0).getConfidence();
         Log.e("info",results.get(0).getTitle()+results.get(0).getConfidence());
-        if(results.size()>0 && confidence>=0.4 ) {
+        if(results.size()>0 && confidence>=10) {
             if(!"健康".equals(title.substring(title.length()-2))) {
 
                 handler.sendEmptyMessage(0x005);
