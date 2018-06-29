@@ -7,6 +7,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.fos.activity.MainActivity;
+import com.fos.dao.UserInfoDao;
+import com.fos.entity.User;
+import com.fos.entity.UserInfo;
+
 import org.json.JSONObject;
 
 import cn.jpush.android.api.JPushInterface;
@@ -47,9 +52,18 @@ public class MyReceiver extends BroadcastReceiver {
 
         } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
             Log.d(TAG, "用户点击打开了通知");
+           /* openNotification(context,bundle);*/
+            //Intent i=new Intent(context, MainActivity.class);
+            Intent i = new Intent(context, MainActivity.class);  //自定义打开的界面
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-            openNotification(context,bundle);
-
+            User[] user =UserInfoDao.getInstance() .getAllUserInfo();
+            UserInfo userInfo = new UserInfo();
+            userInfo.setUserHeadImage(user[0].getUserHeadImage());
+            userInfo.setUserName(user[0].getUserName());
+            userInfo.setUserId(user[0].getUserId());
+            i.putExtra("UserInfo",userInfo);
+            context.startActivity(i);
         } else {
             Log.d(TAG, "Unhandled intent - " + intent.getAction());
         }

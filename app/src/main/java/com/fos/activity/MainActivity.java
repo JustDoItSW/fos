@@ -163,6 +163,8 @@ public class MainActivity extends AppCompatActivity {
         listView_sideSlip = (ListView)findViewById(R.id.listView_sideSlip) ;
         user_icon = (ImageView)findViewById(R.id.user_icon);
         btn_userInfo = (Button)findViewById(R.id.btn_userInfo);
+//        if(userInfo.getUserHeadImage()==null)
+//            userInfo.setUserHeadImage("http://47.106.161.42:8080/images/duorou.jpeg");
         Glide.with(MainActivity.this)
                 .load(userInfo.getUserHeadImage())
                 .transform(new BitmapSetting(MainActivity.this))
