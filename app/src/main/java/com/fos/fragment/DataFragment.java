@@ -123,11 +123,16 @@ public class DataFragment extends Fragment {
         menu_lux.setOnClickListener(onClickListener);
         menu_temp.setSelected(true);
 
+        setNutLevel();
+
         handler =  new Handler(){
             @Override
             public void handleMessage(Message msg) {
                 if(msg.what == 0x004)
                     initUserFlower();
+                else if(msg.what == 0x006){
+                    setNutLevel();
+                }
                 else {
                     super.handleMessage(msg);
                     Bundle bundle = msg.getData();
@@ -136,7 +141,7 @@ public class DataFragment extends Fragment {
                     Infomation infomation = InfomationAnalysis.jsonToData(str);
                     try {
                         HumFragment.myLineChart.repaintView(Integer.parseInt(infomation.getHumidity()), infomation.getDate().toString(), Color.rgb(199, 232, 245));
-                        LuxFragment.myLineChart.repaintView(Integer.parseInt(infomation.getLux()), infomation.getDate().toString(), Color.rgb(246, 235, 188));
+                        LuxFragment.myLineChart.repaintView(1000-Integer.parseInt(infomation.getLux()), infomation.getDate().toString(), Color.rgb(246, 235, 188));
                         SoilHumFragment.myLineChart.repaintView(Math.round(Float.parseFloat(infomation.getSoilHumidity())), infomation.getDate().toString(), Color.rgb(199, 232, 245));
                         TempFragment.myLineChart.repaintView(Integer.parseInt(infomation.getTemperature()), infomation.getDate().toString(), Color.rgb(255, 150, 150));
                         setLevel(infomation);
@@ -168,10 +173,11 @@ public class DataFragment extends Fragment {
         temp_lv1.setBackgroundResource(R.drawable.round_view_gray);
         temp_lv2.setBackgroundResource(R.drawable.round_view_gray);
         temp_lv3.setBackgroundResource(R.drawable.round_view_gray);
+
     }
     private void  setLevel(Infomation infomation){
         initLevel();
-        int light  = Integer.parseInt(infomation.getLux());
+        int light  = 1000-Integer.parseInt(infomation.getLux());
         int hum = Math.round(Float.parseFloat(infomation.getSoilHumidity()));
         int temp = Integer.parseInt(infomation.getTemperature());
 
@@ -209,6 +215,37 @@ public class DataFragment extends Fragment {
         }else{
             level_temp.setText("合适");
             temp_lv2.setBackgroundResource(R.drawable.round_view_green);
+        }
+
+
+    }
+
+    private void setNutLevel(){
+        try {
+            nut_lv1.setBackgroundResource(R.drawable.round_view_gray);
+            nut_lv2.setBackgroundResource(R.drawable.round_view_gray);
+            nut_lv3.setBackgroundResource(R.drawable.round_view_gray);
+            long nurData = TimeUtils.dateDiffNm(MainActivity.nurData);
+            Log.e("info",nurData+"");
+            long aDayNm = 24 * 60 * 60 * 1000;
+            if (nurData != 0) {
+                if (nurData > 5 * aDayNm) {
+                    level_nut.setText("较低");
+                    nut_lv1.setBackgroundResource(R.drawable.round_view_red);
+                } else if (nurData < 2 * aDayNm) {
+                    level_nut.setText("过高");
+                    nut_lv3.setBackgroundResource(R.drawable.round_view_red);
+                } else {
+                    level_nut.setText("合适");
+                    nut_lv2.setBackgroundResource(R.drawable.round_view_green);
+                }
+            }
+
+        }catch (Exception e){e.printStackTrace();}
+        finally {
+            MainActivity.nurData = TimeUtils.getCurrentTime();
+            MainActivity.editor.putString("nurData", MainActivity.nurData);
+            MainActivity.editor.commit();
         }
     }
 

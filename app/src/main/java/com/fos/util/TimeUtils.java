@@ -20,6 +20,24 @@ public class TimeUtils {
         return sdf.format(System.currentTimeMillis());
     }
 
+    public static long dateDiffNm(String endTime){
+        String strTime = null;
+        long diff = 0;
+        // 按照传入的格式生成一个simpledateformate对象
+        SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date curDate = new Date(System.currentTimeMillis());//获取当前时间
+        String str = sd.format(curDate);
+        try {
+            if(!"".equals(endTime))
+            diff = sd.parse(str).getTime()
+                    - sd.parse(endTime).getTime();
+            else {
+                diff  = 3*60*60*24*1000;
+            }
+        }catch (Exception e){e.printStackTrace();}
+        return diff;
+
+    }
     public static  String dateDiff(String endTime) {
         String strTime = null;
         // 按照传入的格式生成一个simpledateformate对象

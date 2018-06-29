@@ -866,7 +866,7 @@ public class CameraActivity extends AppCompatActivity {
         Log.e("1111111111111",results.get(0).getTitle()+results.get(0).getConfidence());
         if(results.size()>0 && confidence>=0.4 ) {
             if(!"健康".equals(title.substring(title.length()-2))) {
-                result_disease.setVisibility(View.VISIBLE);
+                result_disease.setVisibility(View.GONE);
                 result_disease.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

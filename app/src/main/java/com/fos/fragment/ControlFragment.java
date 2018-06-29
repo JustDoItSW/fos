@@ -277,15 +277,15 @@ public class ControlFragment extends Fragment implements TextToSpeech.OnInitList
                         Log.e("Ctrl收到：", str);
                         Infomation infomation = InfomationAnalysis.jsonToData(str);
 
-                        progress_water.setProgress(((4000-100*Integer.parseInt(infomation.getWaterHigh()))/40));
-                        progress_nut.setProgress(((4000-100*Integer.parseInt(infomation.getWaterHigh()))/40));
+                        progress_water.setProgress(((2000-100*Integer.parseInt(infomation.getWaterHigh()))/20));
+                        progress_nut.setProgress(((3000-100*Integer.parseInt(infomation.getWaterHigh()))/30));
                         }
                         else if(msg.what == 0x004){
                             ((ImageView)msg.obj).getDrawable().setLevel(msg.arg1);
                         }else if(msg.what == 0x005){
                             hintDisease.setText("植物生病啦~点击查看详情");
-                            hintDisease.setVisibility(View.VISIBLE);
-                            redPoint.setVisibility(View.VISIBLE);
+                            hintDisease.setVisibility(View.GONE);
+                            redPoint.setVisibility(View.GONE);
                         }else if(msg.what == 0x006){
                             hintDisease.setVisibility(View.GONE);
                         }
@@ -444,6 +444,7 @@ public class ControlFragment extends Fragment implements TextToSpeech.OnInitList
                                 Client.getClient("v");
                                 setDrawableLevel(fab_nut,0,10000);
                                 nowState.setText("当前施肥状态：打开");
+                                DataFragment.handler.sendEmptyMessage(0x006);
                                 fab_nut.setSelected(true);
                             }
                             break;
@@ -893,6 +894,7 @@ public class ControlFragment extends Fragment implements TextToSpeech.OnInitList
                 tts.speak("当前施肥状态:打开。",TextToSpeech.QUEUE_FLUSH,null);
                 setDrawableLevel(fab_nut,0,10000);
                 nowState.setText("当前施肥状态：打开");
+                DataFragment.handler.sendEmptyMessage(0x006);
                 fab_nut.setSelected(true);
                 break;
             case "停止施肥":
