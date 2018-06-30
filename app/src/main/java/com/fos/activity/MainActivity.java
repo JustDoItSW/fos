@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static SharedPreferences.Editor editor;
     public static Flower flower;
-    public static String browseDate;
+    public static String browseDate,nurData;
     //Preferece机制操作的文件名
     public static final String PREFERENCE_NAME = "SaveContent";
     //Preferece机制的操作模式
@@ -138,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
         flower.setFlowerTemp(sharedPreferences.getString("temp","25"));
         flower.setFlowerImage(sharedPreferences.getString("image",""));
         browseDate = sharedPreferences.getString("date","");
+        nurData = sharedPreferences.getString("nurData","");
         if(!sharedPreferences.getString("flowerName","").equals("未选择")&&!sharedPreferences.getString("flowerName","").equals("")){
             /**
              * 这里选择了植物的花名，是否选择植物标识置为true
