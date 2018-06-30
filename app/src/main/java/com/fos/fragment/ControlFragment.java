@@ -533,6 +533,7 @@ public class ControlFragment extends Fragment implements TextToSpeech.OnInitList
         _module.setModuleIp(_deviceIp);
         _controller = _module.getController();
         _player = _module.getPlayer();
+        _player.setAudioOutput(false);
         _player.setTimeout(20000);
         _player.setOnTimeoutListener(new Player.OnTimeoutListener()
         {
