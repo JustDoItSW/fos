@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
     public static Handler  handler;
     private Thread queryThread;
     public static UserInfo userInfo;
-    String[] listContent = {"看图识花","我的消息","社区动态","选择植物","语言控制","我的好友","附近的人"};
+    String[] listContent = {"看图识花","我的消息","社区动态","选择植物","语言控制"};
     int [] listImage ={R.mipmap.ic_scan,R.mipmap.ic_message,R.mipmap.ic_friend,R.mipmap.ic_plant,R.mipmap.ic_record,R.mipmap.ic_community,R.mipmap.ic_location};
     /**
      * 用户是否已经选择了植物
@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
                 super.run();
                 try {
                     while (true) {
-                        sleep(30000);
+                        sleep(2000);
                         Log.e("info", "开始查询");
                         Client.getClient("i");
                       // sleep(20000);

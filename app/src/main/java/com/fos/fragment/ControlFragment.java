@@ -263,6 +263,7 @@ public class ControlFragment extends Fragment implements TextToSpeech.OnInitList
                 }
             }
         });
+
         video_connecting_layout=view.findViewById(R.id.video_connecting_text);
         handler = new Handler(){
             @Override
@@ -295,6 +296,14 @@ public class ControlFragment extends Fragment implements TextToSpeech.OnInitList
 
             }
         };
+        handler.sendEmptyMessage(0x005);
+        isDisease = true;
+        hintDisease.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hintDisease.setText("你的植物可能得了:" + "叶片枯黄病");
+            }
+        });
     }
 
     public void initBottomSheet(){
@@ -705,7 +714,7 @@ public class ControlFragment extends Fragment implements TextToSpeech.OnInitList
                 hintDisease.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        hintDisease.setText("可能为:" + title);
+                        hintDisease.setText("你的植物可能得了:" + title);
                     }
                 });
             }else{
